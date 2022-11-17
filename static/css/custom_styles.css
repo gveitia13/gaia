@@ -1,0 +1,75 @@
+*::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--light);
+}
+
+*::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #afcba1, #E2EFDA);
+    border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    background: linear-gradient(to bottom, #559f57, #477a49);
+}
+
+.fw-semibold {
+    font-weight: 600;
+}
+
+.agrandar, .card-product {
+    transform: scale(1);
+    transition-duration: 0.5s;
+    /*z-index: 999999;*/
+}
+
+.agrandar:hover {
+    transform: scale(1.3);
+    transition-duration: 0.5s;
+    /*z-index: 999999;*/
+}
+
+.truncate-1, .truncate-2, .truncate-3, .truncate-4 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.truncate-1 {
+    -webkit-line-clamp: 1;
+}
+
+.truncate-2 {
+    -webkit-line-clamp: 2;
+}
+
+.truncate-3 {
+    -webkit-line-clamp: 3;
+}
+
+.truncate-4 {
+    -webkit-line-clamp: 4;
+}
+
+.bg-light-success {
+    background-color: #E2EFDA !important;
+}
+
+.nav-link.active {
+    font-weight: bold;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.btn-xs {
+    padding: .125rem .25rem;
+    font-size: .75rem;
+    line-height: 1.5;
+    border-radius: .15rem
+}
