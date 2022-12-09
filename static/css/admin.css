@@ -1,0 +1,12 @@
+.agrandar:hover {
+    transform: scale(1.5);
+    transition-duration: 0.5s;
+}
+
+.agrandar {
+    border-radius: 0.2rem;
+    border: .5mm solid darkslategrey;
+    /*background-clip: border-box;*/
+    transform: scale(1);
+    transition-duration: 0.5s;
+}

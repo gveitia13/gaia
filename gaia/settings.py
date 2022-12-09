@@ -39,10 +39,40 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app_main',
+    'ckeditor',
     'corsheaders',
     'widget_tweaks',
     'django_cleanup.apps.CleanupConfig',
 ]
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        "skin": "moono-lisa",
+        "toolbar_Basic": [["Source", "-", "Bold", "Italic"]],
+        "toolbar_Full": [
+            [
+                "Styles",
+                "Format",
+                "Bold",
+                "Italic",
+                "Underline",
+                "Strike",
+                "SpellChecker",
+                "Undo",
+                "Redo",
+            ],
+            ["Link", "Unlink", "Anchor"],
+            ["Image", "Flash", "Table", "HorizontalRule"],
+            ["TextColor", "BGColor"],
+            ["Smiley", "SpecialChar"],
+        ],
+        "toolbar": "Full",
+        "height": 291,
+        "width": 555,
+        "filebrowserWindowWidth": 940,
+        "filebrowserWindowHeight": 725,
+    }
+}
 
 BUSINESS_LOGO_PATH = 'img/logo_pill.png'
 BUSINESS_NAME = 'GAIA'
@@ -55,9 +85,9 @@ JAZZMIN_SETTINGS = {
     'site_logo': BUSINESS_LOGO_PATH,
     'site_logo_classes': 'brand-image',
     'site_header': BUSINESS_NAME,
-    # "custom_css": 'css/style.css',
+    "custom_css": 'css/admin.css',
     'copyright': 'By Techno$tar',
-    # 'custom_js': 'js/admin.js',
+    'custom_js': 'js/admin.js',
 }
 
 MIDDLEWARE = [

@@ -1,11 +1,15 @@
 from ckeditor.fields import RichTextField
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import RegexValidator
 from django.db import models
 from django.forms import model_to_dict
 from django.utils.safestring import mark_safe
 
-from gaia import settings
 from gaia.settings import STATIC_URL
+
+phone_regex = RegexValidator(
+    regex=r'\+?1?\d{9,15}$',
+    message='El teléfono debe estar en este formato: +9999999999. Hasta 15 dígitos permitidos.'
+)
 
 
 class Category(models.Model):
@@ -18,7 +22,23 @@ class Category(models.Model):
         verbose_name_plural = 'Categorías'
 
     def __str__(self):
-        return self.description
+        return self.name
+
+    def get_image(self):
+        if self.image:
+            return self.image.url
+        return f'{STATIC_URL}img/empty.png'
+
+    def img_link(self):
+        if self.image:
+            return mark_safe(
+                f'<a href="{self.image.url}"><img src="{self.image.url}" class="agrandar mb-2 mr-2" '
+                f'width="40" height="40" /></a>')
+        return mark_safe(
+            f'<a href="{STATIC_URL}img/empty.png"><img src="{STATIC_URL}img/empty.png" class="agrandar mb-2 mr-2" '
+            f'width="40" height="40" /></a>')
+
+    img_link.short_description = 'Imagen'
 
 
 class Product(models.Model):
@@ -61,6 +81,8 @@ class Product(models.Model):
             f'<a href="{STATIC_URL}img/empty.png"><img src="{STATIC_URL}img/empty.png" class="agrandar mb-2 mr-2" '
             f'width="40" height="40" /></a>')
 
+    img_link.short_description = 'Imagen'
+
 
 class GeneralData(models.Model):
     # localization = models.ForeignKey(Localization, on_delete=models.CASCADE, verbose_name='Localización')
@@ -70,13 +92,15 @@ class GeneralData(models.Model):
     enterprise_address = models.CharField(max_length=100, verbose_name='Dirección de la empresa', null=True, blank=True)
     email = models.EmailField('Correo', unique=True,
                               error_messages={'unique': 'Este correo ya existe'})
-
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True, error_messages={
+        'unique': 'Ya este teléfono está registrado'
+    }, verbose_name='Celular', null=True, blank=True)
     # responsables_names = models.CharField(max_length=250, verbose_name='Nombre de los responsables comerciales')
-
     # google_maps = models.CharField(max_length=900, verbose_name='Mapa de google')
-    # facebook = models.URLField(verbose_name='Link de Facebook', null=True, blank=True)
+    facebook = models.URLField(verbose_name='Link de Facebook', null=True, blank=True)
     # whatsapp = models.URLField(verbose_name='Link de Whatsapp', null=True, blank=True)
-    # instagram = models.URLField(verbose_name='Link de Instagram', null=True, blank=True)
+    instagram = models.URLField(verbose_name='Link de Instagram', null=True, blank=True)
+
     # telegram = models.URLField(verbose_name='Link de Telegram', null=True, blank=True)
     # linked_in = models.URLField(verbose_name='Link de LinkedIn', null=True, blank=True)
     # tiktok = models.URLField(verbose_name='Link de TikTok', null=True, blank=True)

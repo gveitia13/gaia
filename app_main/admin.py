@@ -4,7 +4,7 @@ from app_main.models import Category, GeneralData, Product
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('description', 'name')
+    list_display = ('img_link', 'name','description')
 
 
 class GeneralDataAdmin(admin.ModelAdmin):
@@ -16,11 +16,11 @@ class GeneralDataAdmin(admin.ModelAdmin):
         ('Datos principales', {
             'fields': ('enterprise_name', 'logo', 'img_principal')
         },),
-        # ('Redes Sociales', {
-        #     'fields': ('google_maps', 'facebook', 'instagram', 'whatsapp', 'telegram', 'linked_in', 'tiktok')
-        # },),
+        ('Redes Sociales', {
+            'fields': ('facebook', 'instagram',)
+        },),
         ('Contacto', {
-            'fields': ('enterprise_address', 'email',)
+            'fields': ('enterprise_address', 'email', 'phone_number')
         },),
     ]
 
