@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,9 +44,9 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
 ]
 
-BUSINESS_LOGO_PATH = 'img/MercoCuba-final-01.png'
-BUSINESS_NAME = 'MercoCuba'
-BUSINESS_NAME_IMG_PATH = 'img/letra.png'
+BUSINESS_LOGO_PATH = 'img/logo_pill.png'
+BUSINESS_NAME = 'GAIA'
+BUSINESS_NAME_IMG_PATH = 'img/gaia_bg.png'
 
 JAZZMIN_SETTINGS = {
     "site_brand": BUSINESS_NAME,
@@ -158,3 +160,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = reverse_lazy('admin:login')
+
+LOGIN_URL = reverse_lazy('admin:login')

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+    <style>
+        body {
+            background-color: #f8f9fa !important;
+        }
+    </style>
+    <body class="">
+    <div class="wrapper">
+        {% block navbar %}
+            <!-- Navbar -->
+            {% include 'navbar.html' %}
+        {% endblock %}
+        <!-- Content -->
+        <div class="content">
+            <div class="container-fluid">
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    {#        {% include 'footer.html' %}#}
+    </body>
+
+{% endblock %}
