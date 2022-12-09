@@ -61,6 +61,10 @@ class Product(models.Model):
     # sales = models.PositiveIntegerField(verbose_name='Ventas', default=0)
     # stars = models.PositiveIntegerField(verbose_name='Estrellas (1-5)', default=1,
     #                                     validators=[MaxValueValidator(5), MinValueValidator(1)], )
+
+    def __str__(self):
+        return self.name
+
     def info_tag(self):
         return mark_safe(self.info)
 
@@ -82,6 +86,7 @@ class Product(models.Model):
             f'width="40" height="40" /></a>')
 
     img_link.short_description = 'Imagen'
+    info_tag.short_description = 'Información'
 
 
 class GeneralData(models.Model):

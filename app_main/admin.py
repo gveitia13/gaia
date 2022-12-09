@@ -4,7 +4,7 @@ from app_main.models import Category, GeneralData, Product
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('img_link', 'name','description')
+    list_display = ('name', 'img_link', 'description')
 
 
 class GeneralDataAdmin(admin.ModelAdmin):
@@ -45,7 +45,7 @@ class ProductInline(admin.StackedInline):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('img_link', 'name', 'category', 'price', 'info_tag', 'is_active')
+    list_display = ('name', 'category', 'img_link', 'price', 'info_tag', 'is_active')
     fieldsets = [
         ('Datos Principales:', {
             'fields': ('name', 'category', 'price', 'old_price')
@@ -58,6 +58,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_filter = ('category',)
     actions = ['Desactivar_productos', 'Activar_productos']
+    change_list_template = 'admin/custom_list.html'
 
     def Desactivar_productos(self, request, queryset):
         for p in queryset:
