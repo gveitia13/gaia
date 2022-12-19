@@ -1,10 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'body.html' %}
+{% load static %}
+{% block content %}
+    <div>
+        <nav class="row align-items-end">
+            <div class="justify-content-start col-sm-12 col-lg-4">
+                <img src="{% static 'img/gaia_bg.png' %}" class="" alt="gaia" height="100">
+            </div>
+            <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
+                 role="tablist">
+                <button class="nav-link text-semi-success active" id="nav-home-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-home"
+                        type="button" role="tab" aria-controls="nav-home" aria-selected="true">HOME
+                </button>
+                <button class="nav-link text-semi-success" id="nav-profile-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-profile"
+                        type="button" role="tab" aria-controls="nav-profile" aria-selected="false">PRODUCTOS
+                </button>
+                <button class="nav-link text-semi-success align-text-bottom" id="nav-contact-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-contact"
+                        type="button" role="tab" aria-controls="nav-contact" aria-selected="false">MI CARRITO
+                </button>
+                <div class="ms-auto">
+                    <button class="btn btn-outline-success btn-sm rounded-pill">$0.00 / 0 items</button>
+                    <button class="btn btn-outline-success btn-sm rounded-pill"><i class="mdi mdi-heart"></i></button>
+                </div>
+            </div>
+        </nav>
+        <br>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+                 tabindex="0">
+                <div class="row">
+                    <div class="col-md-12 col-lg-8 bg-semi-success">
+                        <div class="p-5">
+                            <h4 class="text-uppercase text-white">La alimentación sana es tu opción!</h4>
+                            <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">Nuestros</h1>
+                            <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">productos</h1>
+                            <p class="text-white fs-5">Alimentos escogidos con amor, garantizando la producción local.
+                                Productos orgánicos frescos, verduras,frutas, carnes, lácteos, pescados y más...</p>
+                            <a href="#" class="btn bg-orange rounded-0 btn-sm fs-6"><b>VER CATÁLOGO</b></a>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4 ">
+                        <div class="row">
+                            {% for prod in products4 %}
+                                <div class="col-6 col-md-3 col-lg-6 p-0">
+                                    {% comment %} <div class="mx-auto" style="background-image: url('{{ prod.image.url }}');
+                                        height: 200px;width: 200px;
+                                        background-repeat: no-repeat;background-size: cover">
+                                </div>{% endcomment %}
+                                    <div class="card rounded-0 border-0">
+                                        <a href="#"><img src="{{ prod.image.url }}"
+                                                         class="card-img-top rounded-0 border-0"
+                                                         alt="..."></a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                ...
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+                ...
+            </div>
+            {% comment %}        <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">
+            ...
+        </div>{% endcomment %}
+        </div>
+    </div>
+    <br>
+    <ul>
+        {% for category in categories %}
+            <li>{{ category.name }}</li>
+        {% endfor %}
 
-</body>
-</html>
+    </ul>
+{% endblock %}

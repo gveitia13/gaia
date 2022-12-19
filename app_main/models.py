@@ -20,6 +20,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Categoría'
         verbose_name_plural = 'Categorías'
+        # order_with_respect_to = ('get_prods_count',)
 
     def __str__(self):
         return self.name
@@ -28,6 +29,11 @@ class Category(models.Model):
         if self.image:
             return self.image.url
         return f'{STATIC_URL}img/empty.png'
+
+    @property
+    def get_prods_count(self):
+        self.product_set.order_by()
+        # return self.product_set.count() if self.product_set.exists() else 0
 
     def img_link(self):
         if self.image:
