@@ -16,6 +16,7 @@ class StartPage(generic.TemplateView):
         context['banner'] = settings.BUSINESS_BANNER
         context['products4'] = Product.objects.filter(is_active=True)[:4]
         context['categories'] = sorted(Category.objects.all(), key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+        context['all_categories'] = Category.objects.all()
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True)[0:5]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False)[0:5]
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:5]
