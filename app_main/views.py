@@ -12,6 +12,11 @@ class StartPage(generic.TemplateView):
         context = super(StartPage, self).get_context_data()
         context['icon'] = settings.BUSINESS_LOGO_PATH
         context['title'] = settings.BUSINESS_NAME
-        context['products4'] = Product.objects.all()[:4]
-        context['categories'] = Category.objects.all()
+        context['logo'] = settings.BUSINESS_NAME_IMG_PATH
+        context['banner'] = settings.BUSINESS_BANNER
+        context['products4'] = Product.objects.filter(is_active=True)[:4]
+        context['categories'] = sorted(Category.objects.all(), key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+        context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True)[0:5]
+        context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False)[0:5]
+        context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:5]
         return context

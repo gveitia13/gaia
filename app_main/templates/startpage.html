@@ -1,10 +1,11 @@
 {% extends 'body.html' %}
+{% load widget_tweaks %}
 {% load static %}
 {% block content %}
     <div>
-        <nav class="row align-items-end">
+        <nav class="row align-items-end user-select-none">
             <div class="justify-content-start col-sm-12 col-lg-4">
-                <img src="{% static 'img/gaia_bg.png' %}" class="" alt="gaia" height="100">
+                <img src="{% static logo %}" class="" alt="gaia" height="100">
             </div>
             <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
                  role="tablist">
@@ -30,10 +31,10 @@
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
                  tabindex="0">
-                <div class="row">
+                <div class="row user-select-none">
                     <div class="col-md-12 col-lg-8 bg-semi-success">
-                        <div class="p-5">
-                            <h4 class="text-uppercase text-white">La alimentación sana es tu opción!</h4>
+                        <div class="p-5 user-select-none">
+                            <h4 class="text-uppercase text-white">¡La alimentación sana es tu opción!</h4>
                             <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">Nuestros</h1>
                             <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">productos</h1>
                             <p class="text-white fs-5">Alimentos escogidos con amor, garantizando la producción local.
@@ -45,14 +46,11 @@
                         <div class="row">
                             {% for prod in products4 %}
                                 <div class="col-6 col-md-3 col-lg-6 p-0">
-                                    {% comment %} <div class="mx-auto" style="background-image: url('{{ prod.image.url }}');
-                                        height: 200px;width: 200px;
-                                        background-repeat: no-repeat;background-size: cover">
-                                </div>{% endcomment %}
                                     <div class="card rounded-0 border-0">
-                                        <a href="#"><img src="{{ prod.image.url }}"
-                                                         class="card-img-top rounded-0 border-0"
-                                                         alt="..."></a>
+                                        <a href="#">
+                                            <img src="{{ prod.image.url }}" class="card-img-top rounded-0 border-0"
+                                                 alt="...">
+                                        </a>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -72,10 +70,117 @@
         </div>
     </div>
     <br>
-    <ul>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 user-select-none">
         {% for category in categories %}
-            <li>{{ category.name }}</li>
+            <div class="col">
+                <a href="#" class="text-decoration-none">
+                    <div class="card rounded-0">
+                        <div class="card-header text-uppercase text-center fs-4
+                        {% if forloop.first %} bg-success {% elif forloop.counter == 2 %} bg-orange
+                         {% elif forloop.counter == 3 %} bg-warning {% elif forloop.last %} bg-semi-success
+                         {% endif %} rounded-0 fw-bold text-white">
+                            {{ category.name }}
+                        </div>
+                        <img src="{{ category.get_image }}" class="card-img-bottom rounded-0" alt="...">
+                    </div>
+                </a>
+            </div>
         {% endfor %}
-
-    </ul>
+    </div>
+    <br>
+    <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con
+        nosotros?</h1>
+    <div class="card text-bg-dark rounded-0 border-0">
+        <img src="{% static banner %}" class="card-img rounded-0 border-0" alt="Banner">
+    </div>
+    <br>
+    <div class="row row-cols-1 row-cols-sm-3 g-4">
+        <div class="col text-center text-success">
+            <h5 class="mb-0">Apoyamos a nuestros productos locales</h5>
+            <span class="fs-6">Nuestro principal objetivo es apoyar a nuestros productos locales, incentivar la producción y
+                buscar el camino hacia la agroecología!!!</span>
+        </div>
+        <div class="col text-center text-semi-success">
+            <h5 class="mb-0">Atención personalizada</h5>
+            <span class="fs-6">Comprar con nosotros será fácil, rápido y según tus necesidades.</span>
+        </div>
+        <div class="col text-center text-orange">
+            <h5 class="mb-0">Alimentación saludable</h5>
+            <span class="fs-6">Buscamos los mejores productos del mercado que sean exclusivos, variados y saludables.</span>
+        </div>
+    </div>
+    <br>
+    <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Productos
+        destacados</h1>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+        {% for prod in products_destacados %}
+            <div class="col">
+                <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
+                    <a href="{{ prod.image.url }}"><img src="{{ prod.image.url }}"
+                                                        class="card-img-top rounded-0 border-0" alt="..."></a>
+                    <div class="card-body text-success bg-light-success text-center">
+                        <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
+                        <p class="card-text truncate-1 mb-0">{{ prod.price }} cup</p>
+                        <div class="truncate-2">
+                            {{ prod.info_tag }}
+                        </div>
+                    </div>
+                    <div class="card-footer text-center bg-light-success rounded-0 border-0">
+                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
+                        <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <br>
+    <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Productos
+        con descuento</h1>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+        {% for prod in products_descuento %}
+            <div class="col">
+                <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
+                    <a href="{{ prod.image.url }}"><img src="{{ prod.image.url }}"
+                                                        class="card-img-top rounded-0 border-0" alt="..."></a>
+                    <div class="card-body text-success bg-light-success text-center">
+                        <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
+                        <p class="card-text truncate-1 mb-0 text-decoration-line-through">{{ prod.old_price }} cup</p>
+                        <p class="card-text truncate-1 mb-0">{{ prod.price }} cup</p>
+                        <div class="truncate-2">
+                            {{ prod.info_tag }}
+                        </div>
+                    </div>
+                    <div class="card-footer text-center bg-light-success rounded-0 border-0">
+                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
+                        <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <br>
+    <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Nuevos
+        productos</h1>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+        {% for prod in products_nuevos %}
+            <div class="col">
+                <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
+                    <a href="{{ prod.image.url }}"><img src="{{ prod.image.url }}"
+                                                        class="card-img-top rounded-0 border-0" alt="..."></a>
+                    <div class="card-body text-success bg-light-success text-center">
+                        <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
+                        <p class="card-text truncate-1 mb-0">{{ prod.price }} cup</p>
+                        <div class="truncate-2">
+                            {{ prod.info_tag }}
+                        </div>
+                    </div>
+                    <div class="card-footer text-center bg-light-success rounded-0 border-0">
+                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
+                        <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <br>
 {% endblock %}

@@ -77,6 +77,7 @@ CKEDITOR_CONFIGS = {
 BUSINESS_LOGO_PATH = 'img/logo_pill.png'
 BUSINESS_NAME = 'GAIA'
 BUSINESS_NAME_IMG_PATH = 'img/gaia_bg.png'
+BUSINESS_BANNER = 'img/banner.png'
 
 JAZZMIN_SETTINGS = {
     "site_brand": BUSINESS_NAME,

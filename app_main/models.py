@@ -20,7 +20,6 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Categoría'
         verbose_name_plural = 'Categorías'
-        # order_with_respect_to = ('get_prods_count',)
 
     def __str__(self):
         return self.name
@@ -32,8 +31,7 @@ class Category(models.Model):
 
     @property
     def get_prods_count(self):
-        self.product_set.order_by()
-        # return self.product_set.count() if self.product_set.exists() else 0
+        return self.product_set.count() if self.product_set.exists() else 0
 
     def img_link(self):
         if self.image:
@@ -61,6 +59,7 @@ class Product(models.Model):
     info = RichTextField(max_length=400, verbose_name='Información', null=True, blank=True)
     about = RichTextField(max_length=400, verbose_name='Sobre el producto', null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name='Visible')
+    is_important = models.BooleanField(default=True, verbose_name='Destacado')
 
     # hidden fields
     # views = models.PositiveIntegerField(verbose_name='Vistos', default=1)
@@ -70,6 +69,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
 
     def info_tag(self):
         return mark_safe(self.info)

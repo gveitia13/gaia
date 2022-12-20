@@ -28,7 +28,7 @@
 }
 
 .agrandar:hover {
-    transform: scale(1.3);
+    transform: scale(1.05);
     transition-duration: 0.5s;
     /*z-index: 999999;*/
 }
@@ -67,12 +67,16 @@
     color: #8cbf44;
 }
 
-.text-semi-success:hover {
+button.text-semi-success:hover {
     color: var(--bs-green) !important;
 }
 
 .text-semi-success.active {
     color: var(--bs-green) !important;
+}
+
+.text-orange {
+    color: #fd7e14 !important
 }
 
 .bg-orange {

@@ -51,13 +51,13 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('name', 'category', 'price', 'old_price')
         }),
         ('Descripción:', {
-            'fields': ('image', 'is_active', 'info', 'about')
+            'fields': ('image', 'is_active', 'is_important', 'info', 'about')
         })
     ]
     # form = ProductForm
     search_fields = ('name',)
     list_filter = ('category',)
-    actions = ['Desactivar_productos', 'Activar_productos']
+    actions = ['Desactivar_productos', 'Activar_productos', 'Activar_destacados', 'Quitar_destacados']
     change_list_template = 'admin/custom_list.html'
 
     def Desactivar_productos(self, request, queryset):
@@ -68,6 +68,16 @@ class ProductAdmin(admin.ModelAdmin):
     def Activar_productos(self, request, queryset):
         for p in queryset:
             p.is_active = True
+            p.save()
+
+    def Activar_destacados(self, request, queryset):
+        for p in queryset:
+            p.is_important = False
+            p.save()
+
+    def Quitar_destacados(self, request, queryset):
+        for p in queryset:
+            p.is_important = True
             p.save()
 
 
