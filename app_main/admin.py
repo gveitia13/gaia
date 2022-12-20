@@ -14,7 +14,7 @@ class GeneralDataAdmin(admin.ModelAdmin):
     )
     fieldsets = [
         ('Datos principales', {
-            'fields': ('enterprise_name', 'logo', 'img_principal')
+            'fields': ('enterprise_name', 'logo', 'img_principal', 'banner')
         },),
         ('Redes Sociales', {
             'fields': ('facebook', 'instagram',)

@@ -102,6 +102,7 @@ class GeneralData(models.Model):
     # localization = models.ForeignKey(Localization, on_delete=models.CASCADE, verbose_name='Localización')
     logo = models.ImageField(upload_to='datos_generales/logo', verbose_name='Logo')
     img_principal = models.ImageField(upload_to='datos_generales/img_principal', verbose_name='Imagen Principal')
+    banner = models.ImageField(upload_to='datos_generales/banner', verbose_name='Banner', null=True)
     enterprise_name = models.CharField(max_length=100, verbose_name='Nombre de la empresa')
     enterprise_address = models.CharField(max_length=100, verbose_name='Dirección de la empresa', null=True, blank=True)
     email = models.EmailField('Correo', unique=True,
@@ -109,16 +110,8 @@ class GeneralData(models.Model):
     phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True, error_messages={
         'unique': 'Ya este teléfono está registrado'
     }, verbose_name='Celular', null=True, blank=True)
-    # responsables_names = models.CharField(max_length=250, verbose_name='Nombre de los responsables comerciales')
-    # google_maps = models.CharField(max_length=900, verbose_name='Mapa de google')
     facebook = models.URLField(verbose_name='Link de Facebook', null=True, blank=True)
-    # whatsapp = models.URLField(verbose_name='Link de Whatsapp', null=True, blank=True)
     instagram = models.URLField(verbose_name='Link de Instagram', null=True, blank=True)
-
-    # telegram = models.URLField(verbose_name='Link de Telegram', null=True, blank=True)
-    # linked_in = models.URLField(verbose_name='Link de LinkedIn', null=True, blank=True)
-    # tiktok = models.URLField(verbose_name='Link de TikTok', null=True, blank=True)
-    # views = models.PositiveIntegerField(verbose_name='Vistos', default=0)
 
     def __str__(self):
         return self.enterprise_name

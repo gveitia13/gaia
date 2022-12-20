@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 
-from app_main.models import Product, Category
+from app_main.models import Product, Category, GeneralData
 from gaia import settings
 
 
@@ -14,6 +14,7 @@ class StartPage(generic.TemplateView):
         context['title'] = settings.BUSINESS_NAME
         context['logo'] = settings.BUSINESS_NAME_IMG_PATH
         context['banner'] = settings.BUSINESS_BANNER
+        context['business'] = GeneralData.objects.first() if GeneralData.objects.exists() else {}
         context['products4'] = Product.objects.filter(is_active=True)[:4]
         context['categories'] = sorted(Category.objects.all(), key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['all_categories'] = Category.objects.all()

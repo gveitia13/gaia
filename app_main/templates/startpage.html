@@ -5,7 +5,8 @@
     <div>
         <nav class="row align-items-end user-select-none">
             <div class="justify-content-start col-sm-12 col-lg-4">
-                <img src="{% static logo %}" class="" alt="gaia" height="100">
+                <img src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
+                     class="" alt="gaia" height="100">
             </div>
             <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
                  role="tablist">
@@ -32,8 +33,8 @@
             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
                  tabindex="0">
                 <div class="row user-select-none">
-                    <div class="col-md-12 col-lg-8 bg-semi-success">
-                        <div class="p-5 user-select-none">
+                    <div class="col-md-12 col-lg-8 ">
+                        <div class="p-5 user-select-none bg-semi-success">
                             <h4 class="text-uppercase text-white">¡La alimentación sana es tu opción!</h4>
                             <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">Nuestros</h1>
                             <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">productos</h1>
@@ -43,7 +44,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 col-lg-4 ">
-                        <div class="row">
+                        <div class="row pt-2 px-3 ps-lg-0 pt-lg-0">
                             {% for prod in products4 %}
                                 <div class="col-6 col-md-3 col-lg-6 p-0">
                                     <div class="card rounded-0 border-0">
@@ -74,8 +75,8 @@
         {% for category in categories %}
             <div class="col">
                 <a href="#" class="text-decoration-none">
-                    <div class="card rounded-0">
-                        <div class="card-header text-uppercase text-center fs-4
+                    <div class="card rounded-0 border-0 agrandar">
+                        <div class="card-header text-uppercase text-center fs-4 border-0
                         {% if forloop.first %} bg-success {% elif forloop.counter == 2 %} bg-orange
                          {% elif forloop.counter == 3 %} bg-warning {% elif forloop.last %} bg-semi-success
                          {% endif %} rounded-0 fw-bold text-white">
@@ -91,7 +92,8 @@
     <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con
         nosotros?</h1>
     <div class="card text-bg-dark rounded-0 border-0">
-        <img src="{% static banner %}" class="card-img rounded-0 border-0" alt="Banner">
+        <img src="{% if business.banner %} {{ business.banner.url }} {% else %}{% static banner %} {% endif %}"
+             class="card-img rounded-0 border-0" alt="Banner">
     </div>
     <br>
     <div class="row row-cols-1 row-cols-sm-3 g-4">

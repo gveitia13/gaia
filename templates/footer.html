@@ -40,16 +40,19 @@
             <div class="col-6 col-md-3  mb-3">
                 <h5>CONTACTO</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-white">Teléfono</a></li>
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-white">Dirección</a></li>
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-white">Email</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-white">{{ business.phone_number }}</a>
+                    </li>
+                    <li class="mb-2"><a href="#"
+                                        class="text-decoration-none text-white">{{ business.enterprise_address }}</a>
+                    </li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-white">{{ business.email }}</a></li>
                 </ul>
             </div>
             <div class="col-6 col-md-3  mb-3">
                 <h5>SÍGUENOS</h5>
                 <div>
-                    <a href="#"><i class="mdi mdi-instagram mdi-48px text-white"></i></a>
-                    <a href="#"><i class="mdi mdi-facebook mdi-48px text-white"></i></a>
+                    <a href="{{ business.instagram }}"><i class="mdi mdi-instagram mdi-48px text-white"></i></a>
+                    <a href="{{ business.facebook }}"><i class="mdi mdi-facebook mdi-48px text-white"></i></a>
                 </div>
             </div>
         </div>

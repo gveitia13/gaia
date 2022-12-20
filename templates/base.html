@@ -7,7 +7,8 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description"
           content="Buy and sell your products along with others peoples"/>
-    <link rel="icon" href="{% static icon %}" type="image/x-icon">
+    <link rel="icon" href="{% if business.logo %} {{ business.logo.url }} {% else %} {% static icon %} {% endif %}"
+          type="image/x-icon">
     <!--    material icons-->
     <link rel="stylesheet" href="{% static 'lib/material-icons/css/icons.min.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -15,8 +16,8 @@
     <!--    select 2-->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <!--    bootstrap select-->
-{#    <link rel="stylesheet"#}
-{#          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">#}
+    {#    <link rel="stylesheet"#}
+    {#          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">#}
     <!--    sweet alert 2-->
     <link rel="stylesheet" href="{% static 'lib/sweetalert2/sweetalert2.min.css' %}">
     <!-- jQuery confirm -->
