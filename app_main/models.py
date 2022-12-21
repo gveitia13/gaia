@@ -99,10 +99,9 @@ class Product(models.Model):
 
 
 class GeneralData(models.Model):
-    # localization = models.ForeignKey(Localization, on_delete=models.CASCADE, verbose_name='Localización')
     logo = models.ImageField(upload_to='datos_generales/logo', verbose_name='Logo')
     img_principal = models.ImageField(upload_to='datos_generales/img_principal', verbose_name='Imagen Principal')
-    banner = models.ImageField(upload_to='datos_generales/banner', verbose_name='Banner', null=True)
+    # banner = models.ImageField(upload_to='datos_generales/banner', verbose_name='Banner', null=True)
     enterprise_name = models.CharField(max_length=100, verbose_name='Nombre de la empresa')
     enterprise_address = models.CharField(max_length=100, verbose_name='Dirección de la empresa', null=True, blank=True)
     email = models.EmailField('Correo', unique=True,
@@ -150,3 +149,8 @@ class GeneralData(models.Model):
     class Meta:
         verbose_name = 'Datos Generales'
         verbose_name_plural = verbose_name
+
+
+class Banner(models.Model):
+    gnd = models.ForeignKey(GeneralData, on_delete=models.CASCADE)
+    banner = models.ImageField(upload_to='datos_generales/banner', verbose_name='Banner', null=True)

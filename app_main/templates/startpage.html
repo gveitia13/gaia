@@ -91,10 +91,11 @@
     <br>
     <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con
         nosotros?</h1>
-    <div class="card text-bg-dark rounded-0 border-0">
+    {% comment %}    <div class="card text-bg-dark rounded-0 border-0">
         <img src="{% if business.banner %} {{ business.banner.url }} {% else %}{% static banner %} {% endif %}"
              class="card-img rounded-0 border-0" alt="Banner">
-    </div>
+    </div>{% endcomment %}
+    {% include 'carousel.html' %}
     <br>
     <div class="row row-cols-1 row-cols-sm-3 g-4">
         <div class="col text-center text-success">
@@ -114,20 +115,20 @@
     <br>
     <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Productos
         destacados</h1>
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 div-card-product">
         {% for prod in products_destacados %}
             <div class="col">
                 <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
                     <a href="{{ prod.image.url }}"><img src="{{ prod.image.url }}"
                                                         class="card-img-top rounded-0 border-0" alt="..."></a>
-                    <div class="card-body text-success bg-light-success text-center">
+                    <div class="card-body text-success bg-light-success text-center pb-0">
                         <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
                         <p class="card-text truncate-1 mb-0">{{ prod.price }} cup</p>
                         <div class="truncate-2">
                             {{ prod.info_tag }}
                         </div>
                     </div>
-                    <div class="card-footer text-center bg-light-success rounded-0 border-0">
+                    <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
                         <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
                         <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
                     </div>
@@ -138,13 +139,13 @@
     <br>
     <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Productos
         con descuento</h1>
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 div-card-product">
         {% for prod in products_descuento %}
             <div class="col">
                 <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
                     <a href="{{ prod.image.url }}"><img src="{{ prod.image.url }}"
                                                         class="card-img-top rounded-0 border-0" alt="..."></a>
-                    <div class="card-body text-success bg-light-success text-center">
+                    <div class="card-body text-success bg-light-success text-center pb-0">
                         <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
                         <p class="card-text truncate-1 mb-0 text-decoration-line-through">{{ prod.old_price }} cup</p>
                         <p class="card-text truncate-1 mb-0">{{ prod.price }} cup</p>
@@ -152,7 +153,7 @@
                             {{ prod.info_tag }}
                         </div>
                     </div>
-                    <div class="card-footer text-center bg-light-success rounded-0 border-0">
+                    <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
                         <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
                         <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
                     </div>
@@ -163,20 +164,20 @@
     <br>
     <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Nuevos
         productos</h1>
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 div-card-product">
         {% for prod in products_nuevos %}
             <div class="col">
                 <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
                     <a href="{{ prod.image.url }}"><img src="{{ prod.image.url }}"
                                                         class="card-img-top rounded-0 border-0" alt="..."></a>
-                    <div class="card-body text-success bg-light-success text-center">
+                    <div class="card-body text-success bg-light-success text-center pb-0">
                         <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
                         <p class="card-text truncate-1 mb-0">{{ prod.price }} cup</p>
                         <div class="truncate-2">
                             {{ prod.info_tag }}
                         </div>
                     </div>
-                    <div class="card-footer text-center bg-light-success rounded-0 border-0">
+                    <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
                         <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
                         <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
                     </div>

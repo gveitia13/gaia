@@ -1,10 +1,16 @@
 from django.contrib import admin
 
-from app_main.models import Category, GeneralData, Product
+from app_main.models import Category, GeneralData, Product, Banner
 
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'img_link', 'description')
+
+
+class BannerInline(admin.TabularInline):
+    model = Banner
+    extra = 5
+    fields = ('banner',)
 
 
 class GeneralDataAdmin(admin.ModelAdmin):
@@ -14,7 +20,7 @@ class GeneralDataAdmin(admin.ModelAdmin):
     )
     fieldsets = [
         ('Datos principales', {
-            'fields': ('enterprise_name', 'logo', 'img_principal', 'banner')
+            'fields': ('enterprise_name', 'logo', 'img_principal',)
         },),
         ('Redes Sociales', {
             'fields': ('facebook', 'instagram',)
@@ -23,6 +29,7 @@ class GeneralDataAdmin(admin.ModelAdmin):
             'fields': ('enterprise_address', 'email', 'phone_number')
         },),
     ]
+    inlines = [BannerInline]
 
     def has_add_permission(self, request):
         user = request.user

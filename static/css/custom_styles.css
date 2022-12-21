@@ -55,6 +55,10 @@
     -webkit-line-clamp: 4;
 }
 
+div.truncate-2 > p {
+    margin-bottom: 0;
+}
+
 .bg-light-success {
     background-color: #E2EFDA !important;
 }
@@ -127,4 +131,26 @@ button.text-semi-success:hover {
     border-bottom: 5px solid var(--bs-orange);
     background: none;
     margin: 0;
+}
+
+@media only screen and (min-width: 400px) {
+    .img-carousel {
+        height: 30vh !important;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .img-carousel {
+        height: 40vh !important;
+    }
+}
+
+@media only screen and (min-width: 1000px) {
+    .img-carousel {
+        height: 60vh !important;
+    }
+}
+
+.div-card-product div.card img {
+    height: 30vh !important;
 }
