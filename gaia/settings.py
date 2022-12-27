@@ -67,8 +67,8 @@ CKEDITOR_CONFIGS = {
             ["Smiley", "SpecialChar"],
         ],
         "toolbar": "Full",
-        "height": 291,
-        "width": 555,
+        "height": 150,
+        "width": 500,
         "filebrowserWindowWidth": 940,
         "filebrowserWindowHeight": 725,
     }
@@ -81,10 +81,12 @@ BUSINESS_BANNER = 'img/banner.png'
 
 JAZZMIN_SETTINGS = {
     "site_brand": BUSINESS_NAME,
-    "welcome_sign": "Bienvenido:",
+    "welcome_sign": '',
     'site_icon': BUSINESS_LOGO_PATH,
     'site_logo': BUSINESS_LOGO_PATH,
     'site_logo_classes': 'brand-image',
+    "login_logo": BUSINESS_NAME_IMG_PATH,
+    "login_logo_dark": False,
     'site_header': BUSINESS_NAME,
     "custom_css": 'css/admin.css',
     'copyright': 'By Techno$tar',

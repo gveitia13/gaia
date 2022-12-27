@@ -60,3 +60,64 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     }
   })
 }
+let fetchFunction = (data, token, url) => {
+  // let data = JSON.stringify(data)
+  console.log(data)
+  let headers = {
+    "X-CSRFToken": token,
+    'Content-Type': 'application/json',
+    // pk: '{{ object.pk }}'
+  }
+  /*  $('#exampleModalCenter').modal({
+      keyboard: false,
+      backdrop: 'static',
+    })*/
+  fetch(url, {
+    method: "POST",
+    body: data,
+    headers: headers
+  }).then((res, reject) => {
+    console.log(res);
+    console.log(res.json());
+  }).catch((err) => {
+
+  })
+}
+
+class EasyHTTP {
+
+  // Make an HTTP GET Request
+  async get(url) {
+
+    // Awaiting fetch response
+    const response = await fetch(url);
+
+    // Awaiting for response.json()
+    const resData = await response.json();
+
+    // Returning result data
+    return resData;
+  }
+
+  // Make an HTTP POST Request
+  async post(url, data, token) {
+
+    // Awaiting fetch response and
+    // defining method, headers and body
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        "X-CSRFToken": token
+      },
+      body: JSON.stringify(data)
+    });
+
+    // Awaiting response.json()
+    const resData = await response.json();
+
+    // Returning result data
+    return resData;
+  }
+}
+

@@ -5,6 +5,7 @@ from app_main.models import Category, GeneralData, Product, Banner
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'img_link', 'description')
+    fields = ('name', 'image', 'description')
 
 
 class BannerInline(admin.TabularInline):
@@ -52,13 +53,13 @@ class ProductInline(admin.StackedInline):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'img_link', 'price', 'info_tag', 'is_active')
+    list_display = ('name', 'category', 'img_link', 'price', 'info_tag', 'sales', 'is_active')
     fieldsets = [
         ('Datos Principales:', {
-            'fields': ('name', 'category', 'price', 'old_price')
+            'fields': ('name', 'category', 'price', 'old_price', 'stock')
         }),
         ('Descripción:', {
-            'fields': ('image', 'is_active', 'is_important', 'info', 'about')
+            'fields': ('image', 'img_link', 'is_active', 'is_important', 'info', 'about')
         })
     ]
     # form = ProductForm
@@ -66,6 +67,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('category',)
     actions = ['Desactivar_productos', 'Activar_productos', 'Activar_destacados', 'Quitar_destacados']
     change_list_template = 'admin/custom_list.html'
+    readonly_fields = ('date_updated', 'sales', 'img_link')
 
     def Desactivar_productos(self, request, queryset):
         for p in queryset:

@@ -49,8 +49,8 @@
                                 <div class="col-6 col-md-3 col-lg-6 p-0">
                                     <div class="card rounded-0 border-0">
                                         <a href="#">
-                                            <img src="{{ prod.image.url }}" class="card-img-top rounded-0 border-0"
-                                                 alt="...">
+                                            <img src="{{ prod.image.url }}" class="card-img-top rounded-0 border-0 algo"
+                                                 alt="..." name="{{ prod.id }}" data-bs-toggle="modal" data-bs-target="#product_modal">
                                         </a>
                                     </div>
                                 </div>
@@ -130,7 +130,9 @@
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
                         <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
-                        <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
+                        <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
+                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">VER
+                        </button>
                     </div>
                 </div>
             </div>
@@ -155,7 +157,9 @@
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
                         <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
-                        <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
+                        <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
+                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">VER
+                        </button>
                     </div>
                 </div>
             </div>
@@ -179,11 +183,64 @@
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
                         <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
-                        <a href="#" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">VER</a>
+                        <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
+                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">VER
+                        </button>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
     <br>
+    {% comment %}    <style>
+        .div-card-product .card {
+            min-width: 250px;
+            margin-right: 15px;
+        }
+    </style>
+    <div class="container-fluid py-2">
+        <h2 class="font-weight-light">Bootstrap 5 Horizontal Scrolling Cards with Flexbox</h2>
+
+        <div class="d-flex flex-row flex-nowrap overflow-auto div-card-product">
+            {% for prod in products_nuevos %}
+                <div class="col">
+                    <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
+                        <a href="{{ prod.image.url }}"><img src="{{ prod.image.url }}"
+                                                            class="card-img-top rounded-0 border-0" alt="..."></a>
+                        <div class="card-body text-success bg-light-success text-center pb-0">
+                            <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
+                            <p class="card-text truncate-1 mb-0">{{ prod.price }} cup</p>
+                            <div class="truncate-2">
+                                {{ prod.info_tag }}
+                            </div>
+                        </div>
+                        <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
+                            <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR
+                            </button>
+                            <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
+                                    data-bs-toggle="modal" data-bs-target="#product_modal">VER
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>{% endcomment %}
+    {% include 'product_modal.html' %}
+{% endblock %}
+{% block scripts %}
+    {% csrf_token %}
+    <script>
+      document.querySelectorAll('[data-bs-toggle="modal"]').forEach(e => e.addEventListener('click', function () {
+        const http = new EasyHTTP;
+        const data = {
+          action: 'details',
+          pk: this.name,
+        }
+        http.post(location.pathname, data, '{{ csrf_token }}')
+          .then(data => console.log(data))
+          .catch(err => console.log(err));
+      }))
+
+    </script>
 {% endblock %}

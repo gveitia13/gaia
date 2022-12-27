@@ -13,9 +13,14 @@ phone_regex = RegexValidator(
 
 
 class Category(models.Model):
-    description = models.CharField(max_length=500, verbose_name='Descripción', null=True, blank=True)
+    description = models.TextField(verbose_name='Descripción', null=True, blank=True)
     name = models.CharField(max_length=100, verbose_name='Nombre')
     image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True)
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['image'] = self.get_image()
+        return item
 
     class Meta:
         verbose_name = 'Categoría'
@@ -47,10 +52,6 @@ class Category(models.Model):
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Categoría')
-    # hit_count_generic = GenericRelation(
-    #     HitCount, object_id_field='object_pk',
-    #     related_query_name='hit_count_generic_relation2')
-    # ratings = GenericRelation(Rating, related_query_name='stars_product_generic_relation')
     image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True)
     name = models.CharField(max_length=100, verbose_name='Nombre')
     price = models.DecimalField(max_digits=9, verbose_name='Precio', decimal_places=2)
@@ -60,15 +61,26 @@ class Product(models.Model):
     about = RichTextField(max_length=400, verbose_name='Sobre el producto', null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name='Visible')
     is_important = models.BooleanField(default=True, verbose_name='Destacado')
-
+    stock = models.IntegerField(verbose_name='Cantidad de inventario', default=1)
+    date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     # hidden fields
     # views = models.PositiveIntegerField(verbose_name='Vistos', default=1)
-    # sales = models.PositiveIntegerField(verbose_name='Ventas', default=0)
+    sales = models.PositiveIntegerField(verbose_name='Ventas', default=0)
+
     # stars = models.PositiveIntegerField(verbose_name='Estrellas (1-5)', default=1,
     #                                     validators=[MaxValueValidator(5), MinValueValidator(1)], )
 
     def __str__(self):
         return self.name
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['category'] = self.category.toJSON()
+        item['image'] = self.get_image()
+        item['info'] = self.info_tag()
+        item['about'] = self.about_tag()
+        item['date_updated'] = self.date_updated.strftime('%d-%m-%Y')
+        return item
 
     class Meta:
         verbose_name = 'Producto'
@@ -89,12 +101,12 @@ class Product(models.Model):
         if self.image:
             return mark_safe(
                 f'<a href="{self.image.url}"><img src="{self.image.url}" class="agrandar mb-2 mr-2" '
-                f'width="40" height="40" /></a>')
+                f'width="50" height="50" /></a>')
         return mark_safe(
             f'<a href="{STATIC_URL}img/empty.png"><img src="{STATIC_URL}img/empty.png" class="agrandar mb-2 mr-2" '
-            f'width="40" height="40" /></a>')
+            f'width="50" height="50" /></a>')
 
-    img_link.short_description = 'Imagen'
+    img_link.short_description = 'Vista previa'
     info_tag.short_description = 'Información'
 
 
