@@ -35,6 +35,7 @@ class StartPage(BaseView, generic.TemplateView):
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             settings.STATIC_URL / settings.BUSINESS_BANNER]
+        context['first'] = Product.objects.last()
         return context
 
     # @method_decorator(csrf_exempt)
@@ -52,7 +53,7 @@ class StartPage(BaseView, generic.TemplateView):
                 data = product.toJSON()
                 print(data)
             else:
-                data['error'] = 'Ha ocurrido un error'
+                data['error'] = 'Ha ocurrido un error en el servidor.'
         except Exception as e:
             print(str(e))
             data['error'] = str(e)

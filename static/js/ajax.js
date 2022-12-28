@@ -1,3 +1,6 @@
+const productModal = document.querySelector('#product_modal')
+const productModal2 = new bootstrap.Modal(document.getElementById('product_modal'));
+
 //Auxiliary method: submit with ajax and jQuery
 function ajaxFunction(url, parameters, type, callback, async = true) {
   $.ajax({
@@ -20,7 +23,7 @@ function ajaxFunction(url, parameters, type, callback, async = true) {
           title: 'Error',
           text: data['error'],
           icon: 'error'
-        });
+        })
       }
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
@@ -68,10 +71,6 @@ let fetchFunction = (data, token, url) => {
     'Content-Type': 'application/json',
     // pk: '{{ object.pk }}'
   }
-  /*  $('#exampleModalCenter').modal({
-      keyboard: false,
-      backdrop: 'static',
-    })*/
   fetch(url, {
     method: "POST",
     body: data,
@@ -81,6 +80,18 @@ let fetchFunction = (data, token, url) => {
     console.log(res.json());
   }).catch((err) => {
 
+  })
+}
+let Alerta = (text, icon = 'success') => {
+  const Alerta = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  })
+  Alerta.fire({
+    icon: icon,
+    title: text
   })
 }
 
@@ -121,3 +132,17 @@ class EasyHTTP {
   }
 }
 
+productModal.addEventListener('hidden.bs.modal', e => {
+  document.querySelector('#my-loader').classList.remove('d-none')
+  document.querySelector('#response').classList.remove('d-block')
+  document.querySelector('#response').classList.add('d-none')
+  console.log('se hizo el evento')
+  limpiarModal()
+})
+
+let llenarModal = data => {
+
+  },
+  limpiarModal = () => {
+
+  }

@@ -2,12 +2,32 @@
 <div class="modal fade" id="product_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-light-success border-bottom-0">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detalles del producto</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" id="close-modal"
+                        aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                ...
+            <div class="modal-body bg-light-success">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-success" id="my-loader" style="width: 3rem; height: 3rem;"
+                         role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div class="response d-none" id="response">
+                    {#                    <p>....</p>#}
+                    <div class="card rounded-0 border-0 h-100">
+                        <img src="{{ first.image.url }}"
+                             class="card-img-top rounded-0 border-0" alt="...">
+                        <div class="card-body text-success bg-light-success text-center pb-0">
+                            <h5 class="card-title text-center truncate-2 mb-0">{{ first.name }}</h5>
+                            <p class="card-text truncate-1 mb-0">{{ first.price }} cup</p>
+                            <div class="truncate-2">
+                                {{ first.info_tag }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

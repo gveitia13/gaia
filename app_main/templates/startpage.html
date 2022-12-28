@@ -50,7 +50,8 @@
                                     <div class="card rounded-0 border-0">
                                         <a href="#">
                                             <img src="{{ prod.image.url }}" class="card-img-top rounded-0 border-0 algo"
-                                                 alt="..." name="{{ prod.id }}" data-bs-toggle="modal" data-bs-target="#product_modal">
+                                                 alt="..." name="{{ prod.id }}" data-bs-toggle="modal"
+                                                 data-bs-target="#product_modal">
                                         </a>
                                     </div>
                                 </div>
@@ -76,13 +77,13 @@
             <div class="col">
                 <a href="#" class="text-decoration-none">
                     <div class="card rounded-0 border-0 agrandar">
-                        <div class="card-header text-uppercase text-center fs-4 border-0
+                        <div class="card-header text-uppercase text-center fs-4 border-0 truncate-1
                         {% if forloop.first %} bg-success {% elif forloop.counter == 2 %} bg-orange
                          {% elif forloop.counter == 3 %} bg-warning {% elif forloop.last %} bg-semi-success
                          {% endif %} rounded-0 fw-bold text-white">
                             {{ category.name }}
                         </div>
-                        <img src="{{ category.get_image }}" class="card-img-bottom rounded-0" alt="...">
+                        <img src="{{ category.get_image }}" class="card-img-bottom rounded-0 img-category" alt="...">
                     </div>
                 </a>
             </div>
@@ -129,9 +130,12 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
+                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
+                                NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
+                        </button>
                         <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
-                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">VER
+                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
+                            <i class="mdi mdi-magnify-plus-outline"></i> VER
                         </button>
                     </div>
                 </div>
@@ -156,9 +160,12 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
+                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
+                                NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
+                        </button>
                         <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
-                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">VER
+                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
+                            <i class="mdi mdi-magnify-plus-outline"></i> VER
                         </button>
                     </div>
                 </div>
@@ -182,9 +189,12 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR</button>
+                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
+                                NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
+                        </button>
                         <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
-                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">VER
+                                data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
+                            <i class="mdi mdi-magnify-plus-outline"></i> VER
                         </button>
                     </div>
                 </div>
@@ -227,6 +237,7 @@
         </div>
     </div>{% endcomment %}
     {% include 'product_modal.html' %}
+    {% include 'loader.html' %}
 {% endblock %}
 {% block scripts %}
     {% csrf_token %}
@@ -238,9 +249,64 @@
           pk: this.name,
         }
         http.post(location.pathname, data, '{{ csrf_token }}')
-          .then(data => console.log(data))
-          .catch(err => console.log(err));
+          .then(data => {
+            console.log(data)
+            if (!data.hasOwnProperty('error')) {
+              console.log('no error')
+              document.querySelector('#my-loader').classList.add('d-none')
+              document.querySelector('#response').classList.add('d-block')
+              document.querySelector('#response').classList.remove('d-none')
+              llenarModal(data)
+              return false
+            } else {
+              console.log(data)
+              Swal.fire({
+                title: 'Error',
+                text: data['error'],
+                icon: 'error'
+              })
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            Swal.fire({
+              title: 'Error',
+              text: 'Hay un problema de conexión con el servidor.',
+              icon: 'error'
+            })
+          });
       }))
 
+      document.querySelectorAll('.add_to_cart').forEach(e => e.addEventListener('click', function () {
+        const http = new EasyHTTP;
+        const data = {
+          action: 'details',
+          pk: this.name,
+        }
+        http.post(location.pathname, data, '{{ csrf_token }}')
+          .then(data => {
+            console.log(data)
+            if (!data.hasOwnProperty('error')) {
+              console.log('no error')
+              Alerta(`${data['name']} fue añadido al carrito`, 'success')
+              return false
+            } else {
+              console.log(data)
+              Swal.fire({
+                title: 'Error',
+                text: data['error'],
+                icon: 'error'
+              })
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            Swal.fire({
+              title: 'Error',
+              text: 'Hay un problema de conexión con el servidor.',
+              icon: 'error'
+            })
+          });
+      }))
     </script>
 {% endblock %}
