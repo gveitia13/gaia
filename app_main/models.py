@@ -63,9 +63,9 @@ class Product(models.Model):
     is_important = models.BooleanField(default=True, verbose_name='Destacado')
     stock = models.IntegerField(verbose_name='Cantidad de inventario', default=1)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
-    # hidden fields
     # views = models.PositiveIntegerField(verbose_name='Vistos', default=1)
     sales = models.PositiveIntegerField(verbose_name='Ventas', default=0)
+    delivery_time = models.PositiveSmallIntegerField('Tiempo de entrega (días)')
 
     # stars = models.PositiveIntegerField(verbose_name='Estrellas (1-5)', default=1,
     #                                     validators=[MaxValueValidator(5), MinValueValidator(1)], )

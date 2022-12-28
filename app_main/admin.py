@@ -56,7 +56,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'img_link', 'price', 'info_tag', 'sales', 'is_active')
     fieldsets = [
         ('Datos Principales:', {
-            'fields': ('name', 'category', 'price', 'old_price', 'stock')
+            'fields': ('name', 'category', 'price', 'old_price', 'stock', 'delivery_time')
         }),
         ('Descripción:', {
             'fields': ('image', 'img_link', 'is_active', 'is_important', 'info', 'about')
