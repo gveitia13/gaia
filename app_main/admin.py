@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app_main.models import Category, GeneralData, Product, Banner
+from app_main.models import Category, GeneralData, Product, Banner, Suscriptor
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -93,3 +93,4 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(GeneralData, GeneralDataAdmin)
+admin.site.register(Suscriptor)

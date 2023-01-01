@@ -170,3 +170,10 @@ class Banner(models.Model):
 
 class Suscriptor(models.Model):
     email = models.EmailField('Correo', unique=True)
+
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        verbose_name = 'Suscriptor'
+        verbose_name_plural = 'Suscriptores'

@@ -3,11 +3,12 @@
     <div class="mx-auto py-3 w-75 px-md-5 px-0">
         <h1 class="text-center text-white text-uppercase display-5 fw-bold user-select-none">suscríbete</h1>
         <h2 class="text-white text-center ">Entérate de todas nuestras novedades y ofertas</h2>
-        <form action="" method="post">
+        <form action="" method="post" id="suscriptor-form">
             {% csrf_token %}
+            <input type="hidden" name="action" value="suscriptor">
             <div class="input-group mb-3">
-                <input type="email" class="form-control rounded-0" placeholder="Escriba su correo"
-                       aria-label="Recipient's username" required aria-describedby="button-addon2">
+                <input type="email" name="email" class="form-control rounded-0" placeholder="Escriba su correo"
+                       aria-label="Recipient's username" required aria-describedby="button-addon2" id="suscriptor-email">
                 <button class="btn bg-orange rounded-0" type="submit" id="button-addon2"><i
                         class="mdi mdi-arrow-right-bold"></i>
                 </button>

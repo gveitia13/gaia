@@ -273,6 +273,38 @@
     <script src="{% static 'lib/button_add_to_cart/script.js' %}"></script>
     {% csrf_token %}
     <script>
+      document.querySelector('#suscriptor-form').addEventListener('submit', function (e) {
+        e.preventDefault()
+        let data = {
+          email: document.querySelector('#suscriptor-email').value
+        }
+        const http = new EasyHTTP
+        http.post('suscriptor_create/', data, '{{ csrf_token }}')
+          .then(data => {
+            console.log(data)
+            if (!data.hasOwnProperty('error')) {
+              Alerta(`Suscripción creada`)
+              {#location.replace(data['url'])#}
+              location.reload()
+            } else {
+              console.log(data)
+              Swal.fire({
+                title: 'Error',
+                text: data['error'],
+                icon: 'error'
+              })
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            Swal.fire({
+              title: 'Error',
+              text: 'Hay un problema de conexión con el servidor.',
+              icon: 'error'
+            })
+          });
+      })
+
       document.querySelectorAll('[data-bs-toggle="modal"]').forEach(e => e.addEventListener('click', function () {
         const http = new EasyHTTP;
         const data = {

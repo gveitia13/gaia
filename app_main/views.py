@@ -1,12 +1,13 @@
 import json
 
+from django.forms import model_to_dict
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import generic, View
 from django.views.decorators.csrf import csrf_exempt
 
-from app_main.models import Product, Category, GeneralData, Banner
+from app_main.models import Product, Category, GeneralData, Banner, Suscriptor
 from gaia import settings
 
 
@@ -59,3 +60,16 @@ class StartPage(BaseView, generic.TemplateView):
             data['error'] = str(e)
             return JsonResponse(data, )
         return JsonResponse(data, )
+
+
+def create_suscriptor(request: HttpRequest, *args, **kwargs: dict):
+    data = {}
+    body = json.loads(request.body)
+    try:
+        suscriptor = Suscriptor(email=body['email'])
+        suscriptor.save()
+        data = model_to_dict(suscriptor)
+        data['url'] = request.path
+    except Exception as e:
+        data['error'] = f'Ya existe un suscriptor con el correo {body["email"]}'
+    return JsonResponse(data=data, safe=False)
