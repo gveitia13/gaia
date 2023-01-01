@@ -160,3 +160,12 @@ button.text-semi-success:hover {
 .div-card-product div.card img, .img-category {
     height: 30vh !important;
 }
+
+.imgProdDetails {
+    width: 100%;
+    height: 300px;
+    background-size: contain !important;
+    background-position: center !important;
+    position: relative;
+    background-repeat: no-repeat !important;
+}

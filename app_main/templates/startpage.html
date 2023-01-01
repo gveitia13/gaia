@@ -1,6 +1,9 @@
 {% extends 'body.html' %}
 {% load widget_tweaks %}
 {% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'lib/button_add_to_cart/style.css' %}">
+{% endblock %}
 {% block content %}
     <div>
         <nav class="row align-items-end user-select-none">
@@ -130,9 +133,18 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
+                        {% comment %}                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
                                 NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
-                        </button>
+                        </button>{% endcomment %}
+                        <Button Class="Button add_to_cart btn-success btn btn-success" name="{{ prod.id }}">
+                            <Span>COMPRAR</Span>
+                            <div Class="Cart">
+                                <Svg ViewBox="0 0 36 26">
+                                    <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>
+                                    <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>
+                                </Svg>
+                            </div>
+                        </Button>
                         <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
                                 data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
                             <i class="mdi mdi-magnify-plus-outline"></i> VER
@@ -160,9 +172,18 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
+                        {% comment %}                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
                                 NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
-                        </button>
+                        </button>{% endcomment %}
+                        <Button Class="Button add_to_cart btn-success btn btn-success" name="{{ prod.id }}">
+                            <Span>COMPRAR</Span>
+                            <div Class="Cart">
+                                <Svg ViewBox="0 0 36 26">
+                                    <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>
+                                    <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>
+                                </Svg>
+                            </div>
+                        </Button>
                         <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
                                 data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
                             <i class="mdi mdi-magnify-plus-outline"></i> VER
@@ -189,9 +210,18 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
+                        {% comment %}                       <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
                                 NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
-                        </button>
+                        </button>{% endcomment %}
+                        <Button Class="Button add_to_cart btn-success btn btn-success" name="{{ prod.id }}">
+                            <Span>COMPRAR</Span>
+                            <div Class="Cart">
+                                <Svg ViewBox="0 0 36 26">
+                                    <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>
+                                    <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>
+                                </Svg>
+                            </div>
+                        </Button>
                         <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
                                 data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
                             <i class="mdi mdi-magnify-plus-outline"></i> VER
@@ -240,6 +270,7 @@
     {% include 'loader.html' %}
 {% endblock %}
 {% block scripts %}
+    <script src="{% static 'lib/button_add_to_cart/script.js' %}"></script>
     {% csrf_token %}
     <script>
       document.querySelectorAll('[data-bs-toggle="modal"]').forEach(e => e.addEventListener('click', function () {

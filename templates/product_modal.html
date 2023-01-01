@@ -16,15 +16,18 @@
                 </div>
                 <div class="response d-none" id="response">
                     {#                    <p>....</p>#}
+                    <div class="img-fluid imgProdDetails" id="img-modal"
+                         style="background: url('{{ first.image.url }}')"></div>
                     <div class="card rounded-0 border-0 h-100">
-                        <img src="{{ first.image.url }}"
-                             class="card-img-top rounded-0 border-0" alt="...">
-                        <div class="card-body text-success bg-light-success text-center pb-0">
-                            <h5 class="card-title text-center truncate-2 mb-0">{{ first.name }}</h5>
-                            <p class="card-text truncate-1 mb-0">{{ first.price }} cup</p>
-                            <div class="truncate-2">
-                                {{ first.info_tag }}
-                            </div>
+                        {% comment %}               <img src="{{ first.image.url }}" id="img-modal"
+                             class="card-img-top rounded-0 border-0" alt="...">{% endcomment %}
+                        <div class="card-body text-success bg-light-success pb-0">
+                            <h5 class="card-title text-center mb-0" id="name-modal">{{ first.name }}</h5>
+                            <p class="card-text mb-0" id="cat-modal">{{ first.price }}</p>
+                            <p class="card-text mb-0 fw-bold" id="price-modal">{{ first.price }} cup</p>
+                            <p class="card-text mb-0" id="delivery-modal"></p>
+                            <div class="card-text mb-0" id="info-modal"></div>
+                            <div class="card-text mb-0" id="about-modal"></div>
                         </div>
                     </div>
                 </div>

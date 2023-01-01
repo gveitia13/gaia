@@ -1,0 +1,24 @@
+.C-Go-Top {
+    Background: None Repeat Scroll 0 0 Padding-Box #1099dd;
+    Bottom: 20px;
+    Border: 1px Solid #1099dd;
+    Border-Radius: 50rem;
+    Color: #Eee;
+    Display: None;
+    Font-Size: 20px;
+    Opacity: 0.8;
+    Padding: 5px;
+    Position: Fixed;
+    left: 1%;
+    Text-Decoration: None;
+    Z-Index: 999;
+}
+
+.C-Go-Top:hover,
+.C-Go-Top:focus,
+.C-Go-Top:active,
+.C-Go-Top:visited {
+    Color: #Fff;
+    Outline: 0;
+    Text-Decoration: None;
+}

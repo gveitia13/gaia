@@ -166,3 +166,7 @@ class GeneralData(models.Model):
 class Banner(models.Model):
     gnd = models.ForeignKey(GeneralData, on_delete=models.CASCADE)
     banner = models.ImageField(upload_to='datos_generales/banner', verbose_name='Banner', null=True)
+
+
+class Suscriptor(models.Model):
+    email = models.EmailField('Correo', unique=True)

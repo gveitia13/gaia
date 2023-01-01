@@ -141,8 +141,22 @@ productModal.addEventListener('hidden.bs.modal', e => {
 })
 
 let llenarModal = data => {
-
+    // document.querySelector('#img-modal').src = data.image
+    document.querySelector('#img-modal').style = `background: url('${data.image}')`
+    document.querySelector('#name-modal').innerHTML = data.name
+    document.querySelector('#cat-modal').innerHTML = data.category.name
+    document.querySelector('#price-modal').innerHTML = data.price + ' cup'
+    document.querySelector('#delivery-modal').innerHTML = 'Tiempo de entrega máximo <b>'
+      + data.delivery_time + ' días</b>'
+    document.querySelector('#info-modal').innerHTML = data.info
+    document.querySelector('#about-modal').innerHTML = data.about
   },
   limpiarModal = () => {
-
+    document.querySelector('#img-modal').src = ''
+    document.querySelector('#name-modal').innerHTML = ''
+    document.querySelector('#cat-modal').innerHTML = ''
+    document.querySelector('#price-modal').innerHTML = ''
+    document.querySelector('#delivery-modal').innerHTML = ''
+    document.querySelector('#info-modal').innerHTML = ''
+    document.querySelector('#about-modal').innerHTML = ''
   }
