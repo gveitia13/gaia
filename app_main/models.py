@@ -85,6 +85,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
+        ordering = ('category',)
 
     def info_tag(self):
         return mark_safe(self.info)

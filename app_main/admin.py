@@ -53,7 +53,7 @@ class ProductInline(admin.StackedInline):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'img_link', 'price', 'info_tag', 'sales', 'is_active')
+    list_display = ('name', 'category', 'img_link', 'price', 'info_tag', 'sales', 'stock', 'is_active')
     fieldsets = [
         ('Datos Principales:', {
             'fields': ('name', 'category', 'price', 'old_price', 'stock', 'delivery_time')

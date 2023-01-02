@@ -150,6 +150,7 @@ let llenarModal = data => {
       + data.delivery_time + ' días</b>'
     document.querySelector('#info-modal').innerHTML = data.info
     document.querySelector('#about-modal').innerHTML = data.about
+    $("#input-touchspin").val(1).trigger("touchspin.updatesettings", {max: parseInt(data.stock)});
   },
   limpiarModal = () => {
     document.querySelector('#img-modal').src = ''

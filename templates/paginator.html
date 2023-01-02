@@ -1,0 +1,29 @@
+<div class="text-end">
+  <span>
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-success btn-sm rounded-pill"><i
+                class="mdi mdi-step-backward"></i></a>
+    {% else %}
+        <a class="btn btn-outline-success btn-sm rounded-pill"><i
+                class="mdi mdi-step-backward"></i></a>
+    {% endif %}
+
+      {% for i in page_obj.paginator.page_range %}
+          {% if page_obj.number == i %}
+              <a href="#" class="btn btn-success btn-sm rounded-pill">&nbsp;{{ i }}&nbsp;</a>
+          {% else %}
+              <a href="?page={{ i }}" class="btn btn-outline-success btn-sm rounded-pill">&nbsp;{{ i }}&nbsp;</a>
+          {% endif %}
+      {% endfor %}
+
+      {#      <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.</span>#}
+
+      {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-success btn-sm rounded-pill"><i
+                  class="mdi mdi-step-forward"></i></a>
+      {% else %}
+          <a class="btn btn-outline-success btn-sm rounded-pill"><i
+                  class="mdi mdi-step-forward"></i></a>
+      {% endif %}
+  </span>
+</div>

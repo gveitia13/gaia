@@ -169,3 +169,15 @@ button.text-semi-success:hover {
     position: relative;
     background-repeat: no-repeat !important;
 }
+.btn-up{
+    border-radius: 50rem 0 0 50rem;
+}
+.btn-down{
+    border-radius: 0 50rem 50rem 0;
+}
+.bootstrap-touchspin-injected{
+    width: auto;
+}
+#input-touchspin{
+    width: 80px;
+}

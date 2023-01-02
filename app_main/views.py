@@ -12,7 +12,7 @@ from gaia import settings
 
 
 class BaseView(View):
-    def get_context_data(self, **kwargs):
+    def get_my_context_data(self, **kwargs):
         return {
             'icon': settings.BUSINESS_LOGO_PATH,
             'title': settings.BUSINESS_NAME,
@@ -22,11 +22,14 @@ class BaseView(View):
         }
 
 
-class StartPage(BaseView, generic.TemplateView):
+class StartPage(BaseView, generic.ListView, ):
     template_name = 'startpage.html'
+    queryset = Product.objects.filter(is_active=True)
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(StartPage, self).get_context_data()
+        context.update(self.get_my_context_data())
         gnd = GeneralData.objects.first() if GeneralData.objects.exists() else None
         context['products4'] = Product.objects.filter(is_active=True)[:4]
         context['categories'] = sorted(Category.objects.all(), key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
@@ -36,7 +39,7 @@ class StartPage(BaseView, generic.TemplateView):
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             settings.STATIC_URL / settings.BUSINESS_BANNER]
-        context['first'] = Product.objects.last()
+        # context['products'] = Product.objects.filter(is_active=True)
         return context
 
     # @method_decorator(csrf_exempt)

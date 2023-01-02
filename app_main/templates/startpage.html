@@ -3,6 +3,7 @@
 {% load static %}
 {% block head %}
     <link rel="stylesheet" href="{% static 'lib/button_add_to_cart/style.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css' %}">
 {% endblock %}
 {% block content %}
     <div>
@@ -64,7 +65,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-                ...
+               {% include 'table_products.html' %}
             </div>
             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
                 ...
@@ -175,7 +176,7 @@
                         {% comment %}                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
                                 NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
                         </button>{% endcomment %}
-                        <Button Class="Button add_to_cart btn-success btn btn-success" name="{{ prod.id }}">
+                        <Button Class="Button add_to_cart btn btn-success" name="{{ prod.id }}">
                             <Span>COMPRAR</Span>
                             <div Class="Cart">
                                 <Svg ViewBox="0 0 36 26">
@@ -213,7 +214,7 @@
                         {% comment %}                       <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
                                 NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
                         </button>{% endcomment %}
-                        <Button Class="Button add_to_cart btn-success btn btn-success" name="{{ prod.id }}">
+                        <Button Class="Button add_to_cart  btn btn-success" name="{{ prod.id }}">
                             <Span>COMPRAR</Span>
                             <div Class="Cart">
                                 <Svg ViewBox="0 0 36 26">
@@ -271,7 +272,19 @@
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'lib/button_add_to_cart/script.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
     {% csrf_token %}
+    <script>
+      $("#input-touchspin").TouchSpin({
+        min: 1,
+        max: 10,
+        step: 1,
+        maxboostedstep: 10,
+        buttondown_class: 'btn btn-success bg-semi-success btn-up border-0',
+        buttonup_class: 'btn btn-success bg-semi-success btn-down border-0',
+        buttondown_txt: ' - '
+      });
+    </script>
     <script>
       document.querySelector('#suscriptor-form').addEventListener('submit', function (e) {
         e.preventDefault()

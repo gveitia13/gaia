@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body %}
-    <script>window.rwbp = {email: 'gveitia95@gmail.com', phone: '+5358496023', message: 'Hola', lang: 'es'}</script>
+    <script>
+      window.rwbp = {
+        email: '{{ business.email }}',
+        phone: '{{ business.phone_number }}',
+        message: 'Hola',
+        lang: 'es'
+      }
+    </script>
     <script defer async src='https://duz4dqsaqembt.cloudfront.net/client/whats.js'></script>
     <body class="">
     <A Href="#" Id="C-Go-Top" Class="C-Go-Top">
