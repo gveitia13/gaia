@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import generic, View
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from app_main.models import Product, Category, GeneralData, Banner, Suscriptor
 from gaia import settings
@@ -65,6 +66,7 @@ class StartPage(BaseView, generic.ListView, ):
         return JsonResponse(data, )
 
 
+@require_POST
 def create_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     data = {}
     body = json.loads(request.body)

@@ -199,3 +199,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = reverse_lazy('admin:login')
 
 LOGIN_URL = reverse_lazy('admin:login')
+
+CART_SESSION_ID = "cart"
+
+SESSION_COOKIE_AGE = 7200

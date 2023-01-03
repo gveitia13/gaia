@@ -2,6 +2,7 @@
     <thead>
     <tr>
         <th scope="col">Nombre</th>
+        <th scope="col">Imagen</th>
         <th scope="col">Categoría</th>
         <th class="text-center" scope="col">Tiempo de entrega</th>
         <th class="text-center" scope="col">Precio</th>
@@ -10,8 +11,9 @@
     </thead>
     <tbody class="table-group-divider">
     {% for product in object_list %}
-        <tr>
+        <tr class="" style="vertical-align: middle">
             <th scope="row">{{ product.name }}</th>
+            <td><img src="{{ product.get_image }}" alt="image" height="45" width="45" class="rounded-pill"></td>
             <td>{{ product.category }}</td>
             <td class="text-center">{{ product.delivery_time }} días</td>
             <td class="text-center">{{ product.price }} CUP</td>
