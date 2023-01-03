@@ -8,6 +8,7 @@ from gaia import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app_main.urls')),
+    path('', include('app_cart.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()

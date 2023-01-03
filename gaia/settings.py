@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app_main',
+    'app_cart',
     'ckeditor',
     'corsheaders',
     'widget_tweaks',
