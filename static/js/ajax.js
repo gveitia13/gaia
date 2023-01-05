@@ -36,64 +36,113 @@ function ajaxFunction(url, parameters, type, callback, async = true) {
 
 //For Delete using jQuery confirm plugin and Jquery with ajax
 let submit_with_ajax_alert = function (url, title, content, parameters, callback, icon) {
-  $.confirm({
-    theme: 'material',
-    title: title,
-    icon: icon,
-    content: content,
-    columnClass: 'small',
-    typeAnimated: true,
-    cancelButtonClass: 'bg-gradient-primary circular',
-    draggable: true,
-    dragWindowBorder: false,
-    buttons: {
-      info: {
-        text: 'Si',
-        btnClass: 'rounded-pill btn btn-secondary',
-        action: function () {
-          ajaxFunction(url, parameters, 'POST', callback, true)
-        }
-      },
-      danger: {
-        text: 'No',
-        btnClass: 'rounded-pill btn btn-primary',
-        action: () => {
+    $.confirm({
+      theme: 'material',
+      title: title,
+      icon: icon,
+      content: content,
+      columnClass: 'small',
+      typeAnimated: true,
+      cancelButtonClass: 'bg-gradient-primary circular',
+      draggable: true,
+      dragWindowBorder: false,
+      buttons: {
+        info: {
+          text: 'Si',
+          btnClass: 'rounded-pill btn btn-secondary',
+          action: function () {
+            ajaxFunction(url, parameters, 'POST', callback, true)
+          }
+        },
+        danger: {
+          text: 'No',
+          btnClass: 'rounded-pill btn btn-primary',
+          action: () => {
+          }
         }
       }
+    })
+  },
+  fetchFunction = (data, token, url) => {
+    // let data = JSON.stringify(data)
+    console.log(data)
+    let headers = {
+      "X-CSRFToken": token,
+      'Content-Type': 'application/json',
+      // pk: '{{ object.pk }}'
     }
-  })
-}
-let fetchFunction = (data, token, url) => {
-  // let data = JSON.stringify(data)
-  console.log(data)
-  let headers = {
-    "X-CSRFToken": token,
-    'Content-Type': 'application/json',
-    // pk: '{{ object.pk }}'
-  }
-  fetch(url, {
-    method: "POST",
-    body: data,
-    headers: headers
-  }).then((res, reject) => {
-    console.log(res);
-    console.log(res.json());
-  }).catch((err) => {
+    fetch(url, {
+      method: "POST",
+      body: data,
+      headers: headers
+    }).then((res, reject) => {
+      console.log(res);
+      console.log(res.json());
+    }).catch((err) => {
 
-  })
-}
-let Alerta = (text, icon = 'success') => {
-  const Alerta = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000
-  })
-  Alerta.fire({
-    icon: icon,
-    title: text
-  })
-}
+    })
+  },
+  Alerta = (text, icon = 'success') => {
+    const Alerta = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    })
+    Alerta.fire({
+      icon: icon,
+      title: text
+    })
+  },
+  alert_action_yes_not = (title, content, callback, icon) => {
+    $.confirm({
+      theme: 'material',
+      title: title,
+      icon: icon,
+      content: content,
+      columnClass: 'small',
+      typeAnimated: true,
+      cancelButtonClass: 'btn-success rounded-pill',
+      draggable: true,
+      dragWindowBorder: false,
+      buttons: {
+        info: {
+          text: 'Si',
+          btnClass: 'btn-danger rounded-pill',
+          action: function () {
+            callback()
+          }
+        },
+        danger: {
+          text: 'No',
+          btnClass: 'btn-success rounded-pill',
+          action: () => {
+          }
+        }
+      }
+    })
+  },
+  llenarModal = data => {
+    // document.querySelector('#img-modal').src = data.image
+    document.querySelector('#img-modal').style = `background: url('${data.image}')`
+    document.querySelector('#name-modal').innerHTML = data.name
+    document.querySelector('#cat-modal').innerHTML = data.category.name
+    document.querySelector('#price-modal').innerHTML = data.price + ' cup'
+    document.querySelector('#delivery-modal').innerHTML = 'Tiempo de entrega máximo <b>'
+      + data.delivery_time + ' días</b>'
+    document.querySelector('#info-modal').innerHTML = data.info
+    document.querySelector('#about-modal').innerHTML = data.about
+    $("#input-touchspin").val(1).trigger("touchspin.updatesettings", {max: parseInt(data.stock)});
+  },
+  limpiarModal = () => {
+    document.querySelector('#img-modal').src = ''
+    document.querySelector('#name-modal').innerHTML = ''
+    document.querySelector('#cat-modal').innerHTML = ''
+    document.querySelector('#price-modal').innerHTML = ''
+    document.querySelector('#delivery-modal').innerHTML = ''
+    document.querySelector('#info-modal').innerHTML = ''
+    document.querySelector('#about-modal').innerHTML = ''
+  }
 
 class EasyHTTP {
 
@@ -139,25 +188,3 @@ productModal.addEventListener('hidden.bs.modal', e => {
   console.log('se hizo el evento')
   limpiarModal()
 })
-
-let llenarModal = data => {
-    // document.querySelector('#img-modal').src = data.image
-    document.querySelector('#img-modal').style = `background: url('${data.image}')`
-    document.querySelector('#name-modal').innerHTML = data.name
-    document.querySelector('#cat-modal').innerHTML = data.category.name
-    document.querySelector('#price-modal').innerHTML = data.price + ' cup'
-    document.querySelector('#delivery-modal').innerHTML = 'Tiempo de entrega máximo <b>'
-      + data.delivery_time + ' días</b>'
-    document.querySelector('#info-modal').innerHTML = data.info
-    document.querySelector('#about-modal').innerHTML = data.about
-    $("#input-touchspin").val(1).trigger("touchspin.updatesettings", {max: parseInt(data.stock)});
-  },
-  limpiarModal = () => {
-    document.querySelector('#img-modal').src = ''
-    document.querySelector('#name-modal').innerHTML = ''
-    document.querySelector('#cat-modal').innerHTML = ''
-    document.querySelector('#price-modal').innerHTML = ''
-    document.querySelector('#delivery-modal').innerHTML = ''
-    document.querySelector('#info-modal').innerHTML = ''
-    document.querySelector('#about-modal').innerHTML = ''
-  }

@@ -8,18 +8,26 @@ from django.views import generic, View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from app_cart.cart import Cart
 from app_main.models import Product, Category, GeneralData, Banner, Suscriptor
 from gaia import settings
 
 
 class BaseView(View):
     def get_my_context_data(self, **kwargs):
+        cart = Cart(self.request)
+        print('products_in_cart', json.dumps(cart.all(), indent=3))
+        print('products_in_cart', cart.all())
+        c_x_p = len(cart.all())
+        print(c_x_p)
         return {
             'icon': settings.BUSINESS_LOGO_PATH,
             'title': settings.BUSINESS_NAME,
             'logo': settings.BUSINESS_NAME_IMG_PATH,
             'banner': settings.BUSINESS_BANNER,
-            'business': GeneralData.objects.first() if GeneralData.objects.exists() else {}
+            'business': GeneralData.objects.first() if GeneralData.objects.exists() else {},
+            'products_in_cart': cart.all(),
+            'total_price': ''
         }
 
 

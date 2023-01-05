@@ -12,10 +12,12 @@ from gaia.settings import CART_SESSION_ID
 # @method_decorator(csrf_exempt, require_POST)
 def add(request: HttpRequest, id: int):
     cart = Cart(request)
-    print(str(cart))
     cart.add(product=Product.objects.filter(id=id).first())
+    # print(str(cart))
+    for i in cart.all():
+        print(i)
     return JsonResponse({
-        'product': f'{id} {Product.objects.get(id=id).name}',
+        'product': Product.objects.get(id=id).toJSON(),
         "result": "ok",
         "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": 0})["quantity"]
     })
@@ -38,7 +40,7 @@ def item_clear(request: HttpRequest, id: int):
     cart = Cart(request)
     cart.remove(product=Product.objects.filter(id=id).first())
     return JsonResponse({
-        'product': f'{id} {Product.objects.get(id=id).name}',
+        'product': Product.objects.get(id=id).toJSON(),
         "result": "ok",
         "amount": cart.get_sum_of("quantity")
     })
@@ -57,7 +59,7 @@ def update_quant(request: HttpRequest, id: int, value: int):
     cart.update_quant(product=product, value=value)
     return JsonResponse({
         "result": "ok",
-        'product': f'{id} {product.name}',
+        'product': product.toJSON(),
         "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": value})["quantity"],
         'price': f'{product.price}'
     })
@@ -95,6 +97,6 @@ def add_quant(request: HttpRequest, id: int, quantity: int):
     cart = Cart(request)
     cart.add(Product.objects.filter(id=id).first(), quantity)
     return JsonResponse({"result": "ok",
-                         'product': f'{id} {Product.objects.get(id=id).name}',
+                         'product':Product.objects.get(id=id).toJSON(),
                          "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": quantity})["quantity"]
                          })

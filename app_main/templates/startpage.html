@@ -1,8 +1,10 @@
 {% extends 'body.html' %}
+{% load cart_tag %}
 {% load widget_tweaks %}
 {% load static %}
 {% block head %}
     <link rel="stylesheet" href="{% static 'lib/button_add_to_cart/style.css' %}">
+    {#    <link rel="stylesheet" href="{% static 'lib/magnifer-js/magnifier.css' %}">#}
     <link rel="stylesheet" href="{% static 'lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css' %}">
 {% endblock %}
 {% block content %}
@@ -27,7 +29,9 @@
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">MI CARRITO
                 </button>
                 <div class="ms-auto">
-                    <button class="btn btn-outline-success btn-sm rounded-pill">$0.00 / 0 items</button>
+                    <button class="btn btn-outline-success btn-sm rounded-pill" id="botoncito-verde">$0.00
+                        / {{ products_in_cart|length }} productos
+                    </button>
                     <button class="btn btn-outline-success btn-sm rounded-pill"><i class="mdi mdi-heart"></i></button>
                 </div>
             </div>
@@ -65,14 +69,60 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-               {% include 'table_products.html' %}
+                {% include 'table_products.html' %}
             </div>
             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
-                ...
+                <div class="container-fluid py-2 px-lg-4">
+                    <h4 class="d-inline-block ps-2">Carrito de compra</h4>
+                    <span class="d-inline-block float-end pe-3 ">Precio</span>
+                    <hr class="mt-0">
+                    <div class="cards-horizontal">
+                        {% csrf_token %}
+                        {% for p in products_in_cart %}
+                            <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
+                                <div class="row no-gutters">
+                                    <input type="hidden" value="{{ p.product.price | multiply:p.quantity }}">
+                                    <div class="col-sm-2 col-3 my-auto">
+                                        <img class="card-img rounded-0" src="{{ p.product.image }}"
+                                             alt="Suresh Dasari Card">
+                                    </div>
+                                    <div class="col-sm-8 col-7">
+                                        <div class="card-body pe-0 px-sm-3 ps-0 pt-1">
+                                            <h5 class="text-truncate">{{ p.product.name }}</h5>
+                                            <span class="card-title truncate-2">{{ p.product.info|safe }}</span>
+                                            <input type="number" min="1"
+                                                   class="form-control d-inline-block text-center form-control-sm input-cantidad"
+                                                   placeholder="cantidad" value="{{ p.quantity }}"
+                                                   style="width: 85px" id="p{{ p.product.id }}">
+                                            <button class="btn btn-danger btn-sm btn-delete rounded-sm"
+                                                    id="{{ p.product.name }}" name="{{ p.product.id }}">
+                                                <i class="mdi mdi-trash-can-outline"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 col-2">
+                                    <span class="float-end pe-2 pt-1 span-price text-nowrap">
+                                        <b>$ <span>{{ p.product.price | multiply:p.quantity }}</span></b></span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="row">
+                            <div class="col-12 col-sm-6">
+                                <form action="" method="post" name="clear-cart">
+                                    {% csrf_token %}
+                                    <button class="btn btn-danger rounded-pill"><i class="mdi-cart-remove mdi"></i> Limpiar carrito
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-12 col-sm-6 text-end">
+                                <span class="fs-4 pe-1" id="total-price"><b>Total</b> (2 items): <b>$29.97</b></span>
+                            </div>
+                        </div>
+                        <input type="hidden" value="0" id="total-hidden">
+                    </div>
+                </div>
             </div>
-            {% comment %}        <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">
-            ...
-        </div>{% endcomment %}
         </div>
     </div>
     <br>
@@ -96,10 +146,6 @@
     <br>
     <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con
         nosotros?</h1>
-    {% comment %}    <div class="card text-bg-dark rounded-0 border-0">
-        <img src="{% if business.banner %} {{ business.banner.url }} {% else %}{% static banner %} {% endif %}"
-             class="card-img rounded-0 border-0" alt="Banner">
-    </div>{% endcomment %}
     {% include 'carousel.html' %}
     <br>
     <div class="row row-cols-1 row-cols-sm-3 g-4">
@@ -134,9 +180,6 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        {% comment %}                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
-                                NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
-                        </button>{% endcomment %}
                         <Button Class="Button add_to_cart btn-success btn btn-success" name="{{ prod.id }}">
                             <Span>COMPRAR</Span>
                             <div Class="Cart">
@@ -173,9 +216,6 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        {% comment %}                        <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
-                                NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
-                        </button>{% endcomment %}
                         <Button Class="Button add_to_cart btn btn-success" name="{{ prod.id }}">
                             <Span>COMPRAR</Span>
                             <div Class="Cart">
@@ -211,9 +251,6 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        {% comment %}                       <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill add_to_cart"
-                                NAME="{{ prod.id }}"><i class="mdi mdi-cart-plus"></i> COMPRAR
-                        </button>{% endcomment %}
                         <Button Class="Button add_to_cart  btn btn-success" name="{{ prod.id }}">
                             <Span>COMPRAR</Span>
                             <div Class="Cart">
@@ -233,48 +270,17 @@
         {% endfor %}
     </div>
     <br>
-    {% comment %}    <style>
-        .div-card-product .card {
-            min-width: 250px;
-            margin-right: 15px;
-        }
-    </style>
-    <div class="container-fluid py-2">
-        <h2 class="font-weight-light">Bootstrap 5 Horizontal Scrolling Cards with Flexbox</h2>
-
-        <div class="d-flex flex-row flex-nowrap overflow-auto div-card-product">
-            {% for prod in products_nuevos %}
-                <div class="col">
-                    <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
-                        <a href="{{ prod.image.url }}"><img src="{{ prod.image.url }}"
-                                                            class="card-img-top rounded-0 border-0" alt="..."></a>
-                        <div class="card-body text-success bg-light-success text-center pb-0">
-                            <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
-                            <p class="card-text truncate-1 mb-0">{{ prod.price }} cup</p>
-                            <div class="truncate-2">
-                                {{ prod.info_tag }}
-                            </div>
-                        </div>
-                        <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                            <button class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill">COMPRAR
-                            </button>
-                            <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
-                                    data-bs-toggle="modal" data-bs-target="#product_modal">VER
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>{% endcomment %}
     {% include 'product_modal.html' %}
     {% include 'loader.html' %}
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'lib/button_add_to_cart/script.js' %}"></script>
+    {#    <script src="{% static 'lib/magnifer-js/Event.js' %}"></script>#}
+    {#    <script src="{% static 'lib/magnifer-js/Magnifier.js' %}"></script>#}
     <script src="{% static 'lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
     {% csrf_token %}
     <script>
+      //Iniciar el touch spin
       $("#input-touchspin").TouchSpin({
         min: 1,
         max: 10,
@@ -286,6 +292,24 @@
       });
     </script>
     <script>
+      let cant = 0
+      const d = document
+      d.querySelectorAll('.input-cantidad').forEach(e => cant++)
+      let product = cant === 1 ? `producto` : 'productos',
+        total = 0
+
+      d.querySelectorAll('.card-s-cart div div > span.span-price b').forEach(e =>
+        total += parseFloat(e.children[0].innerText.replace(',', '.')))
+      console.log(total)
+      d.querySelector('#total-hidden').value = total
+
+      d.querySelector('#total-price').innerHTML =
+        `<b>Total</b>: (${cant} ${product}) <b>$${total.toFixed(2)}</b>`
+
+      d.querySelector('#botoncito-verde').innerHTML = `$ ${total.toFixed(2)} / ${cant} ${product}`
+    </script>
+    <script>
+      //Crear suscriptor
       document.querySelector('#suscriptor-form').addEventListener('submit', function (e) {
         e.preventDefault()
         let data = {
@@ -318,6 +342,7 @@
           });
       })
 
+      //Abrir el modal
       document.querySelectorAll('[data-bs-toggle="modal"]').forEach(e => e.addEventListener('click', function () {
         const http = new EasyHTTP;
         const data = {
@@ -353,18 +378,19 @@
           });
       }))
 
+      //Annadir al carro
       document.querySelectorAll('.add_to_cart').forEach(e => e.addEventListener('click', function () {
         const http = new EasyHTTP;
         const data = {
           action: 'details',
           pk: this.name,
         }
-        http.post(location.pathname, data, '{{ csrf_token }}')
+        http.post(`cart/add/${this.name}/`, data, '{{ csrf_token }}')
           .then(data => {
             console.log(data)
             if (!data.hasOwnProperty('error')) {
               console.log('no error')
-              Alerta(`${data['name']} fue añadido al carrito`, 'success')
+              Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
               return false
             } else {
               console.log(data)
@@ -384,5 +410,62 @@
             })
           });
       }))
+
+      //Eliminar del carro
+      document.querySelectorAll('.btn-delete').forEach(e => e.addEventListener('click', function () {
+        alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar el producto <b>${this.id}</b> del carrito?`,
+          () => {
+            const http = new EasyHTTP;
+            http.post(`cart/clear/${this.name}/`, {}, '{{ csrf_token }}')
+              .then(data => {
+                console.log(data)
+                if (!data.hasOwnProperty('error')) {
+                  location.reload()
+                } else {
+                  console.log(data)
+                  Swal.fire({
+                    title: 'Error',
+                    text: data['error'],
+                    icon: 'error'
+                  })
+                }
+              }).catch(err => {
+              console.error(err)
+              Swal.fire({
+                title: 'Error',
+                text: 'Hay un problema de conexión con el servidor.',
+                icon: 'error'
+              })
+            });
+          }, 'text-danger mdi mdi-cart-minus')
+      }))
+
+      //Limpiar carrito
+      document.querySelector('form[name=clear-cart]').addEventListener('submit', function (e) {
+        e.preventDefault()
+        alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
+          const http = new EasyHTTP
+          http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
+            console.log(data)
+            if (!data.hasOwnProperty('error')) {
+              location.reload()
+            } else {
+              console.log(data)
+              Swal.fire({
+                title: 'Error',
+                text: data['error'],
+                icon: 'error'
+              })
+            }
+          }).catch(err => {
+            console.error(err)
+            Swal.fire({
+              title: 'Error',
+              text: 'Hay un problema de conexión con el servidor.',
+              icon: 'error'
+            })
+          });
+        }, 'text-danger mdi mdi-cart-minus')
+      })
     </script>
 {% endblock %}

@@ -79,6 +79,8 @@ class Product(models.Model):
         item['image'] = self.get_image()
         item['info'] = self.info_tag()
         item['about'] = self.about_tag()
+        item['price'] = float(self.price)
+        item['old_price'] = float(self.old_price) if self.old_price else ''
         item['date_updated'] = self.date_updated.strftime('%d-%m-%Y')
         return item
 

@@ -2,7 +2,7 @@ import json
 from django.conf import settings
 from django.shortcuts import redirect
 
-from app_sale.models import Product
+from app_main.models import Product
 
 
 class Wrapper(dict):
@@ -32,7 +32,7 @@ class Cart(object):
                 'user_id': self.request.user.id,
                 # "product": Wrapper(product),
                 'product': product.toJSON(),
-                'quantity': quantity
+                'quantity': int(quantity)
             }
             print(self.cart[str(product.id)])
         else:

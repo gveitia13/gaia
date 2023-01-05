@@ -15,9 +15,11 @@
                     </div>
                 </div>
                 <div class="response d-none" id="response">
-                    {#                    <p>....</p>#}
-                    <div class="img-fluid imgProdDetails" id="img-modal"
+                                        <div class="img-fluid imgProdDetails" id="img-modal"
                          style="background: url('{{ first.image.url }}')"></div>
+{% comment %}                    <div class="cursor-none img-magnifier-container">
+                        <img src="https://picsum.photos/seed/picsum/200/300" id="prod-img-full" class="card-img-top">
+                    </div>{% endcomment %}
                     <div class="card rounded-0 border-0 h-100">
                         {% comment %}               <img src="{{ first.image.url }}" id="img-modal"
                              class="card-img-top rounded-0 border-0" alt="...">{% endcomment %}
@@ -33,7 +35,8 @@
                 </div>
             </div>
             <div class="modal-footer bg-light-success">
-                <input type="text" class="text-center bg-light-success text-success fw-bold border-success" accept="*/d" id="input-touchspin" value="1">
+                <input type="text" class="text-center bg-light-success text-success fw-bold border-success" accept="*/d"
+                       id="input-touchspin" value="1">
                 {#                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>#}
                 <button type="submit" class="btn btn-success bg-semi-success rounded-pill d-inline">
                     <i class="mdi mdi-cart-plus"></i>COMPRAR
