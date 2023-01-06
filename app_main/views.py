@@ -6,7 +6,7 @@ from django.views import generic, View
 from django.views.decorators.http import require_POST
 
 from app_cart.cart import Cart
-from app_main.models import Product, Category, GeneralData, Banner, Suscriptor
+from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil
 from gaia import settings
 
 
@@ -24,7 +24,8 @@ class BaseView(View):
             'banner': settings.BUSINESS_BANNER,
             'business': GeneralData.objects.first() if GeneralData.objects.exists() else {},
             'products_in_cart': cart.all(),
-            'total_price': ''
+            'total_price': '',
+            'infoUtil_list': InfoUtil.objects.all()
         }
 
 

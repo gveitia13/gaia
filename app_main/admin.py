@@ -36,7 +36,7 @@ class GeneralDataAdmin(admin.ModelAdmin):
             'fields': ('enterprise_address', 'email', 'phone_number')
         },),
     ]
-    inlines = [BannerInline, InfoUtilInline]
+    inlines = [BannerInline]
 
     def has_add_permission(self, request):
         user = request.user
@@ -96,7 +96,12 @@ class ProductAdmin(admin.ModelAdmin):
             p.save()
 
 
+class InfoUtilAdmin(admin.ModelAdmin):
+    list_display = ('title', 'text_tag')
+
+
 admin.site.register(Product, ProductAdmin)
+admin.site.register(InfoUtil, InfoUtilAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(GeneralData, GeneralDataAdmin)
 admin.site.register(Suscriptor)

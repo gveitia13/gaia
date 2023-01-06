@@ -184,13 +184,16 @@ class Suscriptor(models.Model):
 
 
 class InfoUtil(models.Model):
-    gnd = models.ForeignKey(GeneralData, on_delete=models.CASCADE)
     title = models.CharField('Título', max_length=100)
-    text = models.TextField("Contenido")
+    text = RichTextField("Contenido")
 
     class Meta:
         verbose_name = 'Información útil'
         verbose_name_plural = 'Informaciones útiles'
+
+    def text_tag(self):
+        return mark_safe(self.text)
+    text_tag.short_description = 'Texto'
 
     def __str__(self):
         return self.title

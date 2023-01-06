@@ -33,7 +33,7 @@
             <div class="col-6 col-md-3  mb-3">
                 <h5>INFO ÚTIL</h5>
                 <ul class="list-unstyled">
-                    {% for info in business.infoutil_set.all %}
+                    {% for info in infoUtil_list %}
                         <li class="mb-2"><a href="#" class="text-decoration-none text-white">{{ info.title }}</a></li>
                     {% endfor %}
                 </ul>
