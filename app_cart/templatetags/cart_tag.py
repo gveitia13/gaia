@@ -56,3 +56,14 @@ def firsts(array: list, amount: int):
 @register.filter()
 def lasts(array: list, amount: int):
     return array[-amount:]
+
+
+@register.filter(is_safe=False)
+def restar(value, arg):
+    try:
+        return int(value) - int(arg)
+    except (ValueError, TypeError):
+        try:
+            return value + arg
+        except Exception:
+            return ""

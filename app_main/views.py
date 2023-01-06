@@ -2,16 +2,12 @@ import json
 
 from django.forms import model_to_dict
 from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render
-from django.utils.decorators import method_decorator
 from django.views import generic, View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from app_cart.cart import Cart
 from app_main.models import Product, Category, GeneralData, Banner, Suscriptor
 from gaia import settings
-from gaia.settings import CART_SESSION_ID
 
 
 class BaseView(View):
@@ -49,7 +45,6 @@ class StartPage(BaseView, generic.ListView, ):
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             settings.STATIC_URL / settings.BUSINESS_BANNER]
-        # context['products'] = Product.objects.filter(is_active=True)
         return context
 
     # @method_decorator(csrf_exempt)

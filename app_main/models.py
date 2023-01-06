@@ -1,4 +1,5 @@
 from ckeditor.fields import RichTextField
+from crum import get_current_request
 from django.core.validators import RegexValidator
 from django.db import models
 from django.forms import model_to_dict
@@ -180,3 +181,16 @@ class Suscriptor(models.Model):
     class Meta:
         verbose_name = 'Suscriptor'
         verbose_name_plural = 'Suscriptores'
+
+
+class InfoUtil(models.Model):
+    gnd = models.ForeignKey(GeneralData, on_delete=models.CASCADE)
+    title = models.CharField('Título', max_length=100)
+    text = models.TextField("Contenido")
+
+    class Meta:
+        verbose_name = 'Información útil'
+        verbose_name_plural = 'Informaciones útiles'
+
+    def __str__(self):
+        return self.title

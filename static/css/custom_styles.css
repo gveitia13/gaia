@@ -156,6 +156,11 @@ button.text-semi-success:hover {
         height: 60vh !important;
     }
 }
+/*.img-carousel{*/
+/*    width: 1200px;*/
+/*    height: 300px;*/
+/*    object-fit: cover;*/
+/*}*/
 
 .div-card-product div.card img, .img-category {
     height: 30vh !important;

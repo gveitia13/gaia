@@ -29,10 +29,12 @@
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">MI CARRITO
                 </button>
                 <div class="ms-auto">
-                    <button class="btn btn-outline-success btn-sm rounded-pill" id="botoncito-verde">$0.00
+                    <button class="btn btn-outline-success btn-sm rounded-pill" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="botoncito-verde">$0.00
                         / {{ products_in_cart|length }} productos
                     </button>
-                    <button class="btn btn-outline-success btn-sm rounded-pill"><i class="mdi mdi-heart"></i></button>
+                    <button class="btn btn-outline-success btn-sm rounded-pill"><i
+                            class="mdi mdi-heart"></i></button>
                 </div>
             </div>
         </nav>
@@ -72,57 +74,7 @@
                 {% include 'table_products.html' %}
             </div>
             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
-                <div class="container-fluid py-2 px-lg-4">
-                    <h4 class="d-inline-block ps-2">Carrito de compra</h4>
-                    <span class="d-inline-block float-end pe-3 ">Precio</span>
-                    <hr class="mt-0">
-                    <div class="cards-horizontal">
-                        {% csrf_token %}
-                        {% for p in products_in_cart %}
-                            <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
-                                <div class="row no-gutters">
-                                    <input type="hidden" value="{{ p.product.price | multiply:p.quantity }}">
-                                    <div class="col-sm-2 col-3 my-auto">
-                                        <img class="card-img rounded-0" src="{{ p.product.image }}"
-                                             alt="Suresh Dasari Card">
-                                    </div>
-                                    <div class="col-sm-8 col-7">
-                                        <div class="card-body pe-0 px-sm-3 ps-0 pt-1">
-                                            <h5 class="text-truncate">{{ p.product.name }}</h5>
-                                            <span class="card-title truncate-2">{{ p.product.info|safe }}</span>
-                                            <input type="number" min="1"
-                                                   class="form-control d-inline-block text-center form-control-sm input-cantidad"
-                                                   placeholder="cantidad" value="{{ p.quantity }}"
-                                                   style="width: 85px" id="p{{ p.product.id }}">
-                                            <button class="btn btn-danger btn-sm btn-delete rounded-sm"
-                                                    id="{{ p.product.name }}" name="{{ p.product.id }}">
-                                                <i class="mdi mdi-trash-can-outline"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 col-2">
-                                    <span class="float-end pe-2 pt-1 span-price text-nowrap">
-                                        <b>$ <span>{{ p.product.price | multiply:p.quantity }}</span></b></span>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        <div class="row">
-                            <div class="col-12 col-sm-6">
-                                <form action="" method="post" name="clear-cart">
-                                    {% csrf_token %}
-                                    <button class="btn btn-danger rounded-pill"><i class="mdi-cart-remove mdi"></i>
-                                        Limpiar carrito
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="col-12 col-sm-6 text-end">
-                                <span class="fs-4 pe-1" id="total-price"><b>Total</b> (2 items): <b>$29.97</b></span>
-                            </div>
-                        </div>
-                        <input type="hidden" value="0" id="total-hidden">
-                    </div>
-                </div>
+                {% include 'cart.html' %}
             </div>
         </div>
     </div>
@@ -273,6 +225,7 @@
     <br>
     {% include 'product_modal.html' %}
     {% include 'loader.html' %}
+    {#    {% include 'sidebar_right.html' %}#}
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'lib/button_add_to_cart/script.js' %}"></script>
@@ -295,17 +248,17 @@
     <script>
       let cant = 0
       const d = document
-      d.querySelectorAll('.input-cantidad').forEach(e => cant++)
+      d.querySelectorAll('.cards-horizontal .input-cantidad').forEach(e => cant++)
       let product = cant === 1 ? `producto` : 'productos',
         total = 0
 
-      d.querySelectorAll('.card-s-cart div div > span.span-price b').forEach(e =>
+      d.querySelectorAll('.cards-horizontal .card-s-cart div div > span.span-price b').forEach(e =>
         total += parseFloat(e.children[0].innerText.replace(',', '.')))
       console.log(total)
-      d.querySelector('#total-hidden').value = total
+      d.querySelectorAll('#total-hidden').forEach(e => e.value = total)
 
-      d.querySelector('#total-price').innerHTML =
-        `<b>Total</b>: (${cant} ${product}) <b>$${total.toFixed(2)}</b>`
+      d.querySelectorAll('#total-price').forEach(e => e.innerHTML =
+        `<b>Total</b>: (${cant} ${product}) <b>$${total.toFixed(2)}</b>`)
 
       d.querySelector('#botoncito-verde').innerHTML = `$ ${total.toFixed(2)} / ${cant} ${product}`
     </script>
@@ -392,6 +345,7 @@
             if (!data.hasOwnProperty('error')) {
               console.log('no error')
               Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
+              setTimeout(() => location.reload(), )
               return false
             } else {
               console.log(data)
@@ -442,37 +396,38 @@
       }))
 
       //Limpiar carrito
-      document.querySelector('form[name=clear-cart]').addEventListener('submit', function (e) {
-        e.preventDefault()
-        alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
-          const http = new EasyHTTP
-          http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
-            console.log(data)
-            if (!data.hasOwnProperty('error')) {
-              location.reload()
-            } else {
+      document.querySelectorAll('form[name=clear-cart]').forEach(e => e.addEventListener('submit', function (e) {
+          e.preventDefault()
+          alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
+            const http = new EasyHTTP
+            http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
               console.log(data)
+              if (!data.hasOwnProperty('error')) {
+                location.reload()
+              } else {
+                console.log(data)
+                Swal.fire({
+                  title: 'Error',
+                  text: data['error'],
+                  icon: 'error'
+                })
+              }
+            }).catch(err => {
+              console.error(err)
               Swal.fire({
                 title: 'Error',
-                text: data['error'],
+                text: 'Hay un problema de conexión con el servidor.',
                 icon: 'error'
               })
-            }
-          }).catch(err => {
-            console.error(err)
-            Swal.fire({
-              title: 'Error',
-              text: 'Hay un problema de conexión con el servidor.',
-              icon: 'error'
-            })
-          });
-        }, 'text-danger mdi mdi-cart-minus')
-      })
+            });
+          }, 'text-danger mdi mdi-cart-minus')
+        })
+      )
 
       //Comprar del modal
       document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
         let value = $('#input-touchspin').val()
-        if (!value || value <=0)
+        if (!value || value <= 0)
           return null
         else {
           document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')

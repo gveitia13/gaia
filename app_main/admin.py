@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app_main.models import Category, GeneralData, Product, Banner, Suscriptor
+from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -12,6 +12,12 @@ class BannerInline(admin.TabularInline):
     model = Banner
     extra = 5
     fields = ('banner',)
+
+
+class InfoUtilInline(admin.TabularInline):
+    model = InfoUtil
+    extra = 1
+    # fields = '__all__'
 
 
 class GeneralDataAdmin(admin.ModelAdmin):
@@ -30,7 +36,7 @@ class GeneralDataAdmin(admin.ModelAdmin):
             'fields': ('enterprise_address', 'email', 'phone_number')
         },),
     ]
-    inlines = [BannerInline]
+    inlines = [BannerInline, InfoUtilInline]
 
     def has_add_permission(self, request):
         user = request.user

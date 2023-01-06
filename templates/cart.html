@@ -1,0 +1,52 @@
+{% load cart_tag %}
+<div class="container-fluid py-2 px-lg-4">
+    <h4 class="d-inline-block ps-2">Carrito de compra</h4>
+    <span class="d-inline-block float-end pe-3 ">Precio</span>
+    <hr class="mt-0">
+    <div class="cards-horizontal">
+        {% csrf_token %}
+        {% for p in products_in_cart %}
+            <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
+                <div class="row no-gutters">
+                    <input type="hidden" value="{{ p.product.price | multiply:p.quantity }}">
+                    <div class="col-sm-2 col-3 my-auto">
+                        <img class="card-img rounded-0" src="{{ p.product.image }}"
+                             alt="Suresh Dasari Card">
+                    </div>
+                    <div class="col-sm-8 col-7">
+                        <div class="card-body pe-0 px-sm-3 ps-0 pt-1">
+                            <h5 class="text-truncate">{{ p.product.name }}</h5>
+                            <span class="card-title truncate-2">{{ p.product.info|safe }}</span>
+                            <input type="number" min="1" max="{{ p.product.stock|restar:p.quantity }}"
+                                   class="form-control d-inline-block text-center form-control-sm input-cantidad"
+                                   placeholder="cantidad" value="{{ p.quantity }}"
+                                   style="width: 85px" id="p{{ p.product.id }}">
+                            <button class="btn btn-danger btn-sm btn-delete rounded-sm"
+                                    id="{{ p.product.name }}" name="{{ p.product.id }}">
+                                <i class="mdi mdi-trash-can-outline"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-2">
+                                    <span class="float-end pe-2 pt-1 span-price text-nowrap">
+                                        <b>$ <span>{{ p.product.price | multiply:p.quantity }}</span></b></span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <form action="" method="post" name="clear-cart">
+                    {% csrf_token %}
+                    <button class="btn btn-danger rounded-pill"><i class="mdi-cart-remove mdi"></i>
+                        Limpiar carrito
+                    </button>
+                </form>
+            </div>
+            <div class="col-12 col-sm-6 text-end">
+                <span class="fs-4 pe-1" id="total-price"><b>Total</b> (2 items): <b>$29.97</b></span>
+            </div>
+        </div>
+        <input type="hidden" value="0" id="total-hidden">
+    </div>
+</div>
