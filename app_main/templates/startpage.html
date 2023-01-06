@@ -111,7 +111,8 @@
                             <div class="col-12 col-sm-6">
                                 <form action="" method="post" name="clear-cart">
                                     {% csrf_token %}
-                                    <button class="btn btn-danger rounded-pill"><i class="mdi-cart-remove mdi"></i> Limpiar carrito
+                                    <button class="btn btn-danger rounded-pill"><i class="mdi-cart-remove mdi"></i>
+                                        Limpiar carrito
                                     </button>
                                 </form>
                             </div>
@@ -282,7 +283,7 @@
     <script>
       //Iniciar el touch spin
       $("#input-touchspin").TouchSpin({
-        min: 1,
+        min: 0,
         max: 10,
         step: 1,
         maxboostedstep: 10,
@@ -466,6 +467,40 @@
             })
           });
         }, 'text-danger mdi mdi-cart-minus')
+      })
+
+      //Comprar del modal
+      document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
+        let value = $('#input-touchspin').val()
+        if (!value || value <=0)
+          return null
+        else {
+          document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')
+          document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
+          const http = new EasyHTTP
+          let id = document.querySelector('#input-hidden-id-modal').value
+          http.post(`cart/add/${id}/${value}/`, {}, '{{ csrf_token }}')
+            .then(data => {
+              console.log(data)
+              if (!data.hasOwnProperty('error')) {
+                location.reload()
+              } else {
+                console.log(data)
+                Swal.fire({
+                  title: 'Error',
+                  text: data['error'],
+                  icon: 'error'
+                })
+              }
+            }).catch(err => {
+            console.error(err)
+            Swal.fire({
+              title: 'Error',
+              text: 'Hay un problema de conexión con el servidor.',
+              icon: 'error'
+            })
+          });
+        }
       })
     </script>
 {% endblock %}

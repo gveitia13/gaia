@@ -1,4 +1,8 @@
+import json
+
 from django.http import HttpRequest, JsonResponse
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -52,11 +56,12 @@ def remove_quant(request: HttpRequest, id: int, quantity: int):
     return JsonResponse({"result": "ok"})
 
 
-@method_decorator(require_POST)
+# @method_decorator(require_POST)
 def update_quant(request: HttpRequest, id: int, value: int):
     cart = Cart(request)
     product = Product.objects.get(pk=id)
     cart.update_quant(product=product, value=value)
+    # return redirect(reverse_lazy('index'))
     return JsonResponse({
         "result": "ok",
         'product': product.toJSON(),
@@ -65,15 +70,20 @@ def update_quant(request: HttpRequest, id: int, value: int):
     })
 
 
-# @method_decorator(csrf_exempt, require_POST)
-# def clear_current_cart(request: HttpRequest, id: int, ):
-#     cart = Cart(request)
-#     ids = request.session[settings.CART_SESSION_ID]
-#     user = GeneralData.objects.get(pk=id).user
-#     for p in Product.objects.filter(user_id=user.pk):
-#         for i in ids:
-#             if str(p.pk) == i:
-#                 cart.remove(p)
+# @method_decorator(require_POST)
+def update_quant_2(request: HttpRequest, *args, **kwargs: dict):
+    print(request.POST)
+    cart = Cart(request)
+    body = request.POST
+    product = Product.objects.get(pk=body['id'])
+    cart.add(product=product, quantity=body['value'])
+    return redirect(request.path)
+    return JsonResponse({
+        "result": "ok",
+        'product': product.toJSON(),
+        "amount": cart.session[CART_SESSION_ID].get(body['id'], {"quantity": body['value']})["quantity"],
+        'price': f'{product.price}'
+    })
 
 
 @require_POST
@@ -97,6 +107,6 @@ def add_quant(request: HttpRequest, id: int, quantity: int):
     cart = Cart(request)
     cart.add(Product.objects.filter(id=id).first(), quantity)
     return JsonResponse({"result": "ok",
-                         'product':Product.objects.get(id=id).toJSON(),
+                         'product': Product.objects.get(id=id).toJSON(),
                          "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": quantity})["quantity"]
                          })

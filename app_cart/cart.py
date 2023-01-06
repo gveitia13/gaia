@@ -94,9 +94,19 @@ class Cart(object):
     # mio
     def update_quant(self, product, value):
         self.cart[str(product.id)]['quantity'] = int(value)
-        if self.cart[str(product.id)]['quantity'] < 1:
-            return redirect('cart:cart_detail')
         self.save()
+        # if str(product.id) not in self.cart.keys():
+        #     self.cart[str(product.id)] = {
+        #         "id": str(product.id),
+        #         'user_id': self.request.user.id,
+        #         'product': product.toJSON(),
+        #         'quantity': int(value)
+        #     }
+        #     print(self.cart[str(product.id)])
+        # else:
+        #     self.cart[str(product.id)]['quantity'] = int(value)
+        #     print(self.cart[str(product.id)])
+        # self.save()
 
     def clear(self):
         # empty cart

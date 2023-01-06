@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from app_cart.cart import Cart
 from app_main.models import Product, Category, GeneralData, Banner, Suscriptor
 from gaia import settings
+from gaia.settings import CART_SESSION_ID
 
 
 class BaseView(View):
@@ -63,7 +64,13 @@ class StartPage(BaseView, generic.ListView, ):
             action = body['action']
             if action == 'details':
                 product = Product.objects.get(pk=body['pk'])
-                data = product.toJSON()
+                # data = product.toJSON()
+                cart = Cart(request)
+                data = {
+                    'product': product.toJSON(),
+                    "result": "ok",
+                    "amount": cart.cart[str(product.id)]['quantity'] if cart.cart.get(str(product.id)) else 0
+                }
                 print(data)
             else:
                 data['error'] = 'Ha ocurrido un error en el servidor.'

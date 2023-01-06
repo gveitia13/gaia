@@ -15,14 +15,12 @@
                     </div>
                 </div>
                 <div class="response d-none" id="response">
-                                        <div class="img-fluid imgProdDetails" id="img-modal"
+                    <div class="img-fluid imgProdDetails" id="img-modal"
                          style="background: url('{{ first.image.url }}')"></div>
-{% comment %}                    <div class="cursor-none img-magnifier-container">
+                    {% comment %}                    <div class="cursor-none img-magnifier-container">
                         <img src="https://picsum.photos/seed/picsum/200/300" id="prod-img-full" class="card-img-top">
                     </div>{% endcomment %}
                     <div class="card rounded-0 border-0 h-100">
-                        {% comment %}               <img src="{{ first.image.url }}" id="img-modal"
-                             class="card-img-top rounded-0 border-0" alt="...">{% endcomment %}
                         <div class="card-body text-success bg-light-success pb-0">
                             <h5 class="card-title text-center mb-0" id="name-modal">{{ first.name }}</h5>
                             <p class="card-text mb-0" id="cat-modal">{{ first.price }}</p>
@@ -34,14 +32,20 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer bg-light-success">
-                <input type="text" class="text-center bg-light-success text-success fw-bold border-success" accept="*/d"
-                       id="input-touchspin" value="1">
-                {#                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>#}
-                <button type="submit" class="btn btn-success bg-semi-success rounded-pill d-inline">
-                    <i class="mdi mdi-cart-plus"></i>COMPRAR
-                </button>
-            </div>
+{#            <form action="{% url 'cart_update_quantity_2' %}" method="post">#}
+                {% csrf_token %}
+                <div class="modal-footer bg-light-success">
+                    <input type="text" class="text-center bg-light-success text-success fw-bold border-success"
+                           accept="*/d"
+                           id="input-touchspin" value="1" name="value">
+                    <input type="hidden" name="id" value="" id="input-hidden-id-modal">
+                    {#                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>#}
+                    <button type="submit" class="btn btn-success bg-semi-success rounded-pill d-inline"
+                            id="btn-comprar-modal">
+                        <i class="mdi mdi-cart-plus"></i>COMPRAR
+                    </button>
+                </div>
+{#            </form>#}
         </div>
     </div>
 </div>

@@ -124,15 +124,16 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
   },
   llenarModal = data => {
     // document.querySelector('#img-modal').src = data.image
-    document.querySelector('#img-modal').style = `background: url('${data.image}')`
-    document.querySelector('#name-modal').innerHTML = data.name
-    document.querySelector('#cat-modal').innerHTML = data.category.name
-    document.querySelector('#price-modal').innerHTML = data.price + ' cup'
+    document.querySelector('#img-modal').style = `background: url('${data.product.image}')`
+    document.querySelector('#name-modal').innerHTML = data.product.name
+    document.querySelector('#cat-modal').innerHTML = data.product.category.name
+    document.querySelector('#price-modal').innerHTML = data.product.price + ' cup'
     document.querySelector('#delivery-modal').innerHTML = 'Tiempo de entrega máximo <b>'
-      + data.delivery_time + ' días</b>'
-    document.querySelector('#info-modal').innerHTML = data.info
-    document.querySelector('#about-modal').innerHTML = data.about
-    $("#input-touchspin").val(1).trigger("touchspin.updatesettings", {max: parseInt(data.stock)});
+      + data.product.delivery_time + ' días</b>'
+    document.querySelector('#info-modal').innerHTML = data.product.info
+    document.querySelector('#about-modal').innerHTML = data.product.about
+    $("#input-touchspin").val(1).trigger("touchspin.updatesettings", {max: parseInt(data.product.stock) - parseInt(data.amount)});
+    document.querySelector('#input-hidden-id-modal').value = data.product.id
   },
   limpiarModal = () => {
     document.querySelector('#img-modal').src = ''
