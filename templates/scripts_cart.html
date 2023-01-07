@@ -1,0 +1,220 @@
+<script>
+  //Iniciar el touch spin
+  $("#input-touchspin").TouchSpin({
+    min: 0,
+    max: 10,
+    step: 1,
+    maxboostedstep: 10,
+    buttondown_class: 'btn btn-success bg-semi-success btn-up ',
+    buttonup_class: 'btn btn-success bg-semi-success btn-down ',
+    buttondown_txt: ' - '
+  });
+</script>
+<script>
+  updateCart()
+</script>
+<script>
+  //actualizar cantidad
+  document.querySelectorAll('.input-cantidad').forEach(e => e.addEventListener('change', function (e) {
+    let parent = this.parentElement.parentElement.parentElement,
+      input = parent.children[parent.children.length - 1].children[0].children[0].children[0]
+
+    let id = this.id
+    this.value = Math.floor(parseFloat(this.value))
+    if (parseInt(this.value) >= parseInt(this.max))
+      this.value = this.max
+    document.querySelectorAll(`#${id}`).forEach(e => e.value = this.value)
+
+    let http = new EasyHTTP
+    http.post(`{{ host }}cart/update_quantity/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+      .then(data => {
+        if (!data.hasOwnProperty('error')) {
+          console.log(data)
+          let amount = parseFloat(data.amount),
+            original_price = parseFloat(data.price)
+          setTimeout(() => {
+            document.querySelectorAll(`#${input.id}`).forEach(e =>
+              e.innerHTML = `${parseFloat(amount * original_price).toFixed(2)}`)
+            setTimeout(() => updateCart())
+          })
+
+        } else {
+          console.log(data)
+          Swal.fire({
+            title: 'Error',
+            text: data['error'],
+            icon: 'error'
+          })
+        }
+      }).catch(err => {
+      console.error(err)
+      Swal.fire({
+        title: 'Error',
+        text: 'Hay un problema de conexión con el servidor.',
+        icon: 'error'
+      })
+    });
+  }))
+</script>
+<script>
+  //Abrir el modal
+  document.querySelectorAll('[data-bs-toggle="modal"]').forEach(e => e.addEventListener('click', function () {
+    const http = new EasyHTTP;
+    const data = {
+      action: 'details',
+      pk: this.name,
+    }
+    http.post(location.pathname, data, '{{ csrf_token }}')
+      .then(data => {
+        console.log(data)
+        if (!data.hasOwnProperty('error')) {
+          console.log('no error')
+          document.querySelector('#my-loader').classList.add('d-none')
+          document.querySelector('#response').classList.add('d-block')
+          document.querySelector('#response').classList.remove('d-none')
+          llenarModal(data)
+          return false
+        } else {
+          console.log(data)
+          Swal.fire({
+            title: 'Error',
+            text: data['error'],
+            icon: 'error'
+          })
+        }
+      })
+      .catch(err => {
+        console.error(err)
+        Swal.fire({
+          title: 'Error',
+          text: 'Hay un problema de conexión con el servidor.',
+          icon: 'error'
+        })
+      });
+  }))
+
+  //Annadir al carro
+  document.querySelectorAll('.add_to_cart').forEach(e => e.addEventListener('click', function () {
+    const http = new EasyHTTP;
+    const data = {
+      action: 'details',
+      pk: this.name,
+    }
+    http.post(`{{ host }}cart/add/${this.name}/`, data, '{{ csrf_token }}')
+      .then(data => {
+        console.log(data)
+        if (!data.hasOwnProperty('error')) {
+          console.log('no error')
+          Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
+          setTimeout(() => location.reload(),)
+          return false
+        } else {
+          console.log(data)
+          Swal.fire({
+            title: 'Error',
+            text: data['error'],
+            icon: 'error'
+          })
+        }
+      })
+      .catch(err => {
+        console.error(err)
+        Swal.fire({
+          title: 'Error',
+          text: 'Hay un problema de conexión con el servidor.',
+          icon: 'error'
+        })
+      });
+  }))
+
+  //Eliminar del carro
+  document.querySelectorAll('.btn-delete').forEach(e => e.addEventListener('click', function () {
+    alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar el producto <b>${this.id}</b> del carrito?`,
+      () => {
+        const http = new EasyHTTP;
+        http.post(`{{ host }}cart/clear/${this.name}/`, {}, '{{ csrf_token }}')
+          .then(data => {
+            console.log(data)
+            if (!data.hasOwnProperty('error')) {
+              location.reload()
+            } else {
+              console.log(data)
+              Swal.fire({
+                title: 'Error',
+                text: data['error'],
+                icon: 'error'
+              })
+            }
+          }).catch(err => {
+          console.error(err)
+          Swal.fire({
+            title: 'Error',
+            text: 'Hay un problema de conexión con el servidor.',
+            icon: 'error'
+          })
+        });
+      }, 'text-danger mdi mdi-cart-minus')
+  }))
+
+  //Limpiar carrito
+  document.querySelectorAll('form[name=clear-cart]').forEach(e => e.addEventListener('submit', function (e) {
+    e.preventDefault()
+    alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
+      const http = new EasyHTTP
+      http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
+        console.log(data)
+        if (!data.hasOwnProperty('error')) {
+          location.reload()
+        } else {
+          console.log(data)
+          Swal.fire({
+            title: 'Error',
+            text: data['error'],
+            icon: 'error'
+          })
+        }
+      }).catch(err => {
+        console.error(err)
+        Swal.fire({
+          title: 'Error',
+          text: 'Hay un problema de conexión con el servidor.',
+          icon: 'error'
+        })
+      });
+    }, 'text-danger mdi mdi-cart-minus')
+  }))
+
+  //Comprar del modal
+  document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
+    let value = $('#input-touchspin').val()
+    if (!value || value <= 0)
+      return null
+    else {
+      document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')
+      document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
+      const http = new EasyHTTP
+      let id = document.querySelector('#input-hidden-id-modal').value
+      http.post(`{{ host }}cart/add/${id}/${value}/`, {}, '{{ csrf_token }}')
+        .then(data => {
+          console.log(data)
+          if (!data.hasOwnProperty('error')) {
+            location.reload()
+          } else {
+            console.log(data)
+            Swal.fire({
+              title: 'Error',
+              text: data['error'],
+              icon: 'error'
+            })
+          }
+        }).catch(err => {
+        console.error(err)
+        Swal.fire({
+          title: 'Error',
+          text: 'Hay un problema de conexión con el servidor.',
+          icon: 'error'
+        })
+      });
+    }
+  })
+</script>

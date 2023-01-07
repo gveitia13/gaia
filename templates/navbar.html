@@ -4,12 +4,13 @@
     <ul class="navbar-nav ms-auto ">
         <li class="nav-item">
             <div class="nav-link">
-                <form action="">
+                <form action="{% url 'products' %}">
                     <div class="input-group input-group-sm pe-2">
-                        <input type="search" class="form-control text-end border-0 ps-0 rounded-0" placeholder="Buscador"
+                        <input type="search" class="form-control text-end border-0 ps-0 rounded-0"
+                               placeholder="Buscador"
                                aria-label="Example text with button addon"
-                               aria-describedby="button-addon1">
-                         <button class="btn border-0" type="submit" id="button-addon1"><i
+                               aria-describedby="button-addon1" name="search">
+                        <button class="btn border-0" type="submit" id="button-addon1"><i
                                 class="mdi mdi-magnify text-semi-success"></i></button>
                     </div>
                 </form>

@@ -4,80 +4,90 @@
 {% load static %}
 {% block head %}
     <link rel="stylesheet" href="{% static 'lib/button_add_to_cart/style.css' %}">
-    {#    <link rel="stylesheet" href="{% static 'lib/magnifer-js/magnifier.css' %}">#}
     <link rel="stylesheet" href="{% static 'lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css' %}">
 {% endblock %}
 {% block content %}
-    <div>
-        <nav class="row align-items-end user-select-none">
-            <div class="justify-content-start col-sm-12 col-lg-4">
-                <img src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
-                     class="" alt="gaia" height="100">
-            </div>
-            <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
-                 role="tablist">
-                <button class="nav-link text-semi-success active" id="nav-home-tab" data-bs-toggle="tab"
-                        data-bs-target="#nav-home"
-                        type="button" role="tab" aria-controls="nav-home" aria-selected="true">HOME
-                </button>
-                <button class="nav-link text-semi-success" id="nav-profile-tab" data-bs-toggle="tab"
-                        data-bs-target="#nav-profile"
-                        type="button" role="tab" aria-controls="nav-profile" aria-selected="false">PRODUCTOS
-                </button>
-                <button class="nav-link text-semi-success align-text-bottom" id="nav-contact-tab" data-bs-toggle="tab"
-                        data-bs-target="#nav-contact"
-                        type="button" role="tab" aria-controls="nav-contact" aria-selected="false">MI CARRITO
-                </button>
-                <div class="ms-auto">
-                    <button class="btn btn-outline-success btn-sm rounded-pill" type="button" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="botoncito-verde">$0.00
-                        / {{ products_in_cart|length }} productos
+    {% block subnavbar %}
+        <div>
+            <nav class="row align-items-end user-select-none">
+                <div class="justify-content-start col-sm-12 col-lg-4">
+                    <a href="{% url 'index' %}"><img src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
+                         class="" alt="gaia" height="100"></a>
+                </div>
+                <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
+                     role="tablist">
+                    <button class="nav-link text-semi-success active" id="nav-home-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-home"
+                            type="button" role="tab" aria-controls="nav-home" aria-selected="true">HOME
                     </button>
-                    <button class="btn btn-outline-success btn-sm rounded-pill"><i
-                            class="mdi mdi-heart"></i></button>
-                </div>
-            </div>
-        </nav>
-        <br>
-        <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
-                 tabindex="0">
-                <div class="row user-select-none">
-                    <div class="col-md-12 col-lg-8 ">
-                        <div class="p-5 user-select-none bg-semi-success">
-                            <h4 class="text-uppercase text-white">¡La alimentación sana es tu opción!</h4>
-                            <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">Nuestros</h1>
-                            <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">productos</h1>
-                            <p class="text-white fs-5">Alimentos escogidos con amor, garantizando la producción local.
-                                Productos orgánicos frescos, verduras,frutas, carnes, lácteos, pescados y más...</p>
-                            <a href="#" class="btn bg-orange rounded-0 btn-sm fs-6"><b>VER CATÁLOGO</b></a>
-                        </div>
+                    <button class="nav-link text-semi-success" id="nav-profile-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-profile"
+                            type="button" role="tab" aria-controls="nav-profile" aria-selected="false">PRODUCTOS
+                    </button>
+                    <button class="nav-link text-semi-success align-text-bottom" id="nav-contact-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#nav-contact"
+                            type="button" role="tab" aria-controls="nav-contact" aria-selected="false">MI CARRITO
+                    </button>
+                    <div class="ms-auto">
+                        <button class="btn btn-outline-success btn-sm rounded-pill" type="button"
+                                data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="botoncito-verde">
+                            $0.00
+                            / {{ products_in_cart|length }} productos
+                        </button>
+                        <button class="btn btn-outline-success btn-sm rounded-pill"><i
+                                class="mdi mdi-heart"></i></button>
                     </div>
-                    <div class="col-md-12 col-lg-4 ">
-                        <div class="row pt-2 px-3 ps-lg-0 pt-lg-0">
-                            {% for prod in products4 %}
-                                <div class="col-6 col-md-3 col-lg-6 p-0">
-                                    <div class="card rounded-0 border-0">
-                                        <a href="#">
-                                            <img src="{{ prod.image.url }}" class="card-img-top rounded-0 border-0 algo"
-                                                 alt="..." name="{{ prod.id }}" data-bs-toggle="modal"
-                                                 data-bs-target="#product_modal">
-                                        </a>
+                </div>
+            </nav>
+            <br>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+                     tabindex="0">
+                    <div class="row user-select-none">
+                        <div class="col-md-12 col-lg-8 ">
+                            <div class="p-5 user-select-none bg-semi-success">
+                                <h4 class="text-uppercase text-white">¡La alimentación sana es tu opción!</h4>
+                                <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">
+                                    Nuestros</h1>
+                                <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">
+                                    productos</h1>
+                                <p class="text-white fs-5">Alimentos escogidos con amor, garantizando la producción
+                                    local.
+                                    Productos orgánicos frescos, verduras,frutas, carnes, lácteos, pescados y más...</p>
+                                <a href="#" class="btn bg-orange rounded-0 btn-sm fs-6"><b>VER CATÁLOGO</b></a>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4 ">
+                            <div class="row pt-2 px-3 ps-lg-0 pt-lg-0">
+                                {% for prod in products4 %}
+                                    <div class="col-6 col-md-3 col-lg-6 p-0">
+                                        <div class="card rounded-0 border-0">
+                                            <a href="#">
+                                                <img src="{{ prod.image.url }}"
+                                                     class="card-img-top rounded-0 border-0 algo"
+                                                     alt="..." name="{{ prod.id }}" data-bs-toggle="modal"
+                                                     data-bs-target="#product_modal">
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-                {% include 'table_products.html' %}
-            </div>
-            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
-                {% include 'cart.html' %}
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
+                     tabindex="0">
+                    {% include 'table_products.html' %}
+                </div>
+                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"
+                     tabindex="0">
+                    {% include 'cart.html' %}
+                </div>
             </div>
         </div>
-    </div>
+    {% endblock %}
     <br>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 user-select-none">
         {% for category in categories %}
@@ -229,67 +239,9 @@
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'lib/button_add_to_cart/script.js' %}"></script>
-    {#    <script src="{% static 'lib/magnifer-js/Event.js' %}"></script>#}
-    {#    <script src="{% static 'lib/magnifer-js/Magnifier.js' %}"></script>#}
     <script src="{% static 'lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
     {% csrf_token %}
-    <script>
-      //Iniciar el touch spin
-      $("#input-touchspin").TouchSpin({
-        min: 0,
-        max: 10,
-        step: 1,
-        maxboostedstep: 10,
-        buttondown_class: 'btn btn-success bg-semi-success btn-up ',
-        buttonup_class: 'btn btn-success bg-semi-success btn-down ',
-        buttondown_txt: ' - '
-      });
-    </script>
-    <script>
-      updateCart()
-    </script>
-    <script>
-      document.querySelectorAll('.input-cantidad').forEach(e => e.addEventListener('change', function (e) {
-        let parent = this.parentElement.parentElement.parentElement,
-          input = parent.children[parent.children.length - 1].children[0].children[0].children[0]
-
-        let id = this.id
-        this.value = Math.floor(parseFloat(this.value))
-        if (parseInt(this.value) >= parseInt(this.max))
-          this.value = this.max
-        document.querySelectorAll(`#${id}`).forEach(e => e.value = this.value)
-
-        let http = new EasyHTTP
-        http.post(`cart/update_quantity/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
-          .then(data => {
-            if (!data.hasOwnProperty('error')) {
-              console.log(data)
-              let amount = parseFloat(data.amount),
-                original_price = parseFloat(data.price)
-              setTimeout(() => {
-                document.querySelectorAll(`#${input.id}`).forEach(e =>
-                  e.innerHTML = `${parseFloat(amount * original_price).toFixed(2)}`)
-                setTimeout(() => updateCart())
-              })
-
-            } else {
-              console.log(data)
-              Swal.fire({
-                title: 'Error',
-                text: data['error'],
-                icon: 'error'
-              })
-            }
-          }).catch(err => {
-          console.error(err)
-          Swal.fire({
-            title: 'Error',
-            text: 'Hay un problema de conexión con el servidor.',
-            icon: 'error'
-          })
-        });
-      }))
-    </script>
+    {% include 'scripts_cart.html' %}
     <script>
       //Crear suscriptor
       document.querySelector('#suscriptor-form').addEventListener('submit', function (e) {
@@ -322,167 +274,6 @@
               icon: 'error'
             })
           });
-      })
-
-      //Abrir el modal
-      document.querySelectorAll('[data-bs-toggle="modal"]').forEach(e => e.addEventListener('click', function () {
-        const http = new EasyHTTP;
-        const data = {
-          action: 'details',
-          pk: this.name,
-        }
-        http.post(location.pathname, data, '{{ csrf_token }}')
-          .then(data => {
-            console.log(data)
-            if (!data.hasOwnProperty('error')) {
-              console.log('no error')
-              document.querySelector('#my-loader').classList.add('d-none')
-              document.querySelector('#response').classList.add('d-block')
-              document.querySelector('#response').classList.remove('d-none')
-              llenarModal(data)
-              return false
-            } else {
-              console.log(data)
-              Swal.fire({
-                title: 'Error',
-                text: data['error'],
-                icon: 'error'
-              })
-            }
-          })
-          .catch(err => {
-            console.error(err)
-            Swal.fire({
-              title: 'Error',
-              text: 'Hay un problema de conexión con el servidor.',
-              icon: 'error'
-            })
-          });
-      }))
-
-      //Annadir al carro
-      document.querySelectorAll('.add_to_cart').forEach(e => e.addEventListener('click', function () {
-        const http = new EasyHTTP;
-        const data = {
-          action: 'details',
-          pk: this.name,
-        }
-        http.post(`cart/add/${this.name}/`, data, '{{ csrf_token }}')
-          .then(data => {
-            console.log(data)
-            if (!data.hasOwnProperty('error')) {
-              console.log('no error')
-              Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
-              setTimeout(() => location.reload(),)
-              return false
-            } else {
-              console.log(data)
-              Swal.fire({
-                title: 'Error',
-                text: data['error'],
-                icon: 'error'
-              })
-            }
-          })
-          .catch(err => {
-            console.error(err)
-            Swal.fire({
-              title: 'Error',
-              text: 'Hay un problema de conexión con el servidor.',
-              icon: 'error'
-            })
-          });
-      }))
-
-      //Eliminar del carro
-      document.querySelectorAll('.btn-delete').forEach(e => e.addEventListener('click', function () {
-        alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar el producto <b>${this.id}</b> del carrito?`,
-          () => {
-            const http = new EasyHTTP;
-            http.post(`cart/clear/${this.name}/`, {}, '{{ csrf_token }}')
-              .then(data => {
-                console.log(data)
-                if (!data.hasOwnProperty('error')) {
-                  location.reload()
-                } else {
-                  console.log(data)
-                  Swal.fire({
-                    title: 'Error',
-                    text: data['error'],
-                    icon: 'error'
-                  })
-                }
-              }).catch(err => {
-              console.error(err)
-              Swal.fire({
-                title: 'Error',
-                text: 'Hay un problema de conexión con el servidor.',
-                icon: 'error'
-              })
-            });
-          }, 'text-danger mdi mdi-cart-minus')
-      }))
-
-      //Limpiar carrito
-      document.querySelectorAll('form[name=clear-cart]').forEach(e => e.addEventListener('submit', function (e) {
-        e.preventDefault()
-        alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
-          const http = new EasyHTTP
-          http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
-            console.log(data)
-            if (!data.hasOwnProperty('error')) {
-              location.reload()
-            } else {
-              console.log(data)
-              Swal.fire({
-                title: 'Error',
-                text: data['error'],
-                icon: 'error'
-              })
-            }
-          }).catch(err => {
-            console.error(err)
-            Swal.fire({
-              title: 'Error',
-              text: 'Hay un problema de conexión con el servidor.',
-              icon: 'error'
-            })
-          });
-        }, 'text-danger mdi mdi-cart-minus')
-      }))
-
-      //Comprar del modal
-      document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
-        let value = $('#input-touchspin').val()
-        if (!value || value <= 0)
-          return null
-        else {
-          document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')
-          document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
-          const http = new EasyHTTP
-          let id = document.querySelector('#input-hidden-id-modal').value
-          http.post(`cart/add/${id}/${value}/`, {}, '{{ csrf_token }}')
-            .then(data => {
-              console.log(data)
-              if (!data.hasOwnProperty('error')) {
-                location.reload()
-              } else {
-                console.log(data)
-                Swal.fire({
-                  title: 'Error',
-                  text: data['error'],
-                  icon: 'error'
-                })
-              }
-            }).catch(err => {
-            console.error(err)
-            Swal.fire({
-              title: 'Error',
-              text: 'Hay un problema de conexión con el servidor.',
-              icon: 'error'
-            })
-          });
-        }
       })
     </script>
 {% endblock %}

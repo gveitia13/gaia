@@ -1,0 +1,85 @@
+{% extends 'startpage.html' %}
+{% load static %}
+{% block subnavbar %}
+    <div>
+        <nav class="row align-items-end user-select-none">
+            <div class="justify-content-start col-sm-12 col-lg-4">
+                <a href="{% url 'index' %}"><img
+                        src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
+                        class="" alt="gaia" height="100"></a>
+            </div>
+            <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
+                 role="tablist">
+                <button class="nav-link text-semi-success" id="nav-home-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-home"
+                        type="button" role="tab" aria-controls="nav-home" aria-selected="true">HOME
+                </button>
+                <button class="nav-link text-semi-success active" id="nav-profile-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-profile"
+                        type="button" role="tab" aria-controls="nav-profile" aria-selected="false">PRODUCTOS
+                </button>
+                <button class="nav-link text-semi-success align-text-bottom" id="nav-contact-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#nav-contact"
+                        type="button" role="tab" aria-controls="nav-contact" aria-selected="false">MI CARRITO
+                </button>
+                <div class="ms-auto">
+                    <button class="btn btn-outline-success btn-sm rounded-pill" type="button"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="botoncito-verde">
+                        $0.00
+                        / {{ products_in_cart|length }} productos
+                    </button>
+                    <button class="btn btn-outline-success btn-sm rounded-pill"><i
+                            class="mdi mdi-heart"></i></button>
+                </div>
+            </div>
+        </nav>
+        <br>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+                 tabindex="0">
+                <div class="row user-select-none">
+                    <div class="col-md-12 col-lg-8 ">
+                        <div class="p-5 user-select-none bg-semi-success">
+                            <h4 class="text-uppercase text-white">¡La alimentación sana es tu opción!</h4>
+                            <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">
+                                Nuestros</h1>
+                            <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">
+                                productos</h1>
+                            <p class="text-white fs-5">Alimentos escogidos con amor, garantizando la producción
+                                local.
+                                Productos orgánicos frescos, verduras,frutas, carnes, lácteos, pescados y más...</p>
+                            <a href="#" class="btn bg-orange rounded-0 btn-sm fs-6"><b>VER CATÁLOGO</b></a>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4 ">
+                        <div class="row pt-2 px-3 ps-lg-0 pt-lg-0">
+                            {% for prod in products4 %}
+                                <div class="col-6 col-md-3 col-lg-6 p-0">
+                                    <div class="card rounded-0 border-0">
+                                        <a href="#">
+                                            <img src="{{ prod.image.url }}"
+                                                 class="card-img-top rounded-0 border-0 algo"
+                                                 alt="..." name="{{ prod.id }}" data-bs-toggle="modal"
+                                                 data-bs-target="#product_modal">
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
+                 tabindex="0">
+                {% include 'table_products.html' %}
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"
+                 tabindex="0">
+                {% include 'cart.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

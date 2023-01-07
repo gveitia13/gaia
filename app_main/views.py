@@ -25,7 +25,8 @@ class BaseView(View):
             'business': GeneralData.objects.first() if GeneralData.objects.exists() else {},
             'products_in_cart': cart.all(),
             'total_price': '',
-            'infoUtil_list': InfoUtil.objects.all()
+            'infoUtil_list': InfoUtil.objects.all(),
+            'host': 'http://' + self.request.get_host() + '/'
         }
 
 
@@ -33,6 +34,11 @@ class StartPage(BaseView, generic.ListView, ):
     template_name = 'startpage.html'
     queryset = Product.objects.filter(is_active=True)
     paginate_by = 10
+
+    def get_queryset(self):
+        qs = super(StartPage, self).get_queryset()
+        qs = qs.filter(name__icontains=self.request.GET.get('search', ''))
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(StartPage, self).get_context_data()
@@ -46,6 +52,7 @@ class StartPage(BaseView, generic.ListView, ):
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             settings.STATIC_URL / settings.BUSINESS_BANNER]
+        print(context['host'])
         return context
 
     # @method_decorator(csrf_exempt)
@@ -75,6 +82,10 @@ class StartPage(BaseView, generic.ListView, ):
             data['error'] = str(e)
             return JsonResponse(data, )
         return JsonResponse(data, )
+
+
+class ProductView(StartPage):
+    template_name = 'products.html'
 
 
 @require_POST
