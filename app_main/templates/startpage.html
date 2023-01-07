@@ -97,7 +97,7 @@
         {% endfor %}
     </div>
     <br>
-    <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con
+    <h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con
         nosotros?</h1>
     {% include 'carousel.html' %}
     <br>
@@ -117,7 +117,7 @@
         </div>
     </div>
     <br>
-    <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Productos
+    <h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">Productos
         destacados</h1>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 div-card-product">
         {% for prod in products_destacados %}
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <Button Class="Button add_to_cart btn-success btn btn-success" name="{{ prod.id }}">
+                        <Button Class="Button add_to_cart btn-success btn btn-success mb-1" name="{{ prod.id }}">
                             <Span>COMPRAR</Span>
                             <div Class="Cart">
                                 <Svg ViewBox="0 0 36 26">
@@ -142,7 +142,7 @@
                                 </Svg>
                             </div>
                         </Button>
-                        <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
+                        <button type="button" class="btn btn-success border-0 bg-semi-success mb-1 btn-sm rounded-pill"
                                 data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
                             <i class="mdi mdi-magnify-plus-outline"></i> VER
                         </button>
@@ -152,7 +152,7 @@
         {% endfor %}
     </div>
     <br>
-    <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Productos
+    <h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">Productos
         con descuento</h1>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 div-card-product">
         {% for prod in products_descuento %}
@@ -169,7 +169,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <Button Class="Button add_to_cart btn btn-success" name="{{ prod.id }}">
+                        <Button Class="Button add_to_cart btn btn-success mb-1" name="{{ prod.id }}">
                             <Span>COMPRAR</Span>
                             <div Class="Cart">
                                 <Svg ViewBox="0 0 36 26">
@@ -178,7 +178,7 @@
                                 </Svg>
                             </div>
                         </Button>
-                        <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
+                        <button type="button" class="btn btn-success border-0 mb-1 bg-semi-success btn-sm rounded-pill"
                                 data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
                             <i class="mdi mdi-magnify-plus-outline"></i> VER
                         </button>
@@ -188,7 +188,7 @@
         {% endfor %}
     </div>
     <br>
-    <h1 class="text-center text-semi-success text-uppercase display-5 fw-bold user-select-none">Nuevos
+    <h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">Nuevos
         productos</h1>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 div-card-product">
         {% for prod in products_nuevos %}
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
-                        <Button Class="Button add_to_cart  btn btn-success" name="{{ prod.id }}">
+                        <Button Class="Button add_to_cart mb-1 btn btn-success" name="{{ prod.id }}">
                             <Span>COMPRAR</Span>
                             <div Class="Cart">
                                 <Svg ViewBox="0 0 36 26">
@@ -213,7 +213,7 @@
                                 </Svg>
                             </div>
                         </Button>
-                        <button type="button" class="btn btn-success border-0 bg-semi-success btn-sm rounded-pill"
+                        <button type="button" class="btn btn-success mb-1 border-0 bg-semi-success btn-sm rounded-pill"
                                 data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
                             <i class="mdi mdi-magnify-plus-outline"></i> VER
                         </button>
@@ -246,21 +246,49 @@
       });
     </script>
     <script>
-      let cant = 0
-      const d = document
-      d.querySelectorAll('.cards-horizontal .input-cantidad').forEach(e => cant++)
-      let product = cant === 1 ? `producto` : 'productos',
-        total = 0
+      updateCart()
+    </script>
+    <script>
+      document.querySelectorAll('.input-cantidad').forEach(e => e.addEventListener('change', function (e) {
+        let parent = this.parentElement.parentElement.parentElement,
+          input = parent.children[parent.children.length - 1].children[0].children[0].children[0]
 
-      d.querySelectorAll('.cards-horizontal .card-s-cart div div > span.span-price b').forEach(e =>
-        total += parseFloat(e.children[0].innerText.replace(',', '.')))
-      console.log(total)
-      d.querySelectorAll('#total-hidden').forEach(e => e.value = total)
+        let id = this.id
+        this.value = Math.floor(parseFloat(this.value))
+        if (parseInt(this.value) >= parseInt(this.max))
+          this.value = this.max
+        document.querySelectorAll(`#${id}`).forEach(e => e.value = this.value)
 
-      d.querySelectorAll('#total-price').forEach(e => e.innerHTML =
-        `<b>Total</b>: (${cant} ${product}) <b>$${total.toFixed(2)}</b>`)
+        let http = new EasyHTTP
+        http.post(`cart/update_quantity/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+          .then(data => {
+            if (!data.hasOwnProperty('error')) {
+              console.log(data)
+              let amount = parseFloat(data.amount),
+                original_price = parseFloat(data.price)
+              setTimeout(() => {
+                document.querySelectorAll(`#${input.id}`).forEach(e =>
+                  e.innerHTML = `${parseFloat(amount * original_price).toFixed(2)}`)
+                setTimeout(() => updateCart())
+              })
 
-      d.querySelector('#botoncito-verde').innerHTML = `$ ${total.toFixed(2)} / ${cant} ${product}`
+            } else {
+              console.log(data)
+              Swal.fire({
+                title: 'Error',
+                text: data['error'],
+                icon: 'error'
+              })
+            }
+          }).catch(err => {
+          console.error(err)
+          Swal.fire({
+            title: 'Error',
+            text: 'Hay un problema de conexión con el servidor.',
+            icon: 'error'
+          })
+        });
+      }))
     </script>
     <script>
       //Crear suscriptor
@@ -345,7 +373,7 @@
             if (!data.hasOwnProperty('error')) {
               console.log('no error')
               Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
-              setTimeout(() => location.reload(), )
+              setTimeout(() => location.reload(),)
               return false
             } else {
               console.log(data)
@@ -397,32 +425,31 @@
 
       //Limpiar carrito
       document.querySelectorAll('form[name=clear-cart]').forEach(e => e.addEventListener('submit', function (e) {
-          e.preventDefault()
-          alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
-            const http = new EasyHTTP
-            http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
+        e.preventDefault()
+        alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
+          const http = new EasyHTTP
+          http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
+            console.log(data)
+            if (!data.hasOwnProperty('error')) {
+              location.reload()
+            } else {
               console.log(data)
-              if (!data.hasOwnProperty('error')) {
-                location.reload()
-              } else {
-                console.log(data)
-                Swal.fire({
-                  title: 'Error',
-                  text: data['error'],
-                  icon: 'error'
-                })
-              }
-            }).catch(err => {
-              console.error(err)
               Swal.fire({
                 title: 'Error',
-                text: 'Hay un problema de conexión con el servidor.',
+                text: data['error'],
                 icon: 'error'
               })
-            });
-          }, 'text-danger mdi mdi-cart-minus')
-        })
-      )
+            }
+          }).catch(err => {
+            console.error(err)
+            Swal.fire({
+              title: 'Error',
+              text: 'Hay un problema de conexión con el servidor.',
+              icon: 'error'
+            })
+          });
+        }, 'text-danger mdi mdi-cart-minus')
+      }))
 
       //Comprar del modal
       document.querySelector('#btn-comprar-modal').addEventListener('click', function () {

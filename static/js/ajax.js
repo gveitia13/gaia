@@ -143,7 +143,26 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     document.querySelector('#delivery-modal').innerHTML = ''
     document.querySelector('#info-modal').innerHTML = ''
     document.querySelector('#about-modal').innerHTML = ''
+  },
+  updateCart = () => {
+    let cant = 0
+    const d = document
+    d.querySelectorAll('.cards-horizontal .input-cantidad').forEach(e => cant++)
+    let product = cant === 1 ? `producto` : 'productos',
+      total = 0
+
+    d.querySelectorAll('.cards-horizontal .card-s-cart div div > span.span-price b').forEach(e =>
+      total += parseFloat(e.children[0].innerText.replace(',', '.')))
+    console.log(total)
+    d.querySelectorAll('#total-hidden').forEach(e => e.value = total)
+
+    d.querySelectorAll('#total-price').forEach(e => e.innerHTML =
+      `<b>Total</b>: (${cant} ${product}) <b>$${total.toFixed(2)}</b>`)
+
+    d.querySelector('#botoncito-verde').innerHTML = `$ ${total.toFixed(2)} / ${cant} ${product}`
+    total = 0
   }
+
 
 class EasyHTTP {
 

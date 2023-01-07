@@ -26,17 +26,19 @@ class Cart(object):
         """
         Add a product to the cart its quantity.
         """
+        q = int(quantity)
+        stock = int(product.stock)
         if str(product.id) not in self.cart.keys():
             self.cart[str(product.id)] = {
                 "id": str(product.id),
                 'user_id': self.request.user.id,
-                # "product": Wrapper(product),
                 'product': product.toJSON(),
-                'quantity': int(quantity)
+                'quantity': q if q <= stock else stock
             }
             print(self.cart[str(product.id)])
         else:
-            self.cart[str(product.id)]['quantity'] = int(self.cart[str(product.id)]['quantity']) + int(quantity)
+            amount = int(self.cart[str(product.id)]['quantity'])
+            self.cart[str(product.id)]['quantity'] = amount + q if (amount + q) <= stock else stock
             print(self.cart[str(product.id)])
         self.save()
 
@@ -93,7 +95,14 @@ class Cart(object):
 
     # mio
     def update_quant(self, product, value):
-        self.cart[str(product.id)]['quantity'] = int(value)
+        q = int(value)
+        stock = int(product.stock)
+        amount = int(self.cart[str(product.id)]['quantity'])
+        if q >= stock:
+            self.cart[str(product.id)]['quantity'] = stock
+            self.save()
+            return
+        self.cart[str(product.id)]['quantity'] = q
         self.save()
         # if str(product.id) not in self.cart.keys():
         #     self.cart[str(product.id)] = {

@@ -70,22 +70,6 @@ def update_quant(request: HttpRequest, id: int, value: int):
     })
 
 
-# @method_decorator(require_POST)
-def update_quant_2(request: HttpRequest, *args, **kwargs: dict):
-    print(request.POST)
-    cart = Cart(request)
-    body = request.POST
-    product = Product.objects.get(pk=body['id'])
-    cart.add(product=product, quantity=body['value'])
-    return redirect(request.path)
-    return JsonResponse({
-        "result": "ok",
-        'product': product.toJSON(),
-        "amount": cart.session[CART_SESSION_ID].get(body['id'], {"quantity": body['value']})["quantity"],
-        'price': f'{product.price}'
-    })
-
-
 @require_POST
 def remove(request: HttpRequest, id: int):
     Cart(request).decrement(product=Product.objects.filter(id=id).first())

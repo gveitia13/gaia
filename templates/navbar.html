@@ -5,22 +5,22 @@
         <li class="nav-item">
             <div class="nav-link">
                 <form action="">
-                    <div class="input-group input-group-sm">
-                        <button class="btn border-0" type="submit" id="button-addon1"><i
-                                class="mdi mdi-magnify text-semi-success"></i></button>
-                        <input type="search" class="form-control border-0 ps-0 rounded-0" placeholder="Buscador"
+                    <div class="input-group input-group-sm pe-2">
+                        <input type="search" class="form-control text-end border-0 ps-0 rounded-0" placeholder="Buscador"
                                aria-label="Example text with button addon"
                                aria-describedby="button-addon1">
+                         <button class="btn border-0" type="submit" id="button-addon1"><i
+                                class="mdi mdi-magnify text-semi-success"></i></button>
                     </div>
                 </form>
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-semi-success {% if active == 'project' %} active {% endif %}"
+            <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                href="#"><i class=""></i>Quiénes somos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-semi-success {% if active == 'project' %} active {% endif %}"
+            <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                href="#"><i class="mdi mdi-translate"></i> Idioma</a>
         </li>
     </ul>

@@ -1,8 +1,6 @@
-{#<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button>#}
-
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasRightLabel">Carrito de compras</h5>
+        <h5 class="offcanvas-title" id="offcanvasRightLabel"><i class="mdi mdi-cart"></i>Carrito de compras</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -15,19 +13,23 @@
                     <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
                         <div class="row no-gutters">
                             <input type="hidden" value="{{ p.product.price | multiply:p.quantity }}">
-                            <div class=" col-3 my-auto px-0">
+                            <div class=" col-2 my-auto px-0">
                                 <img class="card-img rounded-0" src="{{ p.product.image }}"
                                      alt="Suresh Dasari Card">
                             </div>
-                            <div class=" col-7">
+                            <div class=" col-8">
                                 <div class="card-body px-0 pt-1">
                                     <h6 class="">{{ p.product.name }}</h6>
                                     {#                                    <span class="card-title truncate-2">{{ p.product.info|safe }}</span>#}
-                                    <input type="number" min="1" max="{{ p.product.stock|restar:p.quantity }}"
+                                    <input type="number" min="1" max="{{ p.product.stock }}"
                                            class="form-control d-inline-block text-center form-control-sm input-cantidad"
                                            placeholder="cantidad" value="{{ p.quantity }}"
                                            style="width: 85px" id="p{{ p.product.id }}">
-                                    <button class="btn btn-danger btn-sm btn-delete rounded-sm"
+{% comment %}                                    <button class="btn btn-success btn-sm btn-update rounded-pill"
+                                            id="{{ p.product.name }}" name="{{ p.product.id }}">
+                                        <i class="mdi mdi-update"></i>
+                                    </button>{% endcomment %}
+                                    <button class="btn btn-danger btn-sm btn-delete rounded-pill"
                                             id="{{ p.product.name }}" name="{{ p.product.id }}">
                                         <i class="mdi mdi-trash-can-outline"></i>
                                     </button>
@@ -35,7 +37,7 @@
                             </div>
                             <div class=" col-2">
                                     <span class="float-end pt-1 span-price text-nowrap">
-                                        <b>$ <span>{{ p.product.price | multiply:p.quantity }}</span></b></span>
+                                        <b>$ <span id="span{{ p.product.id }}">{{ p.product.price | multiply:p.quantity }}</span></b></span>
                             </div>
                         </div>
                     </div>
