@@ -11,8 +11,9 @@
         <div>
             <nav class="row align-items-end user-select-none">
                 <div class="justify-content-start col-sm-12 col-lg-4">
-                    <a href="{% url 'index' %}"><img src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
-                         class="" alt="gaia" height="100"></a>
+                    <a href="{% url 'index' %}"><img
+                            src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
+                            class="" alt="gaia" height="100"></a>
                 </div>
                 <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
                      role="tablist">
@@ -241,7 +242,9 @@
     <script src="{% static 'lib/button_add_to_cart/script.js' %}"></script>
     <script src="{% static 'lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
     {% csrf_token %}
-    {% include 'scripts_cart.html' %}
+    {% block cart_js %}
+        {% include 'scripts_cart.html' %}
+    {% endblock %}
     <script>
       //Crear suscriptor
       document.querySelector('#suscriptor-form').addEventListener('submit', function (e) {

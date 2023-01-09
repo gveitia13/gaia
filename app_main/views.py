@@ -26,6 +26,7 @@ class BaseView(View):
             'products_in_cart': cart.all(),
             'total_price': '',
             'infoUtil_list': InfoUtil.objects.all(),
+            'all_categories': Category.objects.all(),
             'host': 'http://' + self.request.get_host() + '/'
         }
 
@@ -46,7 +47,6 @@ class StartPage(BaseView, generic.ListView, ):
         gnd = GeneralData.objects.first() if GeneralData.objects.exists() else None
         context['products4'] = Product.objects.filter(is_active=True)[:4]
         context['categories'] = sorted(Category.objects.all(), key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
-        context['all_categories'] = Category.objects.all()
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True)[0:10]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False)[0:10]
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
@@ -86,6 +86,23 @@ class StartPage(BaseView, generic.ListView, ):
 
 class ProductView(StartPage):
     template_name = 'products.html'
+
+
+class InfoView(generic.ListView, BaseView):
+    template_name = 'info.html'
+    # queryset = InfoUtil.objects.all()
+    model = InfoUtil
+
+    def get_queryset(self):
+        qs = super(InfoView, self).get_queryset()
+        qs = qs.filter(title__icontains=self.request.GET.get('search', ''))
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context.update(self.get_my_context_data())
+        context['title'] = 'Informaciones'
+        return context
 
 
 @require_POST
