@@ -157,6 +157,7 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     d.querySelectorAll('.cards-horizontal .card-s-cart div div > span.span-price b').forEach(e =>
       total += parseFloat(e.children[0].innerText.replace(',', '.')))
     console.log(total)
+
     d.querySelectorAll('#total-hidden').forEach(e => e.value = total)
 
     d.querySelectorAll('#total-price').forEach(e => e.innerHTML =

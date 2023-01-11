@@ -202,7 +202,7 @@ button.text-semi-success:hover {
     width: 80px;
 }
 
-button[data-bs-target="#product_modal"] {
+button[data-bs-target="#product_modal"]:not(.btn-table-ver) {
     position: absolute;
     top: 5px;
     right: 5px;

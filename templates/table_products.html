@@ -1,41 +1,95 @@
-<div class="table-responsive">
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th scope="col">Nombre</th>
-        <th scope="col">Imagen</th>
-        <th scope="col">Categoría</th>
-        <th class="text-center" scope="col">Tiempo de entrega</th>
-        <th class="text-center" scope="col">Precio</th>
-        <th class="text-center" scope="col">Opciones</th>
-    </tr>
-    </thead>
-    <tbody class="table-group-divider">
-    {% for product in object_list %}
-        <tr class="" style="vertical-align: middle">
-            <th scope="row">{{ product.name }}</th>
-            <td><img src="{{ product.get_image }}" alt="image" height="45" width="45" class="rounded-pill"></td>
-            <td>{{ product.category }}</td>
-            <td class="text-center">{{ product.delivery_time }} días</td>
-            <td class="text-center">{{ product.price }} CUP</td>
-            <td class="text-center">
-                <Button Class="Button add_to_cart mt-1 btn-success btn btn-success" name="{{ product.id }}">
-                    <Span>Comprar</Span>
-                    <div Class="Cart">
-                        <Svg ViewBox="0 0 36 26">
-                            <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>
-                            <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>
-                        </Svg>
-                    </div>
-                </Button>
-                <button type="button" class="btn btn-success mt-1 border-0 bg-semi-success btn-sm rounded-pill"
-                        data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ product.id }}">
-                    <i class="mdi mdi-magnify-plus-outline"></i>
-                </button>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% include 'paginator.html' %}
+{% for category in all_categories %}
+    <div class="table-responsive">
+        <h1 class="text-center text-success text-uppercase display-6 fw-bold user-select-none">{{ category }}</h1>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Imagen</th>
+{#                            <th scope="col">Categoría</th>#}
+                <th class="text-center" scope="col">Tiempo de entrega</th>
+                <th class="text-center" scope="col">Precio</th>
+                <th class="text-center" scope="col">Opciones</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            {% for product in object_list %}
+                {% if product.category == category %}
+                    <tr class="" style="vertical-align: middle">
+                        <th scope="row" style="width: 30%">{{ product.name }}</th>
+                        <td style="width: 20%"><img src="{{ product.get_image }}" alt="image" height="45" width="45" class="rounded-pill">
+                        </td>
+                        {#                <td>{{ product.category }}</td>#}
+                        <td class="text-center " style="width: 15%">{{ product.delivery_time }} días</td>
+                        <td class="text-center" style="width: 15%">{{ product.price }} CUP</td>
+                        <td class="text-center" style="width: 20%">
+                            <Button Class="Button add_to_cart mt-1 btn-success btn btn-success" name="{{ product.id }}">
+                                <Span>Comprar</Span>
+                                <div Class="Cart">
+                                    <Svg ViewBox="0 0 36 26">
+                                        <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>
+                                        <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>
+                                    </Svg>
+                                </div>
+                            </Button>
+                            <button type="button"
+                                    class="btn btn-success mt-1 border-0 bg-semi-success btn-sm rounded-pill btn-table-ver"
+                                    data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ product.id }}">
+                                <i class="mdi mdi-magnify-plus-outline"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+{#        {% include 'paginator.html' %}#}
+    </div>
+{% endfor %}
+
+{#<div class="table-responsive">#}
+{#    <h1 class="text-center text-success text-uppercase display-6 fw-bold user-select-none">Catálogo</h1>#}
+{#    <table class="table table-hover">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th scope="col">Nombre</th>#}
+{#            <th scope="col">Imagen</th>#}
+            {#            <th scope="col">Categoría</th>#}
+{#            <th class="text-center" scope="col">Tiempo de entrega</th>#}
+{#            <th class="text-center" scope="col">Precio</th>#}
+{#            <th class="text-center" scope="col">Opciones</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody class="table-group-divider">#}
+{#        {% for product in object_list %}#}
+{#            <tr class="" style="vertical-align: middle">#}
+{#                <th scope="row">{{ product.name }}</th>#}
+{#                <td><img src="{{ product.get_image }}" alt="image" height="45" width="45" class="rounded-pill"></td>#}
+                {#                <td>{{ product.category }}</td>#}
+{#                <td class="text-center">{{ product.delivery_time }} días</td>#}
+{#                <td class="text-center">{{ product.price }} CUP</td>#}
+{#                <td class="text-center">#}
+{#                    <Button Class="Button add_to_cart mt-1 btn-success btn btn-success" name="{{ product.id }}">#}
+{#                        <Span>Comprar</Span>#}
+{#                        <div Class="Cart">#}
+{#                            <Svg ViewBox="0 0 36 26">#}
+{#                                <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>#}
+{#                                <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>#}
+{#                            </Svg>#}
+{#                        </div>#}
+{#                    </Button>#}
+{#                    <button type="button"#}
+{#                            class="btn btn-success mt-1 border-0 bg-semi-success btn-sm rounded-pill btn-table-ver"#}
+{#                            data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ product.id }}">#}
+{#                        <i class="mdi mdi-magnify-plus-outline"></i>#}
+{#                    </button>#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+{#    {% include 'paginator.html' %}#}
+{#</div>#}
+<div CLASS="d-none">
+    {% include 'cart.html' %}
 </div>

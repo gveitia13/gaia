@@ -105,6 +105,16 @@ class InfoView(generic.ListView, BaseView):
         return context
 
 
+class CatalogoView(StartPage):
+    template_name = 'catalogo.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context.update(self.get_my_context_data())
+        context['title'] = 'Catálogo'
+        return context
+
+
 @require_POST
 def create_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     data = {}

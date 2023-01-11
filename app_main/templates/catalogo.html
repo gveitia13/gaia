@@ -1,0 +1,54 @@
+{% extends 'startpage.html' %}
+{% load static %}
+{% block navbar %}
+    <nav class="navbar bg-semi-success"></nav>
+    <nav class="navbar bg-white navbar-expand-sm">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <div class="nav-link">
+                    <a href="{% url 'index' %}"><img
+                            src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
+                            class="ps-2" alt="gaia" height="35"></a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav ms-auto ">
+            <li class="nav-item">
+                <div class="nav-link">
+                    <form action="{% url 'catalogo' %}">
+                        <div class="input-group input-group-sm pe-2">
+                            <input type="search" class="form-control text-end border-0 ps-0 rounded-0"
+                                   placeholder="Buscador"
+                                   aria-label="Example text with button addon"
+                                   aria-describedby="button-addon1" name="search">
+                            <button class="btn border-0" type="submit" id="button-addon1"><i
+                                    class="mdi mdi-magnify text-semi-success"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
+                   href="{% url 'info' %}"><i class=""></i>Quiénes somos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
+                   href="#"><i class="mdi mdi-translate"></i> Idioma</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+{% block content %}
+    <div class="text-end">
+        <button class="btn btn-outline-success btn-sm rounded-pill" type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="botoncito-verde">
+            $0.00
+            / {{ products_in_cart|length }} productos
+        </button>
+        <button class="btn btn-outline-success btn-sm rounded-pill"><i
+                class="mdi mdi-heart"></i></button>
+    </div>
+    {% include 'table_products.html' %}
+    {% include 'product_modal.html' %}
+{% endblock %}
