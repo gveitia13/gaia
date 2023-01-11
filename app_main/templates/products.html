@@ -70,14 +70,23 @@
                         </div>
                     </div>
                 </div>
+                {% include 'cat_carousel_letricas.html' %}
+                {% include 'products_destacados.html' %}
+                {% include 'products_descuento.html' %}
+                {% include 'products_nuevos.html' %}
             </div>
             <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
                  tabindex="0">
-                {% include 'table_products.html' %}
+                {% include 'products_x_categories.html' %}
+{#                {% include 'cat_carousel_letricas.html' %}#}
+{#                {% include 'products_destacados.html' %}#}
+{#                {% include 'products_descuento.html' %}#}
+{#                {% include 'products_nuevos.html' %}#}
             </div>
             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"
                  tabindex="0">
                 {% include 'cart.html' %}
+                {% include 'products_destacados.html' %}
             </div>
         </div>
     </div>

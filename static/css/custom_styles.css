@@ -171,7 +171,8 @@ button.text-semi-success:hover {
     .div-card-product div.card img, .img-category {
         height: 20vh !important;
     }
-    div.wrapper{
+
+    div.wrapper {
         width: 100% !important;
     }
 }
@@ -199,4 +200,10 @@ button.text-semi-success:hover {
 
 #input-touchspin {
     width: 80px;
+}
+
+button[data-bs-target="#product_modal"] {
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }

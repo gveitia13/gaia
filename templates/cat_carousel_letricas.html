@@ -1,0 +1,41 @@
+{#    de aki#}
+<br>
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 user-select-none">
+    {% for category in categories %}
+        <div class="col">
+            <a href="#" class="text-decoration-none">
+                <div class="card rounded-0 border-0 agrandar">
+                    <div class="card-header text-uppercase text-center fs-4 border-0 truncate-1
+                        {% if forloop.first %} bg-success {% elif forloop.counter == 2 %} bg-orange
+                         {% elif forloop.counter == 3 %} bg-warning {% elif forloop.last %} bg-semi-success
+                         {% endif %} rounded-0 fw-bold text-white">
+                        {{ category.name }}
+                    </div>
+                    <img src="{{ category.get_image }}" class="card-img-bottom rounded-0 img-category" alt="...">
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+<br>
+<h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con
+    nosotros?</h1>
+{% include 'carousel.html' %}
+<br>
+<div class="row row-cols-1 row-cols-sm-3 g-4">
+    <div class="col text-center text-success">
+        <h5 class="mb-0">Apoyamos a nuestros productos locales</h5>
+        <span class="fs-6">Nuestro principal objetivo es apoyar a nuestros productos locales, incentivar la producción y
+                buscar el camino hacia la agroecología!!!</span>
+    </div>
+    <div class="col text-center text-semi-success">
+        <h5 class="mb-0">Atención personalizada</h5>
+        <span class="fs-6">Comprar con nosotros será fácil, rápido y según tus necesidades.</span>
+    </div>
+    <div class="col text-center text-orange">
+        <h5 class="mb-0">Alimentación saludable</h5>
+        <span class="fs-6">Buscamos los mejores productos del mercado que sean exclusivos, variados y saludables.</span>
+    </div>
+</div>
+<br>
+{#    a aki#}

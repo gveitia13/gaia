@@ -134,6 +134,8 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     document.querySelector('#about-modal').innerHTML = data.product.about
     $("#input-touchspin").val(1).trigger("touchspin.updatesettings", {max: parseInt(data.product.stock) - parseInt(data.amount)});
     document.querySelector('#input-hidden-id-modal').value = data.product.id
+    if (data.product.old_price)
+      document.querySelector('#old-price-modal').innerHTML = data.product.old_price + ' cup'
   },
   limpiarModal = () => {
     document.querySelector('#img-modal').src = ''
@@ -143,6 +145,7 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     document.querySelector('#delivery-modal').innerHTML = ''
     document.querySelector('#info-modal').innerHTML = ''
     document.querySelector('#about-modal').innerHTML = ''
+    document.querySelector('#old-price-modal').innerHTML = ''
   },
   updateCart = () => {
     let cant = 0

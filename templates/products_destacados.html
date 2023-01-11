@@ -1,0 +1,8 @@
+<h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">Productos
+    destacados</h1>
+<div class="row row-cols-2 d-flex justify-content-center row-cols-md-3 row-cols-lg-5 div-card-product">
+    {% for prod in products_destacados %}
+        {% include 'card_product.html' %}
+    {% endfor %}
+</div>
+<br>

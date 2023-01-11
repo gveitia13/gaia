@@ -1,0 +1,37 @@
+<p>
+    <button class="btn btn-success rounded-pill btn-category" type="button" data-bs-toggle="collapse"
+            data-bs-target=".multi-collapse132" aria-expanded="false" id="todos"
+            aria-controls="">Todos
+    </button>
+    {% for category in all_categories %}
+        <a class="btn btn-success bg-semi-success rounded-pill btn-category" data-bs-toggle="collapse"
+           href="#collapse123{{ category.id }}" role="button" id="cat{{ category.id }}"
+           aria-expanded="false" aria-controls="collapse{{ category.id }}">{{ category.name }}</a>
+    {% endfor %}
+</p>
+<hr>
+{% for category in all_categories %}
+    <div class="collapse multi-collapse show" id="collapse{{ category.id }}">
+        <h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">{{ category.name }}</h1>
+        <div class="row row-cols-2 d-flex justify-content-center row-cols-md-3 row-cols-lg-5 div-card-product">
+            {% for prod in object_list %}
+                {% if prod.category.id == category.id %}
+                    {% include 'card_product.html' %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+<script>
+  console.log('asdsfkjsdhfksdfsd')
+  document.querySelectorAll('.btn-category').forEach(e => e.addEventListener('click', function () {
+    document.querySelectorAll(`.btn-category`).forEach(e => e.classList.add('bg-semi-success'))
+    e.classList.remove('bg-semi-success')
+    if (e.id === 'todos') {
+      document.querySelectorAll(`.multi-collapse`).forEach(e => e.style = "")
+      return
+    }
+    document.querySelectorAll(`.multi-collapse:not(#collapse${this.id.slice(3)})`).forEach(e => e.style = "display:none")
+    document.querySelectorAll(`.multi-collapse[id=collapse${this.id.slice(3)}]`).forEach(e => e.style = "")
+  }))
+</script>

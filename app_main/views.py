@@ -26,7 +26,7 @@ class BaseView(View):
             'products_in_cart': cart.all(),
             'total_price': '',
             'infoUtil_list': InfoUtil.objects.all(),
-            'all_categories': Category.objects.all(),
+            'all_categories': Category.objects.filter(product__isnull=False).distinct(),
             'host': 'http://' + self.request.get_host() + '/'
         }
 
@@ -52,7 +52,7 @@ class StartPage(BaseView, generic.ListView, ):
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             settings.STATIC_URL / settings.BUSINESS_BANNER]
-        print(context['host'])
+
         return context
 
     # @method_decorator(csrf_exempt)

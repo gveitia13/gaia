@@ -1,0 +1,8 @@
+<h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">Nuevos
+    productos</h1>
+<div class="row row-cols-2 row-cols-md-3 d-flex justify-content-center row-cols-lg-5 div-card-product">
+    {% for prod in products_nuevos %}
+        {% include 'card_product.html' %}
+    {% endfor %}
+</div>
+<br>
