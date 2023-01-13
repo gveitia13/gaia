@@ -6,3 +6,6 @@ class AppMainConfig(AppConfig):
     name = 'app_main'
     verbose_name = 'Principal'
     verbose_name_plural = 'Principales'
+
+    def ready(self):
+        import app_main.signals
