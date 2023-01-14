@@ -6,7 +6,7 @@
 services:
   - type: web
     name: gaia
-    env: python3.10.1
+    env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn gaia.wsgi:application"
 #    envVars:
