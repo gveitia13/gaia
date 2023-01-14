@@ -197,3 +197,10 @@ class InfoUtil(models.Model):
 
     def __str__(self):
         return self.title
+
+class Municipio(models.Model):
+    nombre = models.CharField(max_length=255)
+    precio = models.FloatField(default=8, verbose_name='Precio de envío')
+
+    def __str__(self):
+        return '{}'.format(self.nombre)
