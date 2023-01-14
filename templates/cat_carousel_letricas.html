@@ -1,4 +1,7 @@
 {#    de aki#}
+{#<h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con#}
+{#    nosotros?</h1>#}
+{% include 'carousel.html' %}
 <br>
 <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 user-select-none">
     {% for category in categories %}
@@ -18,11 +21,8 @@
     {% endfor %}
 </div>
 <br>
-<h1 class="text-center text-success text-uppercase display-5 fw-bold user-select-none">¿Por qué comprar con
-    nosotros?</h1>
-{% include 'carousel.html' %}
 <br>
-<div class="row row-cols-1 row-cols-sm-3 g-4">
+{% comment %}<div class="row row-cols-1 row-cols-sm-3 g-4">
     <div class="col text-center text-success">
         <h5 class="mb-0">Apoyamos a nuestros productos locales</h5>
         <span class="fs-6">Nuestro principal objetivo es apoyar a nuestros productos locales, incentivar la producción y
@@ -37,5 +37,5 @@
         <span class="fs-6">Buscamos los mejores productos del mercado que sean exclusivos, variados y saludables.</span>
     </div>
 </div>
-<br>
+<br>{% endcomment %}
 {#    a aki#}
