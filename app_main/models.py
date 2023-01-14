@@ -204,3 +204,8 @@ class Municipio(models.Model):
 
     def __str__(self):
         return '{}'.format(self.nombre)
+
+class Orden(models.Model):
+    __link_de_pago = None
+    total = models.FloatField(default=0, verbose_name='Importe total')
+    precio_envio = models.FloatField(default=0, verbose_name='Precio de envío')
