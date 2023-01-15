@@ -30,7 +30,7 @@ class BaseView(View):
             'infoUtil_list': InfoUtil.objects.all(),
             'all_categories': sorted(Category.objects.filter(product__isnull=False).distinct(),
                                      key=lambda cat: cat.get_prods_count, reverse=True),
-            'host': 'http://' + self.request.get_host() + '/'
+            'host': 'https://' + self.request.get_host() + '/'
         }
 
 
