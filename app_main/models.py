@@ -222,6 +222,7 @@ class Orden(models.Model):
 class ComponenteOrden(models.Model):
     producto = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='componente_producto')
     respaldo = models.FloatField()
+
     cantidad = models.IntegerField()
 
     def __str__(self):
