@@ -19,7 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ['https://*.ngrok.io', 'https://*.127.0.0.1','https://*.cubasuper-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://*.ngrok.io', 'https://*.gaia-kla9.onrender.com', 'https://*.127.0.0.1',
+                        'https://*.cubasuper-production.up.railway.app']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -28,9 +29,6 @@ SECRET_KEY = 'django-insecure-5s5r7(&3kc#x&(a3%@$ienldvsj$axcl7k(81s&aojt)%zk5jl
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -195,8 +193,6 @@ EMAIL_HOST_USER = 'gaia.store.cuba@gmail.com'
 EMAIL_HOST_PASSWORD = 'ehyqfphlarwlrizj'  # past the key or password app here
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 LOGIN_REDIRECT_URL = '/'
 

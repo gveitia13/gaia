@@ -193,10 +193,12 @@ class InfoUtil(models.Model):
 
     def text_tag(self):
         return mark_safe(self.text)
+
     text_tag.short_description = 'Texto'
 
     def __str__(self):
         return self.title
+
 
 class Municipio(models.Model):
     nombre = models.CharField(max_length=255)

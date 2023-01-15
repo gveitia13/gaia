@@ -5,10 +5,13 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.template.loader import render_to_string, get_template
+from django.utils.html import strip_tags
 
-from app_main.models import Product, Suscriptor
+from app_main.models import Product, Suscriptor, GeneralData
 from gaia import settings
 
 
@@ -20,23 +23,23 @@ def save_hash(sender, instance: Product, created, **kwargs):
             remitente = settings.EMAIL_HOST_USER
             destinatarios = [i.email for i in Suscriptor.objects.all()]
             asunto = 'Nuevo producto disponible'
-            cuerpo = f'Nombre: {prod.name}\nPrecio: {prod.price}\Tiempo de entrega: {prod.delivery_time}\n'
+            cuerpo = f'Nombre: {prod.name}\nPrecio: {prod.price}\nTiempo de entrega: {prod.delivery_time}\n'
             ruta_adjunto = prod.image.path
             nombre_adjunto = f'{prod.name}.jpg'
             # Creamos el objeto mensaje
             mensaje = MIMEMultipart()
             # Establecemos los atributos del mensaje
             mensaje['From'] = remitente
-            mensaje['BCC'] = ", ".join(destinatarios)
+            mensaje['bcc'] = ", ".join(destinatarios)
             mensaje['Subject'] = asunto
             # Agregamos el cuerpo del mensaje como objeto MIME de tipo texto
             mensaje.attach(MIMEText(cuerpo, 'plain'))
             # Abrimos el archivo que vamos a adjuntar
-            archivo_adjunto = open(ruta_adjunto, 'rb')
+            archivo_adjunto = open(prod.image.path, 'rb')
             # Creamos un objeto MIME base
             adjunto_MIME = MIMEBase('application', 'octet-stream')
             # Y le cargamos el archivo adjunto
-            adjunto_MIME.set_payload((archivo_adjunto).read())
+            adjunto_MIME.set_payload(archivo_adjunto.read())
             # Codificamos el objeto en BASE64
             encoders.encode_base64(adjunto_MIME)
             # Agregamos una cabecera al objeto
@@ -56,6 +59,3 @@ def save_hash(sender, instance: Product, created, **kwargs):
             # Cerramos la conexión
             sesion_smtp.quit()
             print('se envio el correo')
-    # else:
-    #     print(os.path.join(os.getcwd(),settings.BASE_DIR, str(prod.get_image())))
-    #     print(prod.image.path)

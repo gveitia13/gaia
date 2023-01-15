@@ -1,10 +1,10 @@
 <p>
-    <button class="btn btn-success rounded-pill btn-category" type="button" data-bs-toggle="collapse"
+    <button class="btn btn-success mx-1 rounded-pill btn-category" type="button" data-bs-toggle="collapse"
             data-bs-target=".multi-collapse132" aria-expanded="false" id="todos"
             aria-controls="">Todos
     </button>
     {% for category in all_categories %}
-        <a class="btn btn-success bg-semi-success rounded-pill btn-category" data-bs-toggle="collapse"
+        <a class="btn btn-success mx-1 bg-semi-success rounded-pill btn-category" data-bs-toggle="collapse"
            href="#collapse123{{ category.id }}" role="button" id="cat{{ category.id }}"
            aria-expanded="false" aria-controls="collapse{{ category.id }}">{{ category.name }}</a>
     {% endfor %}
