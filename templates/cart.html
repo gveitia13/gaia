@@ -21,7 +21,7 @@
                                    class="form-control d-inline-block text-center form-control-sm input-cantidad"
                                    placeholder="cantidad" value="{{ p.quantity }}"
                                    style="width: 85px" id="p{{ p.product.id }}">
-{% comment %}                            <button class="btn btn-success btn-sm btn-update mt-1 mt-sm-0 rounded-pill"
+                            {% comment %}                            <button class="btn btn-success btn-sm btn-update mt-1 mt-sm-0 rounded-pill"
                                     id="{{ p.product.name }}" name="{{ p.product.id }}">
                                 <i class="mdi mdi-update"></i>Actualizar
                             </button>{% endcomment %}
@@ -33,7 +33,8 @@
                     </div>
                     <div class="col-sm-2 col-2">
                         <span class="float-end pe-2 pt-1 span-price text-nowrap">
-                            <b>$ <span id="span{{ p.product.id }}">{{ p.product.price | multiply:p.quantity }}</span></b></span>
+                            <b>$ <span
+                                    id="span{{ p.product.id }}">{{ p.product.price | multiply:p.quantity }}</span></b></span>
                     </div>
                 </div>
             </div>
@@ -53,4 +54,39 @@
         </div>
         <input type="hidden" value="0" id="total-hidden">
     </div>
+    <hr>
+    <form action="" method="post" class="mx-auto w-75 my-3">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header">
+                <h3 CLASS="text-center card-text text-success">Poner algo aki</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="id_name" name="name" placeholder="Nombre">
+                    <label for="id_name">Nombre</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="id_lastname" name="lastname" placeholder="Apellidos">
+                    <label for="id_lastname">Apellidos</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="id_address" name="address" placeholder="Dirección">
+                    <label for="id_address">Dirección</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="id_email" name="email" placeholder="name@example.com">
+                    <label for="id_email">Correo electrónico</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="tel" class="form-control" id="id_phone" name="phone" placeholder="+53999999999">
+                    <label for="id_phone">Teléfono</label>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <button type="submit" class="btn btn-success rounded-pill"><i class="mdi mdi-credit-card"></i>Comprar
+                </button>
+            </div>
+        </div>
+    </form>
 </div>

@@ -27,7 +27,7 @@ class BaseView(View):
             'total_price': '',
             'infoUtil_list': InfoUtil.objects.all(),
             'all_categories': Category.objects.filter(product__isnull=False).distinct(),
-            'host': 'https://' + self.request.get_host() + '/'
+            'host': 'http://' + self.request.get_host() + '/'
         }
 
 
