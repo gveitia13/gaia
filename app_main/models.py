@@ -1,3 +1,4 @@
+import uuid as uuid
 from ckeditor.fields import RichTextField
 from crum import get_current_request
 from django.core.validators import RegexValidator
@@ -211,3 +212,20 @@ class Orden(models.Model):
     __link_de_pago = None
     total = models.FloatField(default=0, verbose_name='Importe total')
     precio_envio = models.FloatField(default=0, verbose_name='Precio de envío')
+    destinatario = models.TextField()
+    moneda = models.CharField(max_length=255, default='EUR')
+    uuid = models.UUIDField(verbose_name='ID', primary_key=True, default=uuid.uuid4, editable=False)
+
+    def __str__(self):
+        return '{}'.format(str(self.uuid))
+
+class ComponenteOrden(models.Model):
+    producto = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='componente_producto')
+    respaldo = models.FloatField()
+    cantidad = models.IntegerField()
+
+    def __str__(self):
+        return '{}x {} - {}'.format(self.cantidad, self.producto.name, self.respaldo)
+
+
+
