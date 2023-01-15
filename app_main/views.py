@@ -2,6 +2,8 @@ import json
 
 from django.forms import model_to_dict
 from django.http import HttpRequest, JsonResponse
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views import generic, View
 from django.views.decorators.http import require_POST
 
@@ -26,7 +28,8 @@ class BaseView(View):
             'products_in_cart': cart.all(),
             'total_price': '',
             'infoUtil_list': InfoUtil.objects.all(),
-            'all_categories': Category.objects.filter(product__isnull=False).distinct(),
+            'all_categories': sorted(Category.objects.filter(product__isnull=False).distinct(),
+                                     key=lambda cat: cat.get_prods_count, reverse=True),
             'host': 'http://' + self.request.get_host() + '/'
         }
 
@@ -46,7 +49,8 @@ class StartPage(BaseView, generic.ListView, ):
         context.update(self.get_my_context_data())
         gnd = GeneralData.objects.first() if GeneralData.objects.exists() else None
         context['products4'] = Product.objects.filter(is_active=True)[:4]
-        context['categories'] = sorted(Category.objects.all(), key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+        context['categories'] = sorted(Category.objects.filter(product__isnull=False).distinct(),
+                                       key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True)[0:10]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False)[0:10]
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
@@ -127,3 +131,11 @@ def create_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     except Exception as e:
         data['error'] = f'Ya existe un suscriptor con el correo {body["email"]}'
     return JsonResponse(data=data, safe=False)
+
+
+def delete_suscriptor(request: HttpRequest, *args, **kwargs: dict):
+    email = kwargs.get('email')
+    print(email)
+    susc = Suscriptor.objects.get(email=email)
+    susc.delete()
+    return redirect(reverse_lazy('index'))
