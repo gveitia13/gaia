@@ -21,8 +21,16 @@
                href="{% url 'info' %}"><i class=""></i>Quiénes somos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
-               href="#"><i class="mdi mdi-translate"></i> Idioma</a>
+            <select id="select-trampa"
+                    class="form-select custom-select h-100 pt-0 text-end border-0 rounded-0 pe-5 text-semi-success">
+                <option selected value="CUP">Productos en CUP</option>
+                <option value="Euro">Productos en Euro</option>
+                <option value="Ambas">Productos en ambas monedas</option>
+            </select>
         </li>
+        {#        <li class="nav-item">#}
+        {#            <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"#}
+        {#               href="#"><i class="mdi mdi-translate"></i> Idioma</a>#}
+        {#        </li>#}
     </ul>
 </nav>

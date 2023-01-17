@@ -53,12 +53,6 @@ class Category(models.Model):
     img_link.short_description = 'Imagen'
 
 
-class Moneda(models.Model):
-    name = models.CharField('Nombre', max_length=200)
-
-    def __str__(self): return self.name
-
-
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Categoría')
     image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True)
@@ -74,7 +68,11 @@ class Product(models.Model):
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     sales = models.PositiveIntegerField(verbose_name='Ventas', default=0)
     delivery_time = models.PositiveSmallIntegerField('Tiempo de entrega (días)')
-    moneda = models.CharField('Moneda principal', choices=Moneda.objects.all(), null=True, blank=True)
+    moneda = models.CharField('Moneda principal', choices=(
+        ('CUP', 'CUP'),
+        ('Euro', 'Euro'),
+        ('Ambas', 'Ambas'),
+    ), default='CUP', max_length=200)
 
     def __str__(self):
         return self.name

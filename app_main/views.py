@@ -46,7 +46,15 @@ class StartPage(BaseView, generic.ListView, ):
 
     def get_queryset(self):
         qs = super(StartPage, self).get_queryset()
-        qs = qs.filter(name__icontains=self.request.GET.get('search', ''))
+        if self.request.GET.get('search'):
+            qs = qs.filter(name__icontains=self.request.GET.get('search', ''))
+        if self.kwargs.get('moneda') == 'Euro':
+            qs = qs.filter(moneda='Euro')
+        if self.kwargs.get('moneda') == 'CUP':
+            qs = qs.filter(moneda='CUP')
+        if self.kwargs.get('moneda') == 'Ambas':
+            qs = qs
+        print(qs)
         return qs
 
     def get_context_data(self, **kwargs):

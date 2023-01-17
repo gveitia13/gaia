@@ -31,10 +31,10 @@
                 <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                    href="{% url 'info' %}"><i class=""></i>Quiénes somos</a>
             </li>
-            <li class="nav-item">
+            {% comment %}            <li class="nav-item">
                 <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                    href="#"><i class="mdi mdi-translate"></i> Idioma</a>
-            </li>
+            </li>{% endcomment %}
         </ul>
     </nav>
 {% endblock %}
