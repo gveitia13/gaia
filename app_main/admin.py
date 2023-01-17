@@ -22,12 +22,12 @@ class InfoUtilInline(admin.TabularInline):
 
 class GeneralDataAdmin(admin.ModelAdmin):
     list_display = (
-        'enterprise_name', 'email', 'logo_link',
+        'enterprise_name', 'email', 'taza_cambio', 'logo_link',
         'img_principal_link',
     )
     fieldsets = [
         ('Datos principales', {
-            'fields': ('enterprise_name', 'logo', 'img_principal',)
+            'fields': ('enterprise_name', 'taza_cambio', 'logo', 'img_principal',)
         },),
         ('Redes Sociales', {
             'fields': ('facebook', 'instagram',)
@@ -68,7 +68,6 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('image', 'img_link', 'is_active', 'is_important', 'info', 'about')
         })
     ]
-    # form = ProductForm
     search_fields = ('name',)
     list_filter = ('category',)
     actions = ['Desactivar_productos', 'Activar_productos', 'Activar_destacados', 'Quitar_destacados']

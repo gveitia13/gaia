@@ -1,7 +1,7 @@
 import uuid as uuid
 from ckeditor.fields import RichTextField
 from crum import get_current_request
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.forms import model_to_dict
 from django.utils.safestring import mark_safe
@@ -53,6 +53,12 @@ class Category(models.Model):
     img_link.short_description = 'Imagen'
 
 
+class Moneda(models.Model):
+    name = models.CharField('Nombre', max_length=200)
+
+    def __str__(self): return self.name
+
+
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Categoría')
     image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True)
@@ -66,12 +72,9 @@ class Product(models.Model):
     is_important = models.BooleanField(default=True, verbose_name='Destacado')
     stock = models.IntegerField(verbose_name='Cantidad de inventario', default=1)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
-    # views = models.PositiveIntegerField(verbose_name='Vistos', default=1)
     sales = models.PositiveIntegerField(verbose_name='Ventas', default=0)
     delivery_time = models.PositiveSmallIntegerField('Tiempo de entrega (días)')
-
-    # stars = models.PositiveIntegerField(verbose_name='Estrellas (1-5)', default=1,
-    #                                     validators=[MaxValueValidator(5), MinValueValidator(1)], )
+    moneda = models.CharField('Moneda principal', choices=Moneda.objects.all(), null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -119,9 +122,9 @@ class Product(models.Model):
 class GeneralData(models.Model):
     logo = models.ImageField(upload_to='datos_generales/logo', verbose_name='Logo')
     img_principal = models.ImageField(upload_to='datos_generales/img_principal', verbose_name='Imagen Principal')
-    # banner = models.ImageField(upload_to='datos_generales/banner', verbose_name='Banner', null=True)
     enterprise_name = models.CharField(max_length=100, verbose_name='Nombre de la empresa')
     enterprise_address = models.CharField(max_length=100, verbose_name='Dirección de la empresa', null=True, blank=True)
+    taza_cambio = models.FloatField('Taza de cambio', validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
     email = models.EmailField('Correo', unique=True,
                               error_messages={'unique': 'Este correo ya existe'})
     phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True, error_messages={

@@ -19,6 +19,11 @@ class BaseView(View):
         print('products_in_cart', cart.all())
         c_x_p = len(cart.all())
         print(c_x_p)
+        print(self.request.get_host())
+        if self.request.get_host().__contains__("127.0.0.1") or self.request.get_host().__contains__("localhost"):
+            host = 'http://'
+        else:
+            host = 'https://'
         return {
             'icon': settings.BUSINESS_LOGO_PATH,
             'title': settings.BUSINESS_NAME,
@@ -30,7 +35,7 @@ class BaseView(View):
             'infoUtil_list': InfoUtil.objects.all(),
             'all_categories': sorted(Category.objects.filter(product__isnull=False).distinct(),
                                      key=lambda cat: cat.get_prods_count, reverse=True),
-            'host': 'https://' + self.request.get_host() + '/'
+            'host': host + self.request.get_host() + '/'
         }
 
 
