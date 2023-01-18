@@ -4,10 +4,10 @@
     <ul class="navbar-nav ms-auto ">
         <li class="nav-item">
             <div class="nav-link">
-                <form action="{% url 'products' %}">
+                <form action="">
                     <div class="input-group input-group-sm pe-2">
                         <input type="search" class="form-control border-0 ps-0 rounded-0"
-                               placeholder="Buscador"
+                               placeholder="Buscador" value="{{ search }}"
                                aria-label="Example text with button addon"
                                aria-describedby="button-addon1" name="search">
                         <button class="btn border-0" type="submit" id="button-addon1"><i
@@ -23,9 +23,8 @@
         <li class="nav-item">
             <select id="select-trampa"
                     class="form-select custom-select h-100 pt-0 text-end border-0 rounded-0 pe-5 text-semi-success">
-                <option selected value="CUP">Productos en CUP</option>
-                <option value="Euro">Productos en Euro</option>
-                <option value="Ambas">Productos en ambas monedas</option>
+                <option {% if moneda != 'Euro' %} selected {% endif %} value="CUP">Productos en CUP</option>
+                <option {% if moneda == 'Euro' %} selected {% endif %} value="Euro">Productos en Euro</option>
             </select>
         </li>
         {#        <li class="nav-item">#}

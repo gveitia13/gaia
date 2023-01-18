@@ -20,6 +20,7 @@ def add(request: HttpRequest, id: int):
     # print(str(cart))
     for i in cart.all():
         print(i)
+    request.session['active'] = '1'
     return JsonResponse({
         'product': Product.objects.get(id=id).toJSON(),
         "result": "ok",
@@ -43,6 +44,7 @@ def cart_clear(request: HttpRequest):
 def item_clear(request: HttpRequest, id: int):
     cart = Cart(request)
     cart.remove(product=Product.objects.filter(id=id).first())
+    request.session['active'] = '3'
     return JsonResponse({
         'product': Product.objects.get(id=id).toJSON(),
         "result": "ok",
@@ -53,6 +55,7 @@ def item_clear(request: HttpRequest, id: int):
 @require_POST
 def remove_quant(request: HttpRequest, id: int, quantity: int):
     Cart(request).add(product=Product.objects.filter(id=id).first(), quantity=quantity, action="remove")
+    request.session['active'] = '3'
     return JsonResponse({"result": "ok"})
 
 
@@ -62,6 +65,7 @@ def update_quant(request: HttpRequest, id: int, value: int):
     product = Product.objects.get(pk=id)
     cart.update_quant(product=product, value=value)
     # return redirect(reverse_lazy('index'))
+    request.session['active'] = '3'
     return JsonResponse({
         "result": "ok",
         'product': product.toJSON(),
@@ -73,6 +77,7 @@ def update_quant(request: HttpRequest, id: int, value: int):
 @require_POST
 def remove(request: HttpRequest, id: int):
     Cart(request).decrement(product=Product.objects.filter(id=id).first())
+    request.session['active'] = '3'
     return JsonResponse({"result": "ok"})
 
 
@@ -80,6 +85,7 @@ def remove(request: HttpRequest, id: int):
 def cart_pop(request: HttpRequest, ):
     cart = Cart(request)
     cart.pop()
+    request.session['active'] = '3'
     return JsonResponse({
         "result": "ok",
         "amount": cart.get_sum_of("quantity")
@@ -90,6 +96,7 @@ def cart_pop(request: HttpRequest, ):
 def add_quant(request: HttpRequest, id: int, quantity: int):
     cart = Cart(request)
     cart.add(Product.objects.filter(id=id).first(), quantity)
+    request.session['active'] = '1'
     return JsonResponse({"result": "ok",
                          'product': Product.objects.get(id=id).toJSON(),
                          "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": quantity})["quantity"]

@@ -68,7 +68,7 @@ class Product(models.Model):
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     sales = models.PositiveIntegerField(verbose_name='Ventas', default=0)
     delivery_time = models.PositiveSmallIntegerField('Tiempo de entrega (días)')
-    moneda = models.CharField('Moneda principal', choices=(
+    moneda = models.CharField('Moneda', choices=(
         ('CUP', 'CUP'),
         ('Euro', 'Euro'),
         ('Ambas', 'Ambas'),

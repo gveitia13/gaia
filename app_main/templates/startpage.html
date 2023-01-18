@@ -11,21 +11,24 @@
         <div>
             <nav class="row align-items-end user-select-none">
                 <div class="justify-content-start col-sm-12 col-lg-4">
-                    <a href="{% url 'index' %}"><img
+                    <a href="#"><img
                             src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
                             class="" alt="gaia" height="100"></a>
                 </div>
                 <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
                      role="tablist">
-                    <button class="nav-link text-semi-success active" id="nav-home-tab" data-bs-toggle="tab"
+                    <button class="nav-link text-semi-success {% if active == '1' %} active{% endif %}"
+                            id="nav-home-tab" data-bs-toggle="tab"
                             data-bs-target="#nav-home"
                             type="button" role="tab" aria-controls="nav-home" aria-selected="true">HOME
                     </button>
-                    <button class="nav-link text-semi-success" id="nav-profile-tab" data-bs-toggle="tab"
+                    <button class="nav-link text-semi-success {% if active == '2' %} active{% endif %}"
+                            id="nav-profile-tab" data-bs-toggle="tab"
                             data-bs-target="#nav-profile"
                             type="button" role="tab" aria-controls="nav-profile" aria-selected="false">PRODUCTOS
                     </button>
-                    <button class="nav-link text-semi-success align-text-bottom" id="nav-contact-tab"
+                    <button class="nav-link text-semi-success align-text-bottom {% if active == '3' %} active{% endif %}"
+                            id="nav-contact-tab"
                             data-bs-toggle="tab"
                             data-bs-target="#nav-contact"
                             type="button" role="tab" aria-controls="nav-contact" aria-selected="false">MI CARRITO
@@ -44,7 +47,8 @@
             </nav>
             <br>
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+                <div class="tab-pane fade {% if active == '1' %} show active {% endif %}" id="nav-home" role="tabpanel"
+                     aria-labelledby="nav-home-tab"
                      tabindex="0">
                     {% comment %}       <div class="row user-select-none">
                         <div class="col-md-12 col-lg-8 ">
@@ -80,15 +84,13 @@
                     {% include 'products_descuento.html' %}
                     {% include 'products_nuevos.html' %}
                 </div>
-                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
+                <div class="tab-pane fade {% if active == '2' %} show active {% endif %}" id="nav-profile"
+                     role="tabpanel" aria-labelledby="nav-profile-tab"
                      tabindex="0">
                     {% include 'products_x_categories.html' %}
-                    {#                    {% include 'cat_carousel_letricas.html' %}#}
-                    {#                    {% include 'products_destacados.html' %}#}
-                    {#                    {% include 'products_descuento.html' %}#}
-                    {#                    {% include 'products_nuevos.html' %}#}
                 </div>
-                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"
+                <div class="tab-pane fade {% if active == '3' %} show active {% endif %}" id="nav-contact"
+                     role="tabpanel" aria-labelledby="nav-contact-tab"
                      tabindex="0">
                     {% include 'cart.html' %}
                     {% include 'products_destacados.html' %}
@@ -144,7 +146,11 @@
       })
       document.querySelector("#select-trampa").addEventListener('change', function (e) {
         let moneda = this.options[this.options.selectedIndex].value
-        location.replace(`/index/${moneda}`)
+        {#location.replace(`/index/${moneda}`)#}
+        if (moneda === 'CUP')
+          location.replace('{% url "index-cup" %}')
+        else
+          location.replace('{% url "index-euro" %}')
       })
     </script>
 {% endblock %}

@@ -24,6 +24,14 @@ class BaseView(View):
             host = 'http://'
         else:
             host = 'https://'
+
+        # search = ''
+        # if 'search' in self.request.session:
+        #     search = self.request.session['search']
+        # moneda = ''
+        # if 'moneda' in self.request.session:
+        #     moneda = self.request.session['moneda']
+
         return {
             'icon': settings.BUSINESS_LOGO_PATH,
             'title': settings.BUSINESS_NAME,
@@ -35,7 +43,7 @@ class BaseView(View):
             'infoUtil_list': InfoUtil.objects.all(),
             'all_categories': sorted(Category.objects.filter(product__isnull=False).distinct(),
                                      key=lambda cat: cat.get_prods_count, reverse=True),
-            'host': host + self.request.get_host() + '/'
+            'host': host + self.request.get_host() + '/',
         }
 
 
@@ -45,15 +53,14 @@ class StartPage(BaseView, generic.ListView, ):
     paginate_by = 10
 
     def get_queryset(self):
-        qs = super(StartPage, self).get_queryset()
+        qs = super().get_queryset()
         if self.request.GET.get('search'):
-            qs = qs.filter(name__icontains=self.request.GET.get('search', ''))
-        if self.kwargs.get('moneda') == 'Euro':
-            qs = qs.filter(moneda='Euro')
-        if self.kwargs.get('moneda') == 'CUP':
-            qs = qs.filter(moneda='CUP')
-        if self.kwargs.get('moneda') == 'Ambas':
-            qs = qs
+            qs = qs.filter(name__icontains=self.request.GET.get('search'))
+            self.request.session['search'] = self.request.GET.get('search')
+            self.request.session['active'] = '2'
+        elif 'search' in self.request.session:
+            del self.request.session['search']
+            del self.request.session['active']
         print(qs)
         return qs
 
@@ -61,18 +68,24 @@ class StartPage(BaseView, generic.ListView, ):
         context = super(StartPage, self).get_context_data()
         context.update(self.get_my_context_data())
         gnd = GeneralData.objects.first() if GeneralData.objects.exists() else None
-        context['products4'] = Product.objects.filter(is_active=True)[:4]
+
+        if 'search' in self.request.session:
+            context['search'] = self.request.session['search']
+        context['active'] = '1'
+        if 'active' in self.request.session:
+            context['active'] = self.request.session['active']
+        # Sobreescribir abajo
         context['categories'] = sorted(Category.objects.filter(product__isnull=False).distinct(),
                                        key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True)[0:10]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False)[0:10]
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
+
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             settings.STATIC_URL / settings.BUSINESS_BANNER]
 
         return context
 
-    # @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -99,6 +112,46 @@ class StartPage(BaseView, generic.ListView, ):
             data['error'] = str(e)
             return JsonResponse(data, )
         return JsonResponse(data, )
+
+
+class StartPageCUP(StartPage):
+    queryset = Product.objects.filter(is_active=True).exclude(moneda='Euro')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['moneda'] = 'CUP'
+        context['categories'] = sorted(
+            Category.objects.filter(product__isnull=False).exclude(product__moneda='Euro').distinct(),
+            key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+        context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
+            moneda='Euro')[0:10]
+        context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False).exclude(
+            moneda='Euro')[0:10]
+        context['products_nuevos'] = Product.objects.filter(is_active=True).exclude(moneda='Euro').order_by('-pk')[0:10]
+        context['all_categories'] = sorted(
+            Category.objects.filter(product__isnull=False, product__moneda__in=['CUP', 'Ambas']).distinct(),
+            key=lambda cat: cat.get_prods_count, reverse=True)
+        return context
+
+
+class StartPageEuro(StartPage):
+    queryset = Product.objects.filter(is_active=True).exclude(moneda='CUP')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['moneda'] = 'Euro'
+        context['categories'] = sorted(
+            Category.objects.filter(product__isnull=False).exclude(product__moneda='CUP').distinct(),
+            key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+        context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
+            moneda='CUP')[0:10]
+        context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False).exclude(
+            moneda='CUP')[0:10]
+        context['products_nuevos'] = Product.objects.filter(is_active=True).exclude(moneda='CUP').order_by('-pk')[0:10]
+        context['all_categories'] = sorted(
+            Category.objects.filter(product__isnull=False, product__moneda__in=['Euro', 'Ambas']).distinct(),
+            key=lambda cat: cat.get_prods_count, reverse=True)
+        return context
 
 
 class ProductView(StartPage):
