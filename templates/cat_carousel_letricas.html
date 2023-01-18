@@ -3,7 +3,7 @@
 {#    nosotros?</h1>#}
 {% include 'carousel.html' %}
 <br>
-<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 user-select-none">
+<div class="row d-flex justify-content-center row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 user-select-none">
     {% for category in categories %}
         <div class="col">
             <a href="{{ catalogo_url }}#category{{ category.id }}" class="text-decoration-none">
