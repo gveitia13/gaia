@@ -131,6 +131,13 @@ class StartPageCUP(StartPage):
         context['all_categories'] = sorted(
             Category.objects.filter(product__isnull=False, product__moneda__in=['CUP', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)
+        cart = Cart(self.request)
+        products_in_cart = []
+        if cart.all():
+            for c in cart.all():
+                if Product.objects.get(pk=c['id']).moneda in ['CUP', 'Ambas']:
+                    products_in_cart.append(c)
+        context['products_in_cart'] = products_in_cart
         return context
 
 
@@ -151,6 +158,13 @@ class StartPageEuro(StartPage):
         context['all_categories'] = sorted(
             Category.objects.filter(product__isnull=False, product__moneda__in=['Euro', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)
+        cart = Cart(self.request)
+        products_in_cart = []
+        if cart.all():
+            for c in cart.all():
+                if Product.objects.get(pk=c['id']).moneda in ['Euro', 'Ambas']:
+                    products_in_cart.append(c)
+        context['products_in_cart'] = products_in_cart
         return context
 
 
