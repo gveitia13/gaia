@@ -25,13 +25,6 @@ class BaseView(View):
         else:
             host = 'https://'
 
-        # search = ''
-        # if 'search' in self.request.session:
-        #     search = self.request.session['search']
-        # moneda = ''
-        # if 'moneda' in self.request.session:
-        #     moneda = self.request.session['moneda']
-
         return {
             'icon': settings.BUSINESS_LOGO_PATH,
             'title': settings.BUSINESS_NAME,
@@ -61,6 +54,7 @@ class StartPage(BaseView, generic.ListView, ):
         elif 'search' in self.request.session:
             del self.request.session['search']
             del self.request.session['active']
+        self.request.session['index_url'] = str(reverse_lazy('index-cup'))
         print(qs)
         return qs
 
@@ -83,6 +77,7 @@ class StartPage(BaseView, generic.ListView, ):
 
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             settings.STATIC_URL / settings.BUSINESS_BANNER]
+        # context['index_url'] = self.request.session['index_url']
 
         return context
 
@@ -121,7 +116,7 @@ class StartPageCUP(StartPage):
         context = super().get_context_data()
         context['moneda'] = 'CUP'
         context['categories'] = sorted(
-            Category.objects.filter(product__isnull=False).exclude(product__moneda='Euro').distinct(),
+            Category.objects.filter(product__isnull=False, product__moneda__in=['CUP', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
             moneda='Euro')[0:10]
@@ -138,6 +133,9 @@ class StartPageCUP(StartPage):
                 if Product.objects.get(pk=c['id']).moneda in ['CUP', 'Ambas']:
                     products_in_cart.append(c)
         context['products_in_cart'] = products_in_cart
+        context['catalogo_url'] = reverse_lazy('catalogo-cup')
+        context['index_url'] = reverse_lazy('index-cup')
+        # self.request.session['index_url'] = reverse_lazy('index-cup')
         return context
 
 
@@ -148,7 +146,7 @@ class StartPageEuro(StartPage):
         context = super().get_context_data()
         context['moneda'] = 'Euro'
         context['categories'] = sorted(
-            Category.objects.filter(product__isnull=False).exclude(product__moneda='CUP').distinct(),
+            Category.objects.filter(product__isnull=False, product__moneda__in=['Euro', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
             moneda='CUP')[0:10]
@@ -165,6 +163,9 @@ class StartPageEuro(StartPage):
                 if Product.objects.get(pk=c['id']).moneda in ['Euro', 'Ambas']:
                     products_in_cart.append(c)
         context['products_in_cart'] = products_in_cart
+        context['catalogo_url'] = reverse_lazy('catalogo-euro')
+        context['index_url'] = reverse_lazy('index-euro')
+        # self.request.session['index_url'] = reverse_lazy('index-euro')
         return context
 
 
@@ -174,7 +175,6 @@ class ProductView(StartPage):
 
 class InfoView(generic.ListView, BaseView):
     template_name = 'info.html'
-    # queryset = InfoUtil.objects.all()
     model = InfoUtil
 
     def get_queryset(self):
@@ -186,16 +186,27 @@ class InfoView(generic.ListView, BaseView):
         context = super().get_context_data()
         context.update(self.get_my_context_data())
         context['title'] = 'Informaciones'
+        context['index_url'] = reverse_lazy('index-cup')
         return context
 
 
-class CatalogoView(StartPage):
+class CatalogoCUPView(StartPageCUP):
     template_name = 'catalogo.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
-        context.update(self.get_my_context_data())
-        context['title'] = 'Catálogo'
+        # context.update(self.get_my_context_data())
+        context['title'] = 'Catálogo | Productos CUP'
+        return context
+
+
+class CatalogoEuroView(StartPageEuro):
+    template_name = 'catalogo.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        # context.update(self.get_my_context_data())
+        context['title'] = 'Catálogo | Productos CUP'
         return context
 
 

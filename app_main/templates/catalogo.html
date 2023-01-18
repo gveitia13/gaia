@@ -6,7 +6,7 @@
         <ul class="navbar-nav">
             <li class="nav-item">
                 <div class="nav-link">
-                    <a href="{% url 'index' %}"><img
+                    <a href="{{ index_url }}"><img
                             src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
                             class="ps-2" alt="gaia" height="35"></a>
                 </div>
@@ -15,10 +15,10 @@
         <ul class="navbar-nav ms-auto ">
             <li class="nav-item">
                 <div class="nav-link">
-                    <form action="{% url 'catalogo' %}">
+                    <form action="">
                         <div class="input-group input-group-sm pe-2">
-                            <input type="search" class="form-control text-end border-0 ps-0 rounded-0"
-                                   placeholder="Buscador"
+                            <input type="search" class="form-control border-0 ps-0 rounded-0"
+                                   placeholder="Buscador" value="{{ search }}"
                                    aria-label="Example text with button addon"
                                    aria-describedby="button-addon1" name="search">
                             <button class="btn border-0" type="submit" id="button-addon1"><i
@@ -31,10 +31,10 @@
                 <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                    href="{% url 'info' %}"><i class=""></i>Quiénes somos</a>
             </li>
-            <li class="nav-item">
+{% comment %}            <li class="nav-item">
                 <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                    href="#"><i class="mdi mdi-translate"></i> Idioma</a>
-            </li>
+            </li>{% endcomment %}
         </ul>
     </nav>
 {% endblock %}
