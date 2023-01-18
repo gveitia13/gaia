@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import path
 
-from app_main.views import create_suscriptor, ProductView, InfoView, delete_suscriptor, \
+from app_main.views import create_suscriptor, InfoView, delete_suscriptor, \
     StartPageCUP, StartPageEuro, CatalogoEuroView, CatalogoCUPView
 
 
@@ -17,11 +17,9 @@ def asd(request):
 urlpatterns = [
     path('', asd, name='asd'),
     # path('index/', StartPage.as_view(), name='index'),  # todos
-    # path('index/<moneda>/', StartPage.as_view(), name='index-filter'),  # CUP
     path('CUP/', StartPageCUP.as_view(), name='index-cup'),  # CUP
     path('Euro/', StartPageEuro.as_view(), name='index-euro'),  # CUP
     path('suscriptor_create/', create_suscriptor, name='suscriptor'),
-    path('products/', ProductView.as_view(), name='products'),
     path('info/', InfoView.as_view(), name='info'),
     path('catalogo/CUP/', CatalogoCUPView.as_view(), name='catalogo-cup'),
     path('catalogo/Euro/', CatalogoEuroView.as_view(), name='catalogo-euro'),

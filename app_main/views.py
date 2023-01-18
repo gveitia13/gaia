@@ -169,10 +169,6 @@ class StartPageEuro(StartPage):
         return context
 
 
-class ProductView(StartPage):
-    template_name = 'products.html'
-
-
 class InfoView(generic.ListView, BaseView):
     template_name = 'info.html'
     model = InfoUtil
