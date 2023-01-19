@@ -8,7 +8,8 @@
         {% for p in products_in_cart %}
             <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
                 <div class="row no-gutters">
-                    <input type="hidden" value="{{ p.product.price | multiply:p.quantity | floatformat:2 }}">
+                    <input type="hidden"
+                           value="{{ p.product.price |dividir:business.taza_cambio | multiply:p.quantity }}">
                     <div class="col-sm-2 col-3 my-auto col-xl-1">
                         <img class="card-img rounded-0" src="{{ p.product.image }}"
                              alt="Suresh Dasari Card">
@@ -28,8 +29,8 @@
                     </div>
                     <div class="col-sm-2 col-2">
                         <span class="float-end pe-2 pt-1 span-price text-nowrap">
-                            <b>$ <span
-                                    id="span{{ p.product.id }}">{{ p.product.price | multiply:p.quantity | floatformat:2 }}</span></b></span>
+                            <b>€ <span
+                                    id="span{{ p.product.id }}">{{ p.product.price |dividir:business.taza_cambio | multiply:p.quantity | floatformat:2 }}</span></b></span>
                     </div>
                 </div>
             </div>
@@ -44,7 +45,7 @@
                 </form>
             </div>
             <div class="col-12 col-sm-6 text-end">
-                <span class="fs-4 pe-1" id="total-price"><b>Total</b> (2 items): <b>$29.97</b></span>
+                <span class="fs-4 pe-1" id="total-price"><b>Total</b> (2 items): <b>€29.97</b></span>
             </div>
         </div>
         <input type="hidden" value="0" id="total-hidden">

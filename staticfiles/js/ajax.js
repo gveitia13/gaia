@@ -127,7 +127,7 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     document.querySelector('#img-modal').style = `background: url('${data.product.image}')`
     document.querySelector('#name-modal').innerHTML = data.product.name
     document.querySelector('#cat-modal').innerHTML = data.product.category.name
-    document.querySelector('#price-modal').innerHTML = data.product.price + ' cup'
+    document.querySelector('#price-modal').innerHTML = parseFloat(data.product.price).toFixed(2) + ` ${data.tipo_moneda}`
     document.querySelector('#delivery-modal').innerHTML = 'Tiempo de entrega máximo <b>'
       + data.product.delivery_time + ' días</b>'
     document.querySelector('#info-modal').innerHTML = data.product.info
@@ -135,7 +135,7 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     $("#input-touchspin").val(1).trigger("touchspin.updatesettings", {max: parseInt(data.product.stock) - parseInt(data.amount)});
     document.querySelector('#input-hidden-id-modal').value = data.product.id
     if (data.product.old_price)
-      document.querySelector('#old-price-modal').innerHTML = data.product.old_price + ' cup'
+      document.querySelector('#old-price-modal').innerHTML = parseFloat(data.product.old_price).toFixed() + ` ${data.tipo_moneda}`
   },
   limpiarModal = () => {
     document.querySelector('#img-modal').src = ''
@@ -152,7 +152,8 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     const d = document
     d.querySelectorAll('.cards-horizontal .input-cantidad').forEach(e => cant++)
     let product = cant === 1 ? `producto` : 'productos',
-      total = 0
+      total = 0,
+      tipo_moneda = location.pathname.includes('Euro') ? '€' : '$'
 
     d.querySelectorAll('.cards-horizontal .card-s-cart div div > span.span-price b').forEach(e =>
       total += parseFloat(e.children[0].innerText.replace(',', '.')))
@@ -161,9 +162,9 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     d.querySelectorAll('#total-hidden').forEach(e => e.value = total)
 
     d.querySelectorAll('#total-price').forEach(e => e.innerHTML =
-      `<b>Total</b>: (${cant} ${product}) <b>$${total.toFixed(2)}</b>`)
+      `<b>Total</b>: (${cant} ${product}) <b>${tipo_moneda} ${total.toFixed(2)}</b>`)
 
-    d.querySelector('#botoncito-verde').innerHTML = `$ ${total.toFixed(2)} / ${cant} ${product}`
+    d.querySelector('#botoncito-verde').innerHTML = `${tipo_moneda} ${total.toFixed(2)} / ${cant} ${product}`
     total = 0
   }
 

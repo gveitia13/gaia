@@ -4,6 +4,7 @@ from crum import get_current_request
 from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.forms import model_to_dict
+from django.http import HttpRequest
 from django.utils.safestring import mark_safe
 
 from gaia.settings import STATIC_URL
@@ -83,10 +84,27 @@ class Product(models.Model):
         item['image'] = self.get_image()
         item['info'] = self.info_tag()
         item['about'] = self.about_tag()
-        item['price'] = float(self.price)
-        item['old_price'] = float(self.old_price) if self.old_price else ''
+        item['price'] = float(self.get_price())
+        item['get_price'] = float(self.get_price())
+        # item['old_price'] = float(self.old_price) if self.old_price else ''
+        item['old_price'] = self.get_old_price()
+        item['get_old_price'] = self.get_old_price()
         item['date_updated'] = self.date_updated.strftime('%d-%m-%Y')
         return item
+
+    def get_price(self):
+        request: HttpRequest = get_current_request()
+        print(request.path)
+        if request.path.__contains__('Euro'):
+            return float(self.price) / float(GeneralData.objects.first().taza_cambio)
+        return float(self.price)
+
+    def get_old_price(self):
+        if not self.old_price: return ''
+        request: HttpRequest = get_current_request()
+        if request.path.__contains__('Euro'):
+            return float(self.old_price) / GeneralData.objects.first().taza_cambio
+        return float(self.old_price)
 
     class Meta:
         verbose_name = 'Producto'
@@ -122,7 +140,8 @@ class GeneralData(models.Model):
     img_principal = models.ImageField(upload_to='datos_generales/img_principal', verbose_name='Imagen Principal')
     enterprise_name = models.CharField(max_length=100, verbose_name='Nombre de la empresa')
     enterprise_address = models.CharField(max_length=100, verbose_name='Dirección de la empresa', null=True, blank=True)
-    taza_cambio = models.FloatField('Taza de cambio', validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
+    taza_cambio = models.FloatField('Taza de cambio', validators=[MinValueValidator(0, 'Debe ser mayor que cero')],
+                                    help_text='Valor del Euro en CUP')
     email = models.EmailField('Correo', unique=True,
                               error_messages={'unique': 'Este correo ya existe'})
     phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True, error_messages={

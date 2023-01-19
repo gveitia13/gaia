@@ -11,6 +11,11 @@ def multiply(value, arg):
 
 
 @register.filter()
+def dividir(value, arg):
+    return float(value) / float(arg)
+
+
+@register.filter()
 def get_sum_of(cart: Cart, key):
     return sum(map(lambda x: float(x[key]), cart.all()))
 

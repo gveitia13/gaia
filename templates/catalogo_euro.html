@@ -31,7 +31,7 @@
                 <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                    href="{% url 'info' %}"><i class=""></i>Quiénes somos</a>
             </li>
-{% comment %}            <li class="nav-item">
+            {% comment %}            <li class="nav-item">
                 <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                    href="#"><i class="mdi mdi-translate"></i> Idioma</a>
             </li>{% endcomment %}
@@ -50,6 +50,9 @@
                 class="mdi mdi-heart"></i></button>
     </div>
 
-    {% include 'table_products.html' %}
+    {% include 'table_products_euro.html' %}
     {% include 'product_modal.html' %}
+{% endblock %}
+{% block include_cart_lateral %}
+    {% include 'sidebar_right_euro.html' %}
 {% endblock %}

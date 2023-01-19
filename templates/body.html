@@ -31,5 +31,7 @@
     {% include 'whatsapp.html' %}
     {% include 'footer.html' %}
     </body>
-    {% include 'sidebar_right.html' %}
+    {% block include_cart_lateral %}
+        {% include 'sidebar_right.html' %}
+    {% endblock %}
 {% endblock %}

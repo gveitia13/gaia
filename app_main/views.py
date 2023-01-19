@@ -94,10 +94,15 @@ class StartPage(BaseView, generic.ListView, ):
                 product = Product.objects.get(pk=body['pk'])
                 # data = product.toJSON()
                 cart = Cart(request)
+                if request.path.__contains__('CUP'):
+                    tipo_moneda = 'CUP'
+                else:
+                    tipo_moneda = 'EUR'
                 data = {
                     'product': product.toJSON(),
                     "result": "ok",
-                    "amount": cart.cart[str(product.id)]['quantity'] if cart.cart.get(str(product.id)) else 0
+                    "amount": cart.cart[str(product.id)]['quantity'] if cart.cart.get(str(product.id)) else 0,
+                    'tipo_moneda': tipo_moneda
                 }
                 print(data)
             else:
@@ -135,12 +140,14 @@ class StartPageCUP(StartPage):
         context['products_in_cart'] = products_in_cart
         context['catalogo_url'] = reverse_lazy('catalogo-cup')
         context['index_url'] = reverse_lazy('index-cup')
+        context['tipo_moneda'] = 'CUP'
         # self.request.session['index_url'] = reverse_lazy('index-cup')
         return context
 
 
 class StartPageEuro(StartPage):
     queryset = Product.objects.filter(is_active=True).exclude(moneda='CUP')
+    template_name = 'startpage_euro.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -165,6 +172,8 @@ class StartPageEuro(StartPage):
         context['products_in_cart'] = products_in_cart
         context['catalogo_url'] = reverse_lazy('catalogo-euro')
         context['index_url'] = reverse_lazy('index-euro')
+        context['is_euro'] = True
+        context['tipo_moneda'] = 'EUR'
         # self.request.session['index_url'] = reverse_lazy('index-euro')
         return context
 
@@ -193,16 +202,18 @@ class CatalogoCUPView(StartPageCUP):
         context = super().get_context_data()
         # context.update(self.get_my_context_data())
         context['title'] = 'Catálogo | Productos CUP'
+        context['tipo_moneda'] = 'CUP'
         return context
 
 
 class CatalogoEuroView(StartPageEuro):
-    template_name = 'catalogo.html'
+    template_name = 'catalogo_euro.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
         # context.update(self.get_my_context_data())
         context['title'] = 'Catálogo | Productos CUP'
+        context['tipo_moneda'] = 'EUR'
         return context
 
 

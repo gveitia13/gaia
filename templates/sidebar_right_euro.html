@@ -12,7 +12,8 @@
                 {% for p in products_in_cart %}
                     <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
                         <div class="row no-gutters">
-                            <input type="hidden" value="{{ p.product.price | multiply:p.quantity }}">
+                            <input type="hidden"
+                                   value="{{ p.product.price |dividir:business.taza_cambio | multiply:p.quantity | floatformat:2 }}">
                             <div class=" col-2 my-auto px-0">
                                 <img class="card-img rounded-0" src="{{ p.product.image }}"
                                      alt="Suresh Dasari Card">
@@ -25,10 +26,6 @@
                                            class="form-control d-inline-block text-center form-control-sm input-cantidad"
                                            placeholder="cantidad" value="{{ p.quantity }}"
                                            style="width: 85px" id="p{{ p.product.id }}">
-                                    {% comment %}                                    <button class="btn btn-success btn-sm btn-update rounded-pill"
-                                            id="{{ p.product.name }}" name="{{ p.product.id }}">
-                                        <i class="mdi mdi-update"></i>
-                                    </button>{% endcomment %}
                                     <button class="btn btn-danger btn-sm btn-delete rounded-pill"
                                             id="{{ p.product.name }}" name="{{ p.product.id }}">
                                         <i class="mdi mdi-trash-can-outline"></i>
@@ -37,15 +34,15 @@
                             </div>
                             <div class=" col-2">
                                     <span class="float-end pt-1 span-price text-nowrap">
-                                        <b>$ <span
-                                                id="span{{ p.product.id }}">{{ p.product.price | multiply:p.quantity | floatformat:'2'  }}</span></b></span>
+                                        <b>€ <span
+                                                id="span{{ p.product.id }}">{{ p.product.price |dividir:business.taza_cambio | multiply:p.quantity | floatformat:'2' }}</span></b></span>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
                 <div class="">
                     <div class="text-end">
-                        <span class="fs-5 pe-1" id="total-price"><b>Total</b> (2 items): <b>$29.97</b></span>
+                        <span class="fs-5 pe-1" id="total-price"><b>Total</b> (2 items): <b>€29.97</b></span>
                     </div>
                     <div class="text-center pt-2">
                         <form action="" method="post" name="clear-cart">
@@ -67,11 +64,12 @@
                     </div>
                     <div class="card-body">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" required id="id_name" name="name" placeholder="Nombre">
+                            <input type="text" class="form-control" required id="id_name" name="name"
+                                   placeholder="Nombre">
                             <label for="id_name">Nombre</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control"  required id="id_lastname" name="lastname"
+                            <input type="text" class="form-control" required id="id_lastname" name="lastname"
                                    placeholder="Apellidos">
                             <label for="id_lastname">Apellidos</label>
                         </div>
