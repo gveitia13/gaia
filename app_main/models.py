@@ -58,7 +58,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Categoría')
     image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True)
     name = models.CharField(max_length=100, verbose_name='Nombre')
-    price = models.DecimalField(max_digits=9, verbose_name='Precio', decimal_places=2)
+    price = models.DecimalField(max_digits=9, verbose_name='Precio', decimal_places=2, help_text='Poner en base a CUP')
     old_price = models.DecimalField(max_digits=9, verbose_name='Precio anterior', decimal_places=2, null=True,
                                     help_text='Este precio debería ser mayor al precio actual', blank=True)
     info = RichTextField(max_length=400, verbose_name='Información', null=True, blank=True)
