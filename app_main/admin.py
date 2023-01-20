@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil
+from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil, Municipio
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -99,8 +99,13 @@ class InfoUtilAdmin(admin.ModelAdmin):
     list_display = ('title', 'text_tag')
 
 
+class MunicipioAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'precio')
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(InfoUtil, InfoUtilAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(GeneralData, GeneralDataAdmin)
 admin.site.register(Suscriptor)
+admin.site.register(Municipio, MunicipioAdmin)

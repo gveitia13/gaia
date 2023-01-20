@@ -8,7 +8,7 @@ from django.views import generic, View
 from django.views.decorators.http import require_POST
 
 from app_cart.cart import Cart
-from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil
+from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil, Municipio
 from gaia import settings
 
 
@@ -37,6 +37,7 @@ class BaseView(View):
             'all_categories': sorted(Category.objects.filter(product__isnull=False).distinct(),
                                      key=lambda cat: cat.get_prods_count, reverse=True),
             'host': host + self.request.get_host() + '/',
+            'address': Municipio.objects.all()
         }
 
 
@@ -214,6 +215,7 @@ class CatalogoEuroView(StartPageEuro):
         # context.update(self.get_my_context_data())
         context['title'] = 'Catálogo | Productos CUP'
         context['tipo_moneda'] = 'EUR'
+        context['is_euro'] = True
         return context
 
 

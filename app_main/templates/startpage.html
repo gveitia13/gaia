@@ -146,13 +146,18 @@
             })
           });
       })
-      document.querySelector("#select-trampa").addEventListener('change', function (e) {
-        let moneda = this.options[this.options.selectedIndex].value
-        {#location.replace(`/index/${moneda}`)#}
-        if (moneda === 'CUP')
-          location.replace('{% url "index-cup" %}')
-        else
-          location.replace('{% url "index-euro" %}')
-      })
+      try {
+        document.querySelector("#select-trampa").addEventListener('change', function (e) {
+          let moneda = this.options[this.options.selectedIndex].value
+          {#location.replace(`/index/${moneda}`)#}
+          if (moneda === 'CUP')
+            location.replace('{% url "index-cup" %}')
+          else
+            location.replace('{% url "index-euro" %}')
+        })
+      } catch (e) {
+        console.log(e)
+      }
+
     </script>
 {% endblock %}

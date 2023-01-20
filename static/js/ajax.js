@@ -1,5 +1,24 @@
 const productModal = document.querySelector('#product_modal')
 const productModal2 = new bootstrap.Modal(document.getElementById('product_modal'));
+const titleTarget = document.querySelector('#on-off')
+let setOnline = () => {
+    titleTarget.innerHTML = `<i class="mdi mdi-wifi"></i> Online</span`
+    // titleTarget.classList.remove('border-danger')
+    // titleTarget.classList.add('border-success')
+    titleTarget.style.color = '#198754'
+  },
+  setOffline = () => {
+    titleTarget.innerHTML = `<i class="mdi mdi-wifi-off"></i> Offline</span`
+    // titleTarget.classList.remove('border-success')
+    // titleTarget.classList.add('border-danger')
+    titleTarget.style.color = '#dc3545'
+  }
+if (window.navigator.onLine)
+  setOnline()
+else
+  setOffline()
+window.addEventListener('online', () => setOnline())
+window.addEventListener('offline', () => setOffline())
 
 //Auxiliary method: submit with ajax and jQuery
 function ajaxFunction(url, parameters, type, callback, async = true) {
@@ -147,7 +166,7 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     document.querySelector('#about-modal').innerHTML = ''
     document.querySelector('#old-price-modal').innerHTML = ''
   },
-  updateCart = () => {
+  updateCart = (value = 0) => {
     let cant = 0
     const d = document
     d.querySelectorAll('.cards-horizontal .input-cantidad').forEach(e => cant++)
@@ -158,7 +177,7 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     d.querySelectorAll('.cards-horizontal .card-s-cart div div > span.span-price b').forEach(e =>
       total += parseFloat(e.children[0].innerText.replace(',', '.')))
     console.log(total)
-
+    total += value
     d.querySelectorAll('#total-hidden').forEach(e => e.value = total)
 
     d.querySelectorAll('#total-price').forEach(e => e.innerHTML =

@@ -223,8 +223,9 @@ class InfoUtil(models.Model):
 
 
 class Municipio(models.Model):
-    nombre = models.CharField(max_length=255)
-    precio = models.FloatField(default=8, verbose_name='Precio de envío')
+    nombre = models.CharField('Nombre', max_length=255)
+    precio = models.FloatField(verbose_name='Precio de envío en CUP',
+                               help_text='Si el pago es en Euro, se hará la conversión en base a la taza de cambio')
 
     def __str__(self):
         return '{}'.format(self.nombre)
