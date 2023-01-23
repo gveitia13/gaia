@@ -232,12 +232,18 @@ class Municipio(models.Model):
 
 
 class Orden(models.Model):
-    __link_de_pago = None
+    link_de_pago = models.CharField(max_length=500, null=True, blank=True)
     total = models.FloatField(default=0, verbose_name='Importe total')
     precio_envio = models.FloatField(default=0, verbose_name='Precio de envío')
     destinatario = models.TextField()
-    moneda = models.CharField(max_length=255, default='EUR')
+    receptor = models.TextField()
+    moneda = models.CharField(max_length=255, default='Euro')
     uuid = models.UUIDField(verbose_name='ID', primary_key=True, default=uuid.uuid4, editable=False)
+    status = models.CharField('Estado', choices=(
+        ('1', 'Completada'),
+        ('2', 'Pendiente'),
+    ), max_length=10, default='2')
+    date_created = models.DateTimeField(auto_now_add=True, )
 
     def __str__(self):
         return '{}'.format(str(self.uuid))

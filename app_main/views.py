@@ -1,14 +1,18 @@
-import json
+import datetime
+import json, http.client
+from hashlib import sha256, sha1
 
+import pytz
 from django.forms import model_to_dict
 from django.http import HttpRequest, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic, View
 from django.views.decorators.http import require_POST
 
 from app_cart.cart import Cart
-from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil, Municipio
+from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
+    ComponenteOrden
 from gaia import settings
 
 
@@ -239,3 +243,131 @@ def delete_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     susc = Suscriptor.objects.get(email=email)
     susc.delete()
     return redirect(reverse_lazy('index'))
+
+
+def pagar(request):
+    # Crear la orden
+    # Vaciar carrito
+    # Si es tropipay se hace to esto
+    # Else nada y se envia x whatsapp
+
+    orden = Orden.objects.create(moneda='Euro', precio_envio=10, destinatario='Los inputs del form', total=1234.5,
+                                 receptor='Los inputs del form')
+
+    taza = GeneralData.objects.all().first().taza_cambio
+    cant_productos = 10
+    prod = Product.objects.all().first()
+    cantidad = 5
+    for i in range(cant_productos):
+        component = ComponenteOrden.objects.create(producto_id=prod.id, respaldo=float(prod.price) * taza * cantidad,
+                                                   cantidad=cantidad)
+
+    conn = http.client.HTTPSConnection("" + settings.TPP_URL + "")
+    # genera un request json
+    payload_tpp = {"grant_type": "client_credentials", "client_id": settings.TPP_CLIENT_ID,
+                   "client_secret": settings.TPP_CLIENT_SECRET}
+    # hago la petition y capturo el response
+    payload_tpp = json.dumps(payload_tpp)
+    headers = {'Content-Type': "application/json"}
+    # se hace el post
+    conn.request("POST", "/api/v2/access/token", payload_tpp, headers)
+    res = conn.getresponse()
+    data = res.read()
+    token = data.decode("utf-8")
+    token = token.split(':')[1].split(',')[0].replace('"', '').replace(' ', '')
+
+    user_comprador = 'Nombre q viene en el input'
+
+    mensaje = 'Listados de productos x cantidad y precios'
+    # Convertir total a 2 decimales
+    total = 4655
+    client = {
+        'name': 'name del input',
+        'lastName': 'sacar del input',
+        "address": 'sacar del input',
+        "phone": '+5358496023',
+        "email": 'gveitia13@gmail.com',
+        "countryId": 0,
+        "termsAndConditions": "true"
+    }
+
+    spain_timezone = pytz.timezone("Europe/Madrid")
+    spain_time = datetime.datetime.now(spain_timezone)
+    payload_tpp = {
+        "reference": str(orden.uuid),
+        "concept": "Orden de GAIA a nombre de " + client['email'],
+        "favorite": "false",
+        "description": mensaje,
+        "amount": total * 100,  # para quitar decimales
+        "currency": 'EUR',
+        "singleUse": "true",
+        "reasonId": 4,
+        "expirationDays": 10,
+        "lang": "es",
+        "urlSuccess": "" + settings.TPP_SUCCESS_URL + "",
+        "urlFailed": "" + settings.TPP_FAILED_URL + "",
+        "urlNotification": "" + settings.TPP_NOTIFICACION_URL + "",
+        "serviceDate": str(spain_time.year) + '-' + str(spain_time.month) + '-' + str(spain_time.day),
+        "client": client,
+        "directPayment": "true",
+        "paymentMethods": ["EXT", "TPP"]
+    }
+
+    payload_tpp = json.dumps(payload_tpp)
+    headers = {
+        'Content-Type': "application/json",
+        'Authorization': "Bearer " + token
+    }
+    conn.request("POST", "/api/v2/paymentcards", payload_tpp, headers)
+    res = conn.getresponse()
+    data = res.read()
+    retorno = data.decode("utf-8")
+    print('retorno aki', retorno)
+    retorno = retorno.split(',')
+    retorno = retorno[len(retorno) - 2].replace('"shortUrl":"', '').replace('"', '')
+    orden.link_de_pago = retorno
+    orden.total = orden.total / 100
+
+    orden.save()
+    print('orden d pago va aki', orden.link_de_pago)
+    return redirect(orden.link_de_pago)
+
+
+def tpp_verificar(request):
+    if request.method == 'POST':
+        payload = json.loads(str(request.data).replace('\'', '"'))
+        bankOrderCode = ""
+        originalCurrencyAmount = ""
+        signature = ""
+        status = payload['status']
+        referencia = ""
+        for key, value in payload.items():
+            if key == 'data':
+                datos = json.loads(str(payload['data']).replace('\'', '"'))
+                bankOrderCode = datos['bankOrderCode']
+                originalCurrencyAmount = datos['originalCurrencyAmount']
+                signature = datos['signature']
+                referencia = datos['reference']
+        cadena = bankOrderCode + settings.TPP_CLIENT_EMAIL + sha1(
+            settings.TPP_CLIENT_PASSWORD.encode('utf-8')).hexdigest() \
+                 + originalCurrencyAmount
+        cadena = cadena.encode('utf-8')
+        firma = sha256(cadena).hexdigest()
+        if firma == signature:
+            orden = get_object_or_404(Orden, pk=referencia)
+            if status == 'OK':
+                completar_orden(orden.uuid)
+                orden.status = '1'
+            else:
+                orden.status = '2'
+            orden.link_de_pago = "CONSUMIDO"
+            orden.save()
+        return redirect('index-euro')
+    return redirect('index-euro')
+
+
+def completar_orden(orden_id):
+    # descontar del stock
+    # pongo la orden en completada
+    # limpio link d pago
+    pass
