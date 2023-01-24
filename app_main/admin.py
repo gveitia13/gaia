@@ -4,8 +4,19 @@ from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, 
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'img_link', 'description')
-    fields = ('name', 'image', 'description')
+    list_display = ('name', 'img_link', 'destacado')
+    fields = ('name', 'image', 'destacado')
+    actions = ['Activar_destacados', 'Quitar_destacados']
+
+    def Activar_destacados(self, request, queryset):
+        for p in queryset:
+            p.destacado = False
+            p.save()
+
+    def Quitar_destacados(self, request, queryset):
+        for p in queryset:
+            p.destacado = True
+            p.save()
 
 
 class BannerInline(admin.TabularInline):

@@ -1,8 +1,8 @@
-<div class="col">
-    <div class="card rounded-0 border-0 h-100 pb-3 agrandar">
+<div class="col py-2">
+    <div class="card shadow-sm    h-100 pb-3 agrandar">
         <img src="{{ prod.image.url }}"
              class="card-img-top rounded-0 border-0" alt="...">
-        <div class="card-body text-success bg-light-success text-center pb-0">
+        <div class="card-body text-success  text-center pb-0">
             <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
             {% if prod.old_price %}
                 <p class="card-text truncate-1 mb-0 text-decoration-line-through">{{ prod.get_old_price | floatformat:2 }} {{ tipo_moneda }}</p>
@@ -12,7 +12,7 @@
                 {{ prod.info_tag }}
             </div>
         </div>
-        <div class="card-footer text-center bg-light-success rounded-0 border-0 pb-3">
+        <div class="card-footer text-center bg-white rounded-0 border-0 pb-3">
             <Button Class="Button add_to_cart btn btn-success mb-1" name="{{ prod.id }}">
                 <Span>COMPRAR</Span>
                 <div Class="Cart">
@@ -23,7 +23,7 @@
                 </div>
             </Button>
             <button type="button" class="btn btn-success border-0 mb-1 bg-semi-success btn-sm rounded-pill"
-                    data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
+                    data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}" >
                 <i class="mdi mdi-magnify-plus-outline"></i> VER
             </button>
         </div>

@@ -16,9 +16,10 @@ phone_regex = RegexValidator(
 
 
 class Category(models.Model):
-    description = models.TextField(verbose_name='Descripción', null=True, blank=True)
+    # description = models.TextField(verbose_name='Descripción', null=True, blank=True)
     name = models.CharField(max_length=100, verbose_name='Nombre')
     image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True)
+    destacado = models.BooleanField('Destacada', default=False)
 
     def toJSON(self):
         item = model_to_dict(self)
