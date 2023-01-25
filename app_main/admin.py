@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil, Municipio
+from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
+    ComponenteOrden
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -126,4 +127,6 @@ admin.site.register(InfoUtil, InfoUtilAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(GeneralData, GeneralDataAdmin)
 admin.site.register(Suscriptor)
+admin.site.register(Orden)
+admin.site.register(ComponenteOrden)
 admin.site.register(Municipio, MunicipioAdmin)
