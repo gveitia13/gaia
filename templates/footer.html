@@ -18,14 +18,14 @@
     </div>
 </footer>
 
-<footer class="bd-footer mt-3 bg-orange">
+<footer class="bd-footer mt-3 bg-orange footer-2">
     <div class="container pt-3">
         <div class="row">
             <div class="col-6 col-md-3  mb-3">
                 <h5>CATEGORÍAS</h5>
                 <ul class="list-unstyled">
-                    {% for category in all_categories %}
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-white">{{ category.name }}</a>
+                    {% for category in categories %}
+                        <li class="mb-2"><a href="{{ catalogo_url }}#category{{ category.id }}" class="text-decoration-none text-white">{{ category.name }}</a>
                         </li>
                     {% endfor %}
                 </ul>

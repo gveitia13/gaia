@@ -38,7 +38,7 @@ class BaseView(View):
             'business': GeneralData.objects.first() if GeneralData.objects.exists() else {},
             'products_in_cart': cart.all(),
             'total_price': '',
-            'infoUtil_list': InfoUtil.objects.all(),
+            'infoUtil_list': InfoUtil.objects.filter(title__isnull=False)[:4],
             'all_categories': sorted(Category.objects.filter(product__isnull=False).distinct(),
                                      key=lambda cat: cat.get_prods_count, reverse=True),
             'host': host + self.request.get_host() + '/',
@@ -75,7 +75,7 @@ class StartPage(BaseView, generic.ListView, ):
         if 'active' in self.request.session:
             context['active'] = self.request.session['active']
         # Sobreescribir abajo
-        context['categories'] = sorted(Category.objects.filter(product__isnull=False).distinct(),
+        context['categories'] = sorted(Category.objects.filter(product__isnull=False, destacado=True).distinct(),
                                        key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True)[0:10]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False)[0:10]
@@ -128,7 +128,7 @@ class StartPageCUP(StartPage):
         context = super().get_context_data()
         context['moneda'] = 'CUP'
         context['categories'] = sorted(
-            Category.objects.filter(product__isnull=False, product__moneda__in=['CUP', 'Ambas']).distinct(),
+            Category.objects.filter(product__isnull=False, destacado=True, product__moneda__in=['CUP', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
             moneda='Euro')[0:10]
@@ -160,7 +160,7 @@ class StartPageEuro(StartPage):
         context = super().get_context_data()
         context['moneda'] = 'Euro'
         context['categories'] = sorted(
-            Category.objects.filter(product__isnull=False, product__moneda__in=['Euro', 'Ambas']).distinct(),
+            Category.objects.filter(product__isnull=False, destacado=True, product__moneda__in=['Euro', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
             moneda='CUP')[0:10]

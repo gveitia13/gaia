@@ -11,12 +11,12 @@ class CategoryAdmin(admin.ModelAdmin):
 
     def Activar_destacados(self, request, queryset):
         for p in queryset:
-            p.destacado = False
+            p.destacado = True
             p.save()
 
     def Quitar_destacados(self, request, queryset):
         for p in queryset:
-            p.destacado = True
+            p.destacado = False
             p.save()
 
 
