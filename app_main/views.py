@@ -382,7 +382,10 @@ def pagar_cup(request: HttpRequest):
     # Si es tropipay se hace to esto
     # Else nada y se envia x whatsapp
     if request.method == 'POST':
-        create_order(request, **{})
+        orden = create_order(request, **{})
+        mensaje = ''
+        return redirect(
+            'http://web.whatsapp.com/send?text=' + mensaje.replace(' <br/> ', '\n') + '&phone=' + str(cfg.whatsapp))
     return redirect('index-cup')
 
 
@@ -420,7 +423,17 @@ def create_order(request: HttpRequest, **kwargs):
                                      calle=calle, calle1=entre1, calle2=entre2, numero_edificio=numero, reparto=reparto,
                                      detalles_direccion=detalle)
         for c in cart.all():
-            ComponenteOrden.objects.create()
-
+            prod = Product.objects.get(pk=c['id'])
+            ComponenteOrden.objects.create(orden=orden, producto=prod,
+                                           respaldo=float(c['product']['price'] * c['quantity']),
+                                           cantidad=int(c['quantity']))
+            prod.stock = prod.stock - int(c['quantity'])
+            prod.save()
+    # Limpiar cart
+    Cart(request).clear()
     print(cart.all())
-    # print('products cup', products_cup)
+    return orden
+
+
+def cancel_order(request, order):
+    pass
