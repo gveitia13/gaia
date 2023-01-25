@@ -158,6 +158,14 @@
       } catch (e) {
         console.log(e)
       }
+      try {
+        document.querySelector('#select-info').addEventListener('change', function (e) {
+          let id = this.value
+          location.replace(`{% url 'info' %}#${id}`)
+        })
+      } catch (e) {
+        console.log(e)
+      }
 
     </script>
 {% endblock %}

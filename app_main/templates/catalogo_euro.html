@@ -11,6 +11,11 @@
                             class="ps-2" alt="gaia" height="35"></a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link">
+                    <span id="on-off" class="fs-6 rounded-pill"></span>
+                </a>
+            </li>
         </ul>
         <ul class="navbar-nav ms-auto ">
             <li class="nav-item">
@@ -28,13 +33,14 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
-                   href="{% url 'info' %}"><i class=""></i>Quiénes somos</a>
+                <select class="form-select custom-select h-100 pt-0 text-end border-0 rounded-0 pe-5 text-semi-success"
+                        id="select-info">
+                    <option selected disabled>Info Útil</option>
+                    {% for info in infoUtil_list %}
+                        <option value="{{ info.id }}">{{ info.title }}</option>
+                    {% endfor %}
+                </select>
             </li>
-            {% comment %}            <li class="nav-item">
-                <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
-                   href="#"><i class="mdi mdi-translate"></i> Idioma</a>
-            </li>{% endcomment %}
         </ul>
     </nav>
 {% endblock %}

@@ -21,32 +21,39 @@
 <footer class="bd-footer mt-3 bg-orange footer-2">
     <div class="container pt-3">
         <div class="row">
-            <div class="col-6 col-md-3  mb-3">
-                <h5>CATEGORÍAS</h5>
-                <ul class="list-unstyled">
-                    {% for category in categories %}
-                        <li class="mb-2"><a href="{{ catalogo_url }}#category{{ category.id }}" class="text-decoration-none text-white">{{ category.name }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+            {% if catalogo_url %}
+
+                <div class="col-6 col-md-3  mb-3">
+                    <h5>CATEGORÍAS</h5>
+                    <ul class="list-unstyled">
+                        {% for category in categories %}
+                            <li class="mb-2"><a href="{{ catalogo_url }}#category{{ category.id }}"
+                                                class="text-decoration-none text-white">{{ category.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
             <div class="col-6 col-md-3  mb-3">
                 <h5>INFO ÚTIL</h5>
                 <ul class="list-unstyled">
                     {% for info in infoUtil_list %}
-                        <li class="mb-2"><a href="{% url 'info' %}#{{ info.id }}" class="text-decoration-none text-white">{{ info.title }}</a></li>
+                        <li class="mb-2"><a href="{% url 'info' %}#{{ info.id }}"
+                                            class="text-decoration-none text-white">{{ info.title }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
             <div class="col-6 col-md-3  mb-3">
                 <h5>CONTACTO</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-white">{{ business.phone_number }}</a>
+                    <li class="mb-2"><a href="tel:{{ business.phone_number }}"
+                                        class="text-decoration-none text-white">{{ business.phone_number }}</a>
                     </li>
-                    <li class="mb-2"><a href="#"
+                    <li class="mb-2"><a href="{{ business.enterprise_address }}"
                                         class="text-decoration-none text-white">{{ business.enterprise_address }}</a>
                     </li>
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-white">{{ business.email }}</a></li>
+                    <li class="mb-2"><a href="mailto:{{ business.email }}" class="text-decoration-none text-white">{{ business.email }}</a></li>
                 </ul>
             </div>
             <div class="col-6 col-md-3  mb-3">

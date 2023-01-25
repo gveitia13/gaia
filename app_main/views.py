@@ -199,6 +199,8 @@ class InfoView(generic.ListView, BaseView):
         context.update(self.get_my_context_data())
         context['title'] = 'Informaciones'
         context['index_url'] = reverse_lazy('index-cup')
+        context['categories'] = sorted(Category.objects.filter(product__isnull=False, destacado=True).distinct(),
+                                       key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         return context
 
 
