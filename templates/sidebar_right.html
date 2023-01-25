@@ -19,16 +19,11 @@
                             </div>
                             <div class=" col-8">
                                 <div class="card-body px-0 pt-1">
-                                    <h6 class="">{{ p.product.name }}</h6>
-                                    {#                                    <span class="card-title truncate-2">{{ p.product.info|safe }}</span>#}
+                                    <h6 class="me-2">{{ p.product.name }}</h6>
                                     <input type="number" min="1" max="{{ p.product.stock }}"
                                            class="form-control d-inline-block text-center form-control-sm input-cantidad"
                                            placeholder="cantidad" value="{{ p.quantity }}"
                                            style="width: 85px" id="p{{ p.product.id }}">
-                                    {% comment %}                                    <button class="btn btn-success btn-sm btn-update rounded-pill"
-                                            id="{{ p.product.name }}" name="{{ p.product.id }}">
-                                        <i class="mdi mdi-update"></i>
-                                    </button>{% endcomment %}
                                     <button class="btn btn-danger btn-sm btn-delete rounded-pill"
                                             id="{{ p.product.name }}" name="{{ p.product.id }}">
                                         <i class="mdi mdi-trash-can-outline"></i>

@@ -33,8 +33,12 @@
           let amount = parseFloat(data.amount),
             original_price = parseFloat(data.price)
           setTimeout(() => {
-            document.querySelectorAll(`#${input.id}`).forEach(e =>
-              e.innerHTML = `${parseFloat(amount * original_price).toFixed(2)}`)
+            document.querySelectorAll(`#${input.id}`).forEach(e => {
+              let asd = amount * original_price
+              if (location.pathname.includes('Euro'))
+                asd /= parseFloat('{{ business.taza_cambio }}')
+              e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+            })
             setTimeout(() => updateCart())
           })
 

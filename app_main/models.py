@@ -132,6 +132,11 @@ class Product(models.Model):
             f'<a href="{STATIC_URL}img/empty.png"><img src="{STATIC_URL}img/empty.png" class="agrandar mb-2 mr-2" '
             f'width="50" height="50" /></a>')
 
+    def has_old_price(self):
+        return mark_safe(f'<img src="{STATIC_URL}admin/img/icon-yes.svg" alt="True">') if self.old_price else mark_safe(
+            f'<img src="{STATIC_URL}admin/img/icon-no.svg" alt="False">')
+
+    has_old_price.short_description = 'Tiene descuento'
     img_link.short_description = 'Vista previa'
     info_tag.short_description = 'Información'
 
@@ -207,8 +212,8 @@ class Suscriptor(models.Model):
 
 
 class InfoUtil(models.Model):
-    title = models.CharField('Título', max_length=100)
-    text = RichTextField("Contenido")
+    title = models.CharField('Título', max_length=100, null=True, blank=True)
+    text = RichTextField("Contenido", null=True, blank=True)
 
     class Meta:
         verbose_name = 'Información útil'
@@ -225,8 +230,8 @@ class InfoUtil(models.Model):
 
 class Municipio(models.Model):
     nombre = models.CharField('Nombre', max_length=255)
-    precio = models.FloatField(verbose_name='Precio de envío en CUP',
-                               help_text='Si el pago es en Euro, se hará la conversión en base a la taza de cambio')
+    precio = models.FloatField(verbose_name='Precio de envío en CUP', )
+    precio_euro = models.FloatField('Precio de envío en Euro', )
 
     def __str__(self):
         return '{}'.format(self.nombre)

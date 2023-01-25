@@ -35,9 +35,9 @@
                 <select class="form-select" required aria-label="Default select example" name="municipio">
                     <option selected disabled>Selecciona el lugar de entrega</option>
                     {% for address in address %}
-                        <option value="{% if is_euro %}{{ address.precio | dividir:business.taza_cambio }}{% else %}{{ address.precio }}{% endif %}"
+                        <option value="{% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}"
                                 name="{{ address.id }}">{{ address.nombre }}: ---------{% if is_euro %}€
-                            {{ address.precio | dividir:business.taza_cambio |floatformat:2 }}{% else %}$
+                            {{ address.precio_euro |floatformat:2 }}{% else %}$
                             {{ address.precio }}{% endif %}</option>
                     {% endfor %}
                 </select>

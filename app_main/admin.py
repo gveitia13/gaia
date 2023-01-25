@@ -70,7 +70,8 @@ class ProductInline(admin.StackedInline):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'img_link', 'moneda', 'price', 'info_tag', 'sales', 'stock', 'is_active')
+    list_display = (
+        'name', 'category', 'img_link', 'moneda', 'price', 'info_tag', 'sales', 'stock', 'has_old_price', 'is_active')
     fieldsets = [
         ('Datos Principales:', {
             'fields': ('name', 'category', 'moneda', 'price', 'old_price', 'stock', 'delivery_time')
@@ -81,7 +82,8 @@ class ProductAdmin(admin.ModelAdmin):
     ]
     search_fields = ('name',)
     list_filter = ('category',)
-    actions = ['Desactivar_productos', 'Activar_productos', 'Activar_destacados', 'Quitar_destacados']
+    actions = ['Desactivar_productos', 'Activar_productos', 'Activar_destacados', 'Quitar_destacados',
+               'Quitar_descuento']
     change_list_template = 'admin/custom_list.html'
     readonly_fields = ('date_updated', 'sales', 'img_link')
 
@@ -105,13 +107,18 @@ class ProductAdmin(admin.ModelAdmin):
             p.is_important = True
             p.save()
 
+    def Quitar_descuento(self, request, queryset):
+        for p in queryset:
+            p.old_price = None
+            p.save()
+
 
 class InfoUtilAdmin(admin.ModelAdmin):
     list_display = ('title', 'text_tag')
 
 
 class MunicipioAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'precio')
+    list_display = ('nombre', 'precio', 'precio_euro')
 
 
 admin.site.register(Product, ProductAdmin)
