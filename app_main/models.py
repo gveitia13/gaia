@@ -95,7 +95,7 @@ class Product(models.Model):
 
     def get_price(self):
         request: HttpRequest = get_current_request()
-        print(request.path)
+        # print(request.path)
         if request.path.__contains__('Euro'):
             return float(self.price) / float(GeneralData.objects.first().taza_cambio)
         return float(self.price)
@@ -241,8 +241,6 @@ class Orden(models.Model):
     link_de_pago = models.CharField(max_length=500, null=True, blank=True)
     total = models.FloatField(default=0, verbose_name='Importe total')
     precio_envio = models.FloatField(default=0, verbose_name='Precio de envío')
-    destinatario = models.TextField()
-    receptor = models.TextField()
     moneda = models.CharField(max_length=255, default='Euro')
     uuid = models.UUIDField(verbose_name='ID', primary_key=True, default=uuid.uuid4, editable=False)
     status = models.CharField('Estado', choices=(
@@ -250,6 +248,18 @@ class Orden(models.Model):
         ('2', 'Pendiente'),
     ), max_length=10, default='2')
     date_created = models.DateTimeField(auto_now_add=True, )
+    # Campos del form
+    nombre_comprador = models.CharField('Nombre comprador', max_length=200)
+    telefono_comprador = models.CharField('Teléfono comprador', max_length=200)
+    nombre_receptor = models.CharField('Nombre receptor', max_length=200)
+    telefono_receptor = models.CharField('Teléfono receptor', max_length=200)
+    municipio = models.CharField('Municipio', max_length=200)
+    calle = models.CharField('Calle', max_length=200)
+    calle1 = models.CharField('Entre calle 1', max_length=200)
+    calle2 = models.CharField('Entre calle 2', max_length=200)
+    numero_edificio = models.CharField('Número de edificio', max_length=200)
+    reparto = models.CharField('Reparto', max_length=200)
+    detalles_direccion = models.CharField('Detalles de dirección', max_length=200)
 
     def __str__(self):
         return '{}'.format(str(self.uuid))
@@ -258,7 +268,7 @@ class Orden(models.Model):
 class ComponenteOrden(models.Model):
     producto = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='componente_producto')
     respaldo = models.FloatField()
-
+    orden = models.ForeignKey(Orden, on_delete=models.CASCADE, related_name='componente_orden')
     cantidad = models.IntegerField()
 
     def __str__(self):

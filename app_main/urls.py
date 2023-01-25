@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from django.urls import path
 
 from app_main.views import create_suscriptor, InfoView, delete_suscriptor, \
-    StartPageCUP, StartPageEuro, CatalogoEuroView, CatalogoCUPView, pagar, tpp_verificar
+    StartPageCUP, StartPageEuro, CatalogoEuroView, CatalogoCUPView, pagar_euro, tpp_verificar, pagar_cup
 
 
 # def correo(request):
@@ -16,16 +16,16 @@ def asd(request):
 
 urlpatterns = [
     path('', asd, name='asd'),
-    # path('index/', StartPage.as_view(), name='index'),  # todos
     path('CUP/', StartPageCUP.as_view(), name='index-cup'),  # CUP
     path('Euro/', StartPageEuro.as_view(), name='index-euro'),  # CUP
     path('suscriptor_create/', create_suscriptor, name='suscriptor'),
     path('info/', InfoView.as_view(), name='info'),
     path('catalogo/CUP/', CatalogoCUPView.as_view(), name='catalogo-cup'),
     path('catalogo/Euro/', CatalogoEuroView.as_view(), name='catalogo-euro'),
-    # path('correo/', correo, name='correo'),
     path('suscriptor_delete/<email>/', delete_suscriptor, name='del-suscriptor'),
-
-    path('pagar/', pagar, name='pagar'),
+    # EURO
+    path('pagar/euro/', pagar_euro, name='pagar-euro'),
     path('tropipay/verificar/', tpp_verificar, name='tpp_verificar'),
+    # CUP
+    path('pagar/cup/', pagar_cup, name='pagar-cup'),
 ]

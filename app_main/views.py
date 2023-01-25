@@ -17,13 +17,14 @@ from gaia import settings
 
 
 class BaseView(View):
+
     def get_my_context_data(self, **kwargs):
         cart = Cart(self.request)
-        print('products_in_cart', json.dumps(cart.all(), indent=3))
-        print('products_in_cart', cart.all())
+        # print('products_in_cart', json.dumps(cart.all(), indent=3))
+        # print('products_in_cart', cart.all())
         c_x_p = len(cart.all())
-        print(c_x_p)
-        print(self.request.get_host())
+        # print(c_x_p)
+        # print(self.request.get_host())
         if self.request.get_host().__contains__("127.0.0.1") or self.request.get_host().__contains__("localhost"):
             host = 'http://'
         else:
@@ -60,7 +61,7 @@ class StartPage(BaseView, generic.ListView, ):
             del self.request.session['search']
             del self.request.session['active']
         self.request.session['index_url'] = str(reverse_lazy('index-cup'))
-        print(qs)
+        # print(qs)
         return qs
 
     def get_context_data(self, **kwargs):
@@ -83,7 +84,8 @@ class StartPage(BaseView, generic.ListView, ):
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             settings.STATIC_URL / settings.BUSINESS_BANNER]
         # context['index_url'] = self.request.session['index_url']
-
+        print(self.request.META.get('HTTP_REFERER'))
+        print(self.request.path)
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -245,7 +247,7 @@ def delete_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     return redirect(reverse_lazy('index'))
 
 
-def pagar(request):
+def pagar_euro(request):
     # Crear la orden
     # Vaciar carrito
     # Si es tropipay se hace to esto
@@ -371,3 +373,54 @@ def completar_orden(orden_id):
     # pongo la orden en completada
     # limpio link d pago
     pass
+
+
+def pagar_cup(request: HttpRequest):
+    pass
+    # Crear la orden
+    # Vaciar carrito
+    # Si es tropipay se hace to esto
+    # Else nada y se envia x whatsapp
+    if request.method == 'POST':
+        create_order(request, **{})
+    return redirect('index-cup')
+
+
+def create_order(request: HttpRequest, **kwargs):
+    # Datos del formulario
+    comprador = request.POST.get('comprador')
+    phone_comprador = request.POST.get('phone_comprador')
+    receptor = request.POST.get('receptor')
+    phone_receptor = request.POST.get('phone_receptor')
+    municipio = Municipio.objects.get(pk=request.POST.get('municipio'))
+    nombre_municipio = municipio.nombre
+    calle = request.POST.get('calle')
+    entre1 = request.POST.get('entre1')
+    entre2 = request.POST.get('entre2')
+    numero = request.POST.get('numero')
+    reparto = request.POST.get('reparto')
+    detalle = request.POST.get('detalle')
+    precio_envio = municipio.precio
+    # Calcular total
+    cart = Cart(request)
+    products_cup = []
+    total = 0
+    if cart.all():
+        for c in cart.all():
+            #     p = Product.objects.get(pk=c['id'])
+            #     if p.moneda in ['CUP', 'Ambas']:
+            #         products_cup.append(p)
+            total += (c['product']['price'] * c['quantity'])
+    total += municipio.precio
+    if total > municipio.precio:
+        orden = Orden.objects.create(total=float(total), precio_envio=float(precio_envio), moneda='CUP', status='1',
+                                     nombre_comprador=comprador, telefono_comprador=phone_comprador,
+                                     nombre_receptor=receptor, telefono_receptor=phone_receptor,
+                                     municipio=nombre_municipio,
+                                     calle=calle, calle1=entre1, calle2=entre2, numero_edificio=numero, reparto=reparto,
+                                     detalles_direccion=detalle)
+        for c in cart.all():
+            ComponenteOrden.objects.create()
+
+    print(cart.all())
+    # print('products cup', products_cup)

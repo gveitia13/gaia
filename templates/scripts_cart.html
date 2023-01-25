@@ -62,7 +62,8 @@
 
   //Actualizar precio direccion
   document.querySelectorAll('select[name=municipio]').forEach(e => e.addEventListener('change', function () {
-    let value = this.value.toString().trim() ? this.value : 0
+    let value = this.options[this.selectedIndex].attributes.name.value.toString().trim()
+      ? this.options[this.selectedIndex].attributes.name.value : 0
     updateCart(parseFloat(value))
   }))
 </script>
