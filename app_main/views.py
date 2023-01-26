@@ -24,8 +24,9 @@ class BaseView(View):
         # print('products_in_cart', cart.all())
         c_x_p = len(cart.all())
         # print(c_x_p)
-        # print(self.request.get_host())
-        if self.request.get_host().__contains__("127.0.0.1") or self.request.get_host().__contains__("localhost"):
+        print('host', self.request.get_host())
+        if self.request.get_host().__contains__("127.0.0.1") or self.request.get_host().__contains__(
+                "localhost") or self.request.get_host().__contains__("192.168"):
             host = 'http://'
         else:
             host = 'https://'
@@ -128,7 +129,8 @@ class StartPageCUP(StartPage):
         context = super().get_context_data()
         context['moneda'] = 'CUP'
         context['categories'] = sorted(
-            Category.objects.filter(product__isnull=False, destacado=True, product__moneda__in=['CUP', 'Ambas']).distinct(),
+            Category.objects.filter(product__isnull=False, destacado=True,
+                                    product__moneda__in=['CUP', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
             moneda='Euro')[0:10]
@@ -160,7 +162,8 @@ class StartPageEuro(StartPage):
         context = super().get_context_data()
         context['moneda'] = 'Euro'
         context['categories'] = sorted(
-            Category.objects.filter(product__isnull=False, destacado=True, product__moneda__in=['Euro', 'Ambas']).distinct(),
+            Category.objects.filter(product__isnull=False, destacado=True,
+                                    product__moneda__in=['Euro', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
             moneda='CUP')[0:10]
@@ -370,28 +373,35 @@ def tpp_verificar(request):
     return redirect('index-euro')
 
 
-def completar_orden(orden_id):
-    # descontar del stock
-    # pongo la orden en completada
-    # limpio link d pago
-    pass
-
-
 def pagar_cup(request: HttpRequest):
-    pass
-    # Crear la orden
-    # Vaciar carrito
-    # Si es tropipay se hace to esto
-    # Else nada y se envia x whatsapp
     if request.method == 'POST':
-        orden = create_order(request, **{})
-        mensaje = ''
-        return redirect(
-            'http://web.whatsapp.com/send?text=' + mensaje.replace(' <br/> ', '\n') + '&phone=' + str(cfg.whatsapp))
+        orden = create_order(request, 'CUP', **{})
+        if orden:
+            mensaje = 'Orden de compra:\n'
+            print(orden)
+            mensaje += 'Comprador: ' + orden.nombre_comprador + '\n'
+            mensaje += 'Teléfono del comprador: ' + orden.telefono_comprador + '\n'
+            mensaje += 'Receptor: ' + orden.nombre_receptor + '\n'
+            mensaje += 'Teléfono del receptor: ' + orden.telefono_receptor + '\n'
+            mensaje += 'Precio de envío: ' + str(orden.precio_envio) + ' CUP\n'
+            mensaje += 'Precio total: ' + '{:.2f}'.format(orden.total) + ' CUP\n'
+            mensaje += 'Tiempo máximo de entrega: ' + str(orden.tiempo_de_entrega) + ' días\n\n'
+            mensaje += 'Productos comprados: \n'
+            for c in orden.componente_orden.all():
+                mensaje += str(c) + '\n'
+            mensaje += '\nPara cancelar su orden abra el siguiente enlace: \n'
+            host = 'http://' if request.get_host().__contains__("127.0.0.1") or request.get_host().__contains__(
+                "localhost") or request.get_host().__contains__("192.168") else 'https://'
+
+            mensaje += f'{host}' + request.get_host() + reverse_lazy('cancelar-cup', kwargs={'pk': orden.pk})
+            print(mensaje)
+            return redirect(
+                f'https://api.whatsapp.com/send/?phone=+{GeneralData.objects.all().first().phone_number}&text=' + mensaje.replace(
+                    " <br/> ", "\n") + '&app_absent=1')
     return redirect('index-cup')
 
 
-def create_order(request: HttpRequest, **kwargs):
+def create_order(request: HttpRequest, moneda, **kwargs):
     # Datos del formulario
     comprador = request.POST.get('comprador')
     phone_comprador = request.POST.get('phone_comprador')
@@ -405,37 +415,47 @@ def create_order(request: HttpRequest, **kwargs):
     numero = request.POST.get('numero')
     reparto = request.POST.get('reparto')
     detalle = request.POST.get('detalle')
-    precio_envio = municipio.precio
+    precio_envio = municipio.precio if moneda == 'CUP' else municipio.precio_euro
     # Calcular total
     cart = Cart(request)
-    products_cup = []
     total = 0
+    taza_cambio = 1 if moneda == 'CUP' else GeneralData.objects.all().first().taza_cambio
+    tiempo_de_entrega = 0
     if cart.all():
         for c in cart.all():
-            #     p = Product.objects.get(pk=c['id'])
-            #     if p.moneda in ['CUP', 'Ambas']:
-            #         products_cup.append(p)
-            total += (c['product']['price'] * c['quantity'])
-    total += municipio.precio
-    if total > municipio.precio:
-        orden = Orden.objects.create(total=float(total), precio_envio=float(precio_envio), moneda='CUP', status='1',
-                                     nombre_comprador=comprador, telefono_comprador=phone_comprador,
-                                     nombre_receptor=receptor, telefono_receptor=phone_receptor,
-                                     municipio=nombre_municipio,
-                                     calle=calle, calle1=entre1, calle2=entre2, numero_edificio=numero, reparto=reparto,
-                                     detalles_direccion=detalle)
+            total += c['product']['price'] / taza_cambio * c['quantity']
+            if int(c['product']['delivery_time']) > tiempo_de_entrega:
+                tiempo_de_entrega = int(c['product']['delivery_time'])
+        total += municipio.precio if moneda == 'CUP' else municipio.precio_euro
+
+        orden = Orden.objects.create(total=float(total), precio_envio=float(precio_envio), moneda=moneda,
+                                     status='1' if moneda == 'CUP' else '2', nombre_comprador=comprador,
+                                     telefono_comprador=phone_comprador, nombre_receptor=receptor,
+                                     telefono_receptor=phone_receptor, municipio=nombre_municipio, calle=calle,
+                                     calle1=entre1, calle2=entre2, numero_edificio=numero, reparto=reparto,
+                                     detalles_direccion=detalle, tiempo_de_entrega=tiempo_de_entrega)
         for c in cart.all():
             prod = Product.objects.get(pk=c['id'])
             ComponenteOrden.objects.create(orden=orden, producto=prod,
-                                           respaldo=float(c['product']['price'] * c['quantity']),
+                                           respaldo=float(c['product']['price'] / taza_cambio * c['quantity']),
                                            cantidad=int(c['quantity']))
             prod.stock = prod.stock - int(c['quantity'])
+            prod.sales += int(c['quantity'])
             prod.save()
-    # Limpiar cart
-    Cart(request).clear()
-    print(cart.all())
-    return orden
+        # Limpiar cart
+        Cart(request).clear()
+        return orden
+    return None
 
 
-def cancel_order(request, order):
-    pass
+def cancel_order_cup(request, *args, **kwargs):
+    orden = Orden.objects.get(pk=kwargs.get('pk'))
+    orden.status = '3'
+    orden.save()
+    for c in orden.componente_orden.all():
+        if c.producto:
+            prod = c.producto
+            prod.stock = prod.stock + c.cantidad
+            prod.sales -= c.cantidad
+            prod.save()
+    return redirect('index-cup')

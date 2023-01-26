@@ -34,7 +34,7 @@ class InfoUtilInline(admin.TabularInline):
 
 class GeneralDataAdmin(admin.ModelAdmin):
     list_display = (
-        'enterprise_name', 'email', 'taza_cambio', 'logo_link',
+        'enterprise_name', 'email', 'phone_number', 'taza_cambio', 'logo_link',
         'img_principal_link',
     )
     fieldsets = [

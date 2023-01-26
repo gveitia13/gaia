@@ -27,8 +27,8 @@
 {#            <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"#}
 {#               href="{% url 'info' %}"><i class=""></i>Info Útil</a>#}
 {#        </li>#}
-        <li class="nav-item">
-            <select class="form-select custom-select h-100 pt-0 text-end border-0 rounded-0 pe-5 text-semi-success"
+        <li class="nav-item pe-1 py-1">
+            <select class="form-select custom-select h-100 pt-0 text-end border-0  pe-5 text-semi-success"
                     id="select-info">
                 <option selected disabled>Info Útil</option>
                 {% for info in infoUtil_list %}
@@ -36,9 +36,9 @@
                 {% endfor %}
             </select>
         </li>
-        <li class="nav-item">
+        <li class="nav-item pe-1 py-1">
             <select id="select-trampa"
-                    class="form-select custom-select h-100 pt-0 text-end border-0 rounded-0 pe-5 text-semi-success">
+                    class="form-select custom-select h-100 pt-0 text-end border-0 pe-5 text-semi-success">
                 <option {% if moneda != 'Euro' %} selected {% endif %} value="CUP">Productos en CUP</option>
                 <option {% if moneda == 'Euro' %} selected {% endif %} value="Euro">Productos en Euro</option>
             </select>

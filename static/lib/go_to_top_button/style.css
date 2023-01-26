@@ -1,7 +1,7 @@
 .C-Go-Top {
-    Background: None Repeat Scroll 0 0 Padding-Box #1099dd;
+    Background: None Repeat Scroll 0 0 Padding-Box #8cbf44;
     Bottom: 20px;
-    Border: 1px Solid #1099dd;
+    Border: 1px Solid var(--bs-success);
     Border-Radius: 50rem;
     Color: #Eee;
     Display: None;

@@ -22,7 +22,7 @@
                 <div class="nav-link">
                     <form action="{% url 'info' %}">
                         <div class="input-group input-group-sm pe-2">
-                            <input type="search" class="form-control text-end border-0 ps-0 rounded-0"
+                            <input type="search" class="form-control text-end border-0 rounded-0 ps-0"
                                    placeholder="Buscador"
                                    aria-label="Example text with button addon"
                                    aria-describedby="button-addon1" name="search">
@@ -32,15 +32,15 @@
                     </form>
                 </div>
             </li>
-                <li class="nav-item">
-            <select class="form-select custom-select h-100 pt-0 text-end border-0 rounded-0 pe-5 text-semi-success"
-                    id="select-info">
-                <option selected disabled>Info Útil</option>
-                {% for info in infoUtil_list %}
-                    <option value="{{ info.id }}">{{ info.title }}</option>
-                {% endfor %}
-            </select>
-        </li>
+            <li class="nav-item pe-1 py-1">
+                <select class="form-select custom-select h-100 pt-0 text-end border-0 pe-5 text-semi-success"
+                        id="select-info">
+                    <option selected disabled>Info Útil</option>
+                    {% for info in infoUtil_list %}
+                        <option value="{{ info.id }}">{{ info.title }}</option>
+                    {% endfor %}
+                </select>
+            </li>
             {% comment %}            <li class="nav-item">
                 <a class="nav-link text-semi-success pe-2 text-end {% if active == 'project' %} active {% endif %}"
                    href="#"><i class="mdi mdi-translate"></i> Idioma</a>

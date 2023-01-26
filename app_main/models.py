@@ -246,9 +246,11 @@ class Orden(models.Model):
     status = models.CharField('Estado', choices=(
         ('1', 'Completada'),
         ('2', 'Pendiente'),
+        ('3', 'Cancelada por cliente'),
     ), max_length=10, default='2')
     date_created = models.DateTimeField(auto_now_add=True, )
     # Campos del form
+    tiempo_de_entrega = models.PositiveIntegerField('Tiempo de entrega máximo')
     nombre_comprador = models.CharField('Nombre comprador', max_length=200)
     telefono_comprador = models.CharField('Teléfono comprador', max_length=200)
     nombre_receptor = models.CharField('Nombre receptor', max_length=200)
@@ -266,10 +268,12 @@ class Orden(models.Model):
 
 
 class ComponenteOrden(models.Model):
-    producto = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='componente_producto')
+    producto = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='componente_producto')
     respaldo = models.FloatField()
     orden = models.ForeignKey(Orden, on_delete=models.CASCADE, related_name='componente_orden')
     cantidad = models.IntegerField()
 
     def __str__(self):
-        return '{}x {} - {}'.format(self.cantidad, self.producto.name, self.respaldo)
+        return '{}x {} - {} {}'.format(self.cantidad, self.producto.name, '{:.2f}'.format(self.respaldo),
+                                       self.orden.moneda)

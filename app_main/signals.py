@@ -4,10 +4,8 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from django.core.mail import EmailMultiAlternatives
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.template.loader import render_to_string
 
 from app_main.models import Product, Suscriptor, GeneralData
 from gaia import settings
@@ -21,7 +19,7 @@ def save_hash(sender, instance: Product, created, **kwargs):
             remitente = settings.EMAIL_HOST_USER
             destinatarios = [i.email for i in Suscriptor.objects.all()]
             asunto = 'Nuevo producto disponible'
-            cuerpo = f'Nombre: {prod.name}\nPrecio: {prod.price}\nTiempo de entrega: {prod.delivery_time}\n'
+            cuerpo = f'Nombre: {prod.name}\nPrecio CUP: {prod.price}\nPrecio Euro: {prod.price / GeneralData.objects.all().first().taza_cambio}\nTiempo de entrega: {prod.delivery_time}\n'
             ruta_adjunto = prod.image.path
             nombre_adjunto = f'{prod.name}.jpg'
             # Creamos el objeto mensaje
