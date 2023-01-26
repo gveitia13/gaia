@@ -248,7 +248,7 @@ class Orden(models.Model):
         ('2', 'Pendiente'),
         ('3', 'Cancelada por cliente'),
     ), max_length=10, default='2')
-    date_created = models.DateTimeField(auto_now_add=True, )
+    date_created = models.DateTimeField('Fecha', auto_now_add=True, )
     # Campos del form
     tiempo_de_entrega = models.PositiveIntegerField('Tiempo de entrega máximo')
     nombre_comprador = models.CharField('Nombre comprador', max_length=200)
@@ -266,6 +266,11 @@ class Orden(models.Model):
     def __str__(self):
         return '{}'.format(str(self.uuid))
 
+    class Meta:
+        verbose_name = 'Orden'
+        verbose_name_plural = 'Ordenes'
+        ordering = ('moneda', '-status', 'date_created',)
+
 
 class ComponenteOrden(models.Model):
     producto = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True,
@@ -277,3 +282,11 @@ class ComponenteOrden(models.Model):
     def __str__(self):
         return '{}x {} - {} {}'.format(self.cantidad, self.producto.name, '{:.2f}'.format(self.respaldo),
                                        self.orden.moneda)
+
+    def Componente(self):
+        return str(self)
+
+    class Meta:
+        ordering = ('orden', 'producto')
+        verbose_name = 'Componente de orden'
+        verbose_name_plural = 'Componentes de ordenes'

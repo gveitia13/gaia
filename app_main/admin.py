@@ -122,11 +122,23 @@ class MunicipioAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'precio', 'precio_euro')
 
 
+class OrdenAdmin(admin.ModelAdmin):
+    list_display = ('status', 'uuid', 'date_created', 'total', 'moneda', 'nombre_comprador', 'municipio')
+    list_filter = ('status', 'moneda', 'municipio')
+    search_fields = ('uuid',)
+
+
+class ComponenteOrdenAdmin(admin.ModelAdmin):
+    list_display = ('orden', 'Componente')
+    list_filter = ('producto',)
+    search_fields = ('orden', 'producto')
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(InfoUtil, InfoUtilAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(GeneralData, GeneralDataAdmin)
 admin.site.register(Suscriptor)
-admin.site.register(Orden)
-admin.site.register(ComponenteOrden)
+admin.site.register(Orden, OrdenAdmin)
+admin.site.register(ComponenteOrden, ComponenteOrdenAdmin)
 admin.site.register(Municipio, MunicipioAdmin)

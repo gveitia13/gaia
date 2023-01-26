@@ -1,6 +1,6 @@
 {% load cart_tag %}
 <form action="{% if is_euro %}{% url 'pagar-euro' %}{% else %}{% url 'pagar-cup' %}{% endif %}" method="post"
-      class="mx-auto w-75 my-3">
+      class="mx-auto my-3" style="width: 90%">
     {% csrf_token %}
     <div class="card">
         <div class="card-header">
@@ -10,27 +10,22 @@
             <h4 class="card-title">Datos de contacto:</h4>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_name_comprador" name="comprador"
-                       placeholder="Nombre y apellidos del comprador" value="highjk">
+                       placeholder="Nombre y apellidos del comprador">
                 <label for="id_name_comprador">Nombre y apellidos del comprador</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="tel" class="form-control" required id="id_phone_comprador" name="phone_comprador"
-                       placeholder="+53999999999" value="highjk">
+                       placeholder="+53999999999">
                 <label for="id_phone_comprador">Teléfono del comprador</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_name_receptor" name="receptor"
-                       placeholder="Apellidos" value="highjk">
+                       placeholder="Apellidos" >
                 <label for="id_name_receptor">Nombre y apellidos del que recibe</label>
             </div>
-            {% comment %}            <div class="form-floating mb-3">
-                <input type="email" class="form-control" required id="id_email" name="email"
-                       placeholder="name@example.com">
-                <label for="id_email">Correo electrónico</label>
-            </div>{% endcomment %}
             <div class="form-floating mb-3">
                 <input type="tel" class="form-control" required id="id_phone_receptor" name="phone_receptor"
-                       placeholder="+53999999999" value="highjk">
+                       placeholder="+53999999999">
                 <label for="id_phone_receptor">Teléfono del que recibe</label>
             </div>
             <h4 class="card-title">Dirección:</h4>
@@ -47,7 +42,7 @@
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_calle" name="calle"
-                       placeholder="Calle" value="highjk">
+                       placeholder="Calle">
                 <label for="id_calle">Calle</label>
             </div>
             <div class="row align-middle align-items-center px-3 mb-3 text-center">
@@ -55,29 +50,29 @@
 
                 <div class="form-floating  col-5 px-0">
                     <input type="text" class="form-control" required id="id_entre1" name="entre1"
-                           placeholder="Calle" value="highjk">
+                           placeholder="Calle" >
                     <label for="id_entre1">Calle</label>
                 </div>
                 <div class="col-2 align-middle"><span>y</span></div>
                 <div class="form-floating  col-5 px-0">
                     <input type="text" class="form-control" required id="id_entre2" name="entre2"
-                           placeholder="Calle" value="highjk">
+                           placeholder="Calle" >
                     <label for="id_entre2">Calle</label>
                 </div>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_numero" name="numero"
-                       placeholder="Número de calle o edificio" value="highjk">
+                       placeholder="Número de calle o edificio">
                 <label for="id_numero">Número de calle o edificio</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_reparto" name="reparto"
-                       placeholder="Reparto" value="highjk">
+                       placeholder="Reparto" >
                 <label for="id_reparto">Reparto</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_detalle" name="detalle"
-                       placeholder="Detalles específicos" value="highjk">
+                       placeholder="Detalles específicos">
                 <label for="id_detalle">Detalles específicos</label>
             </div>
         </div>
