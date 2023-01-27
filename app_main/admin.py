@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
-    ComponenteOrden
+    ComponenteOrden, ContenidoInfo
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -26,10 +26,11 @@ class BannerInline(admin.TabularInline):
     fields = ('banner',)
 
 
-class InfoUtilInline(admin.TabularInline):
-    model = InfoUtil
-    extra = 1
-    # fields = '__all__'
+class ContenidoInfoInline(admin.StackedInline):
+    model = ContenidoInfo
+    extra = 3
+    fields = ('text', 'image', 'image_tag')
+    readonly_fields = ('image_tag',)
 
 
 class GeneralDataAdmin(admin.ModelAdmin):
@@ -115,7 +116,8 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class InfoUtilAdmin(admin.ModelAdmin):
-    list_display = ('title', 'text_tag')
+    list_display = ('title',)
+    inlines = [ContenidoInfoInline]
 
 
 class MunicipioAdmin(admin.ModelAdmin):

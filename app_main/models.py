@@ -213,19 +213,31 @@ class Suscriptor(models.Model):
 
 class InfoUtil(models.Model):
     title = models.CharField('Título', max_length=100, null=True, blank=True)
-    text = RichTextField("Contenido", null=True, blank=True)
 
     class Meta:
         verbose_name = 'Información útil'
         verbose_name_plural = 'Informaciones útiles'
 
+    def __str__(self):
+        return self.title
+
+
+class ContenidoInfo(models.Model):
+    text = RichTextField("Contenido", null=True, blank=True)
+    image = models.ImageField('Imagen', null=True, blank=True, upload_to='info/')
+    info = models.ForeignKey(InfoUtil, on_delete=models.CASCADE)
+
     def text_tag(self):
         return mark_safe(self.text)
 
-    text_tag.short_description = 'Texto'
+    def image_tag(self):
+        if self.image:
+            return mark_safe(f'<img src="{self.image.url}" alt="" width="80" height="50">')
+        else:
+            return mark_safe(f'<img src="{STATIC_URL}/img/empty.png" alt="" width="80" height="50">')
 
-    def __str__(self):
-        return self.title
+    text_tag.short_description = 'Texto'
+    image_tag.short_description = 'Vista previa'
 
 
 class Municipio(models.Model):

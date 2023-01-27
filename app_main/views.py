@@ -49,7 +49,7 @@ class BaseView(View):
 
 class StartPage(BaseView, generic.ListView, ):
     template_name = 'startpage.html'
-    queryset = Product.objects.filter(is_active=True)
+    queryset = Product.objects.filter(is_active=True, stock__gt=0)
     paginate_by = 10
 
     def get_queryset(self):
@@ -123,7 +123,7 @@ class StartPage(BaseView, generic.ListView, ):
 
 
 class StartPageCUP(StartPage):
-    queryset = Product.objects.filter(is_active=True).exclude(moneda='Euro')
+    queryset = Product.objects.filter(is_active=True, stock__gt=0).exclude(moneda='Euro')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -155,7 +155,7 @@ class StartPageCUP(StartPage):
 
 
 class StartPageEuro(StartPage):
-    queryset = Product.objects.filter(is_active=True).exclude(moneda='CUP')
+    queryset = Product.objects.filter(is_active=True, stock__gt=0).exclude(moneda='CUP')
     template_name = 'startpage_euro.html'
 
     def get_context_data(self, **kwargs):

@@ -51,12 +51,26 @@
 {% block content %}
     <div class=" mx-auto">
         {% for object in object_list %}
-            <div class="info card mb-2 rounded-0" id="{{ object.id }}">
-                <div class="card-body">
-                    <h3 class="text-center card-title">{{ object.title }}</h3>
-                    {{ object.text_tag }}
+            {% if object.contenidoinfo_set.exists %}
+                <div class="info mb-2 rounded-0" id="{{ object.id }}">
+                    <div class="card-body">
+                        <h1 class="text-center text-semi-success text-uppercase display-6 fw-bold user-select-none">{{ object.title }}</h1>
+                        {{ object.text_tag }}
+                        {% for obj in object.contenidoinfo_set.all %}
+                            {% if obj.text %}
+                                {{ obj.text|safe }}
+                            {% endif %}
+                            {% if obj.image %}
+                                <div class="py-4">
+                                    <img src="{{ obj.image.url }}" class="d-block w-100 rounded-0 border-0 img-carousel"
+                                         alt="...">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         {% endfor %}
     </div>
     {% include 'product_modal.html' %}

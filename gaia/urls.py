@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app_main.urls')),
     path('', include('app_cart.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
