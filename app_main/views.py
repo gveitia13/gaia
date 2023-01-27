@@ -287,7 +287,7 @@ def pagar_euro(request):
                     user_comprador.split(' ')) > 1 else ' ',
                 "address": address,
                 "phone": orden.telefono_comprador,
-                "email": 'gveitia13@gmail.com',
+                "email": orden.correo,
                 "countryId": 0,
                 "termsAndConditions": "true"
             }
@@ -362,6 +362,11 @@ def tpp_verificar(request):
                 orden.status = '2'
             orden.link_de_pago = "CONSUMIDO"
             orden.save()
+
+            mensaje = create_message_order(request, orden)
+            return redirect(
+                f'https://api.whatsapp.com/send/?phone=+{GeneralData.objects.all().first().phone_number}&text=' +
+                mensaje.replace(" <br/> ", "\n") + '&app_absent=1')
         return redirect('index-euro')
     return redirect('index-euro')
 
@@ -381,6 +386,7 @@ def create_order(request: HttpRequest, moneda, **kwargs):
     # Datos del formulario
     comprador = request.POST.get('comprador')
     phone_comprador = request.POST.get('phone_comprador')
+    correo = request.POST.get('email_comprador')
     receptor = request.POST.get('receptor')
     phone_receptor = request.POST.get('phone_receptor')
     municipio = Municipio.objects.get(pk=request.POST.get('municipio'))
@@ -409,7 +415,7 @@ def create_order(request: HttpRequest, moneda, **kwargs):
                                      telefono_comprador=phone_comprador, nombre_receptor=receptor,
                                      telefono_receptor=phone_receptor, municipio=nombre_municipio, calle=calle,
                                      calle1=entre1, calle2=entre2, numero_edificio=numero, reparto=reparto,
-                                     detalles_direccion=detalle, tiempo_de_entrega=tiempo_de_entrega)
+                                     detalles_direccion=detalle, tiempo_de_entrega=tiempo_de_entrega, correo=correo)
         for c in cart.all():
             prod = Product.objects.get(pk=c['id'])
             ComponenteOrden.objects.create(orden=orden, producto=prod,

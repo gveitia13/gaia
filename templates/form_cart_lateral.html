@@ -19,6 +19,11 @@
                 <label for="id_phone_comprador">Teléfono del comprador</label>
             </div>
             <div class="form-floating mb-3">
+                <input type="tel" class="form-control" required id="id_email_comprador" name="email_comprador"
+                       placeholder="algo@servidor.com">
+                <label for="id_email_comprador">Correo del comprador</label>
+            </div>
+            <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_name_receptor" name="receptor"
                        placeholder="Apellidos">
                 <label for="id_name_receptor">Nombre y apellidos del que recibe</label>
@@ -34,9 +39,11 @@
                     <option selected disabled>Selecciona el lugar de entrega</option>
                     {% for address in address %}
                         <option value="{{ address.id }}"
-                                name="{% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}: ---------{% if is_euro %}€
-                            {{ address.precio_euro |floatformat:2 }}{% else %}$
-                            {{ address.precio }}{% endif %}</option>
+                                name="
+                                        {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
+                            ---------{% if is_euro %}€
+                                {{ address.precio_euro |floatformat:2 }}{% else %}$
+                                {{ address.precio }}{% endif %}</option>
                     {% endfor %}
                 </select>
             </div>

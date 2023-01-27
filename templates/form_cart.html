@@ -19,8 +19,13 @@
                 <label for="id_phone_comprador">Teléfono del comprador</label>
             </div>
             <div class="form-floating mb-3">
+                <input type="tel" class="form-control" required id="id_email_comprador" name="email_comprador"
+                       placeholder="algo@servidor.com">
+                <label for="id_email_comprador">Correo del comprador</label>
+            </div>
+            <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_name_receptor" name="receptor"
-                       placeholder="Apellidos" >
+                       placeholder="Apellidos">
                 <label for="id_name_receptor">Nombre y apellidos del que recibe</label>
             </div>
             <div class="form-floating mb-3">
@@ -34,9 +39,11 @@
                     <option selected disabled>Selecciona el lugar de entrega</option>
                     {% for address in address %}
                         <option value="{{ address.id }}"
-                                name="{% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}: ---------{% if is_euro %}€
-                            {{ address.precio_euro |floatformat:2 }}{% else %}$
-                            {{ address.precio }}{% endif %}</option>
+                                name="
+                                        {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
+                            ---------{% if is_euro %}€
+                                {{ address.precio_euro |floatformat:2 }}{% else %}$
+                                {{ address.precio }}{% endif %}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -50,13 +57,13 @@
 
                 <div class="form-floating  col-5 px-0">
                     <input type="text" class="form-control" required id="id_entre1" name="entre1"
-                           placeholder="Calle" >
+                           placeholder="Calle">
                     <label for="id_entre1">Calle</label>
                 </div>
                 <div class="col-2 align-middle"><span>y</span></div>
                 <div class="form-floating  col-5 px-0">
                     <input type="text" class="form-control" required id="id_entre2" name="entre2"
-                           placeholder="Calle" >
+                           placeholder="Calle">
                     <label for="id_entre2">Calle</label>
                 </div>
             </div>
@@ -67,7 +74,7 @@
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" required id="id_reparto" name="reparto"
-                       placeholder="Reparto" >
+                       placeholder="Reparto">
                 <label for="id_reparto">Reparto</label>
             </div>
             <div class="form-floating mb-3">
