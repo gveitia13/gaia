@@ -222,6 +222,6 @@ TPP_CLIENT_SECRET = '64865eba38167851a56a9454aada3eda'
 TPP_CLIENT_EMAIL = 'blinit10@gmail.com'
 TPP_CLIENT_PASSWORD = 'Invoker123*'
 TPP_URL = "tropipay-dev.herokuapp.com"
-TPP_SUCCESS_URL = 'http://127.0.0.1:8000/manolo/'
+TPP_SUCCESS_URL = 'https://600e-152-207-150-112.ngrok.io' + reverse_lazy()
 TPP_FAILED_URL = 'http://127.0.0.1:8000/manolo/'
 TPP_NOTIFICACION_URL = 'http://127.0.0.1:8000/api/tropipay/checkout/'

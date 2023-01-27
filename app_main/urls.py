@@ -3,7 +3,7 @@ from django.urls import path
 
 from app_main.views import create_suscriptor, InfoView, delete_suscriptor, \
     StartPageCUP, StartPageEuro, CatalogoEuroView, CatalogoCUPView, pagar_euro, tpp_verificar, pagar_cup, \
-    cancel_order_cup
+    cancel_order
 
 
 # def correo(request):
@@ -29,5 +29,5 @@ urlpatterns = [
     path('tropipay/verificar/', tpp_verificar, name='tpp_verificar'),
     # CUP
     path('pagar/cup/', pagar_cup, name='pagar-cup'),
-    path('cancelar_orden/cup/<pk>/', cancel_order_cup, name='cancelar-cup'),
+    path('cancelar_orden/<pk>/', cancel_order, name='cancelar'),
 ]

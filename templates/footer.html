@@ -39,8 +39,10 @@
                 <h5>INFO ÚTIL</h5>
                 <ul class="list-unstyled">
                     {% for info in infoUtil_list %}
-                        <li class="mb-2"><a href="{% url 'info' %}#{{ info.id }}"
-                                            class="text-decoration-none text-white">{{ info.title }}</a></li>
+                        {% if info.contenidoinfo_set.exists %}
+                            <li class="mb-2"><a href="{% url 'info' %}#{{ info.id }}"
+                                                class="text-decoration-none text-white">{{ info.title }}</a></li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>
@@ -53,7 +55,8 @@
                     <li class="mb-2"><a href="{{ business.enterprise_address }}"
                                         class="text-decoration-none text-white">{{ business.enterprise_address }}</a>
                     </li>
-                    <li class="mb-2"><a href="mailto:{{ business.email }}" class="text-decoration-none text-white">{{ business.email }}</a></li>
+                    <li class="mb-2"><a href="mailto:{{ business.email }}"
+                                        class="text-decoration-none text-white">{{ business.email }}</a></li>
                 </ul>
             </div>
             <div class="col-6 col-md-3  mb-3">
