@@ -1,9 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import path
 
-from app_main.views import create_suscriptor, InfoView, delete_suscriptor, \
-    StartPageCUP, StartPageEuro, CatalogoEuroView, CatalogoCUPView, pagar_euro, tpp_verificar, pagar_cup, \
-    cancel_order, OrdenAPIList, OrdenAPIDetails
+from app_main.views import *
 
 
 # def correo(request):
@@ -27,6 +25,8 @@ urlpatterns = [
     # EURO
     path('pagar/euro/', pagar_euro, name='pagar-euro'),
     path('tropipay/verificar/', tpp_verificar, name='tpp_verificar'),
+    path('tropipay/success/', tpp_success, name='tpp_success'),
+    path('tropipay/fails/', fail_order, name='orden-fail'),
     # CUP
     path('pagar/cup/', pagar_cup, name='pagar-cup'),
     path('cancelar_orden/<pk>/', cancel_order, name='cancelar'),

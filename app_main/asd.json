@@ -1,0 +1,112 @@
+{
+    "status":"OK",
+    "data":
+        {
+            "id":380902,
+            "reference":"3fe1c428-14a7-48e0-b254-c0a3e09d5e97",
+            "bankOrderCode":"367869895312",
+            "provider":4,
+            "userId":"b8210e00-fec1-11ec-8854-fdf1de468c04",
+            "bookingDate":"2023-01-28T10:05:54.433Z",
+            "days":null,
+            "amount":1450,
+            "currency":"EUR",
+            "originalCurrencyAmount":"1450",
+            "destinationAmount":1350,
+            "destinationCurrency":"EUR",
+            "conversionRate":1,
+            "depositaccountId":null,
+            "state":5,
+            "serviceId":2,
+            "paymentcardId":"5a15c0d0-9ef3-11ed-9a8a-5bd70c2e8629",
+            "expirationDate":"2023-02-07T10:54:00.000Z",
+            "movementTypeId":2,
+            "transactionId":null,
+            "isInternal":false,
+            "agent":"TROPIPAY",
+            "ip":"152.206.185.118",
+            "reasonId":null,
+            "reasonDes":null,
+            "errorReason":null,
+            "notificationUrl":null,
+            "riskFlag":0,
+            "riskScore":0,
+            "createdAt":"2023-01-28T10:05:54.434Z",
+            "updatedAt":"2023-01-28T10:06:31.098Z",
+            "paymentcard":{
+                "id":"5a15c0d0-9ef3-11ed-9a8a-5bd70c2e8629",
+                "reference":"3fe1c428-14a7-48e0-b254-c0a3e09d5e97",
+                "concept":"Orden de GAIA a nombre de asd@zdfsf.cpm",
+                "description":"Orden de compra:\\nComprador: asdasd asdasd\\nTel\xc3\xa9fono del comprador: asdasd
+                    asdasd\\nReceptor: asdasd asdasd\\nTel\xc3\xa9fono del receptor: asdasd asdasd\\nPrecio de
+                    env\xc3\xado: 5.2 Euro\\nPrecio total: 14.50 Euro\\nTiempo m\xc3\xa1ximo de entrega: 70
+                    d\xc3\xadas\\n\\nProductos comprados: \\n1x Bryar Kinney - 5.65 Euro\\n1x Jana King - 3.65
+                    Euro\\n\\nPara cancelar su orden abra el siguiente enlace:
+                    \\nhttps://250e-152-206-185-118.ngrok.io/cancelar_orden/3fe1c428-14a7-48e0-b254-c0a3e09d5e97/",
+                "amount":1450,
+                "currency":"EUR",
+                "singleUse":true,
+                "reasonId":4,
+                "reasonDes":null,
+                "userId":"b8210e00-fec1-11ec-8854-fdf1de468c04",
+                "qrImage":null,
+                "shortUrl":"https://tppay.me/ldfsfct9",
+                "state":2,
+                "expirationDays":10,
+                "lang":"es",
+                "urlSuccess":"https://250e-152-206-185-118.ngrok.io/tropipay/success/",
+                "urlFailed":"http://127.0.0.1:8000/manolo/",
+                "urlNotification":"https://250e-152-206-185-118.ngrok.io/tropipay/verificar/",
+                "expirationDate":null,
+                "serviceDate":"2023-01-28T00:00:00.000Z",
+                "hasClient":true,
+                "paymentUrl":null,
+                "favorite":false,
+                "saveToken":false
+            },
+            "charges":[
+                {
+                    "clientName":"asdasd",
+                    "clientLastName":"asdasd ",
+                    "clientAddress":"Municipio: 10 de Octubre. Calle: asdasd asdasd. Entre calle : asdasd asdasd y
+                        calle asdasd asdasd. N\xc3\xbamero: asdasd asdasd. Reparto: asdasd asdasd. Detalles :
+                        asdasd asdasd.","clientPhone":"asdasd asdasd",
+                    "clientEmail":"asd@zdfsf.cpm",
+                    "riskScore":0,
+                    "id":253071,
+                    "orderCode":"1674900354433",
+                    "cardPan":"0004",
+                    "cardExpirationDate":"2023-12-01T00:00:00.000Z",
+                    "cardHolderName":"asdasd",
+                    "saveToken":false,
+                    "amount":1450,
+                    "currency":"978",
+                    "userId":"b8210e00-fec1-11ec-8854-fdf1de468c04",
+                    "bookingId":380902,
+                    "errorReason":"",
+                    "state":3,
+                    "serviceId":2,
+                    "clientTC":"true",
+                    "clientCountryId":0,
+                    "updatedAt":"2023-01-28T10:06:31.060Z",
+                    "createdAt":"2023-01-28T10:05:54.440Z",
+                    "cardCountry":"DE",
+                    "cardBrand":"VISA",
+                    "cardCategory":"SecureTrading Test Issuer1",
+                    "cardType":"",
+                    "clientIp":"152.206.185.118",
+                    "card3DSVersion":"",
+                    "cardBin":"454881"
+                }
+            ],
+            "cardTokenId":null,
+            "signature":"52aa9574f5c99d7baf087df1c817461c25a7e8f57865e0e4d111979838965fd9",
+            "clientData":{
+                "clientName":"asdasd",
+                "clientLastName":"asdasd ",
+                "clientAddress":"Municipio: 10 de Octubre. Calle: asdasd asdasd. Entre calle : asdasd asdasd y calle
+                    asdasd asdasd. N\xc3\xbamero: asdasd asdasd. Reparto: asdasd asdasd. Detalles : asdasd asdasd.",
+                "clientEmail":"asd@zdfsf.cpm"
+                }
+            }
+        }

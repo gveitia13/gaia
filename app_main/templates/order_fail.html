@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+    <body class="h-100">
+    <div class="content bg-light-success h-100">
+        <div class="container-fluid w-100 mx-auto px-2 px-sm-5 py-5 h-100">
+            <div class="card mb-3">
+                <div class="card-header text-center" style="vertical-align: middle">
+                    <img src="{{ business.img_principal.url }}" alt="" height="50">
+                </div>
+                <h2 class="card-title d-inline text-danger text-center"><i class="mdi mdi-alert-decagram"></i>Error!
+                </h2>
+
+                <div class="card-body">
+                    <h5 class="card-title text-center"> Algo salió mal, su
+                        ticket de orden es <span class="text-danger">{{ uuid }}</span></h5>
+
+                </div>
+                <div class="card-footer text-center">
+                    <a href="https://api.whatsapp.com/send/?phone=+{{ business.phone_number }}&text=Hola&app_absent=1"
+                       class="btn btn-success rounded-pill my-1"><i class="mdi mdi-whatsapp"></i> Contacte por
+                        whatsapp</a>
+                    <a href="{% url 'index-euro' %}" class="btn-primary my-1 btn rounded-pill"><i
+                            class="mdi mdi-home"></i>
+                        Volver a la página</a></div>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock %}
+
+

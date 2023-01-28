@@ -5,13 +5,16 @@ from hashlib import sha256, sha1
 
 import pytz
 from django.forms import model_to_dict
-from django.http import HttpRequest, JsonResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.http import HttpRequest, JsonResponse, HttpResponse
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import generic, View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from app_cart.cart import Cart
 from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
@@ -295,7 +298,7 @@ def pagar_euro(request):
                 "countryId": 0,
                 "termsAndConditions": "true"
             }
-
+            orden_total = int(orden.total * 100)
             spain_timezone = pytz.timezone("Europe/Madrid")
             spain_time = datetime.datetime.now(spain_timezone)
             payload_tpp = {
@@ -303,7 +306,8 @@ def pagar_euro(request):
                 "concept": "Orden de GAIA a nombre de " + client['email'],
                 "favorite": "false",
                 "description": mensaje,
-                "amount": float('{:.2f}'.format(orden.total)) * 100,  # para quitar decimales
+                # "amount": float('{:.2f}'.format(orden.total)) * 100,  # para quitar decimales
+                "amount": orden_total,  # para quitar decimales
                 "currency": 'EUR',
                 "singleUse": "true",
                 "reasonId": 4,
@@ -338,21 +342,83 @@ def pagar_euro(request):
             return redirect(orden.link_de_pago)
 
 
-def tpp_verificar(request):
+# class CheckoutPayloadTTPSuccess(APIView):
+#     """Concreta un checkout de tropipay"""
+#     serializer_class = OrdenSerializer
+#     authentication_classes = []
+#     permission_classes = []
+#
+#     def get_queryset(self, request, *args, **kwargs):
+#         payload = json.loads(str(request.data).replace('\'', '"'))
+#         bankOrderCode = ""
+#         originalCurrencyAmount = ""
+#         signature = ""
+#         status = payload['status']
+#         referencia = ""
+#         for key, value in payload.items():
+#             if key == 'data':
+#                 datos = json.loads(str(payload['data']).replace('\'', '"'))
+#                 bankOrderCode = datos['bankOrderCode']
+#                 originalCurrencyAmount = datos['originalCurrencyAmount']
+#                 signature = datos['signature']
+#                 referencia = datos['reference']
+#         cadena = bankOrderCode + settings.TPP_CLIENT_EMAIL + sha1(
+#             settings.TPP_CLIENT_PASSWORD.encode('utf-8')).hexdigest() \
+#                  + originalCurrencyAmount
+#         cadena = cadena.encode('utf-8')
+#         firma = sha256(cadena).hexdigest()
+#         if firma == signature:
+#             orden = get_object_or_404(Orden, pk=referencia)
+#             if status == 'OK':
+#                 if completar_orden(orden_id=orden.pk):
+#                     orden.status = 'COMPLETED'
+#                 else:
+#                     orden.status = 'HOLDED'
+#             else:
+#                 orden.status = 'REJECTED'
+#             orden.enlace = "CONSUMIDO"
+#             orden.save()
+#             return 200
+#         return 403
+#
+#     def post(self, request, *args, **kwargs):
+#         if self.get_queryset(request=request) == 403:
+#             return Response(data={"status": "K.O"}, content_type='application/json', status=403)
+#         return Response(data={"status": "O.K"}, content_type='application/json', status=200)
+@method_decorator(csrf_exempt)
+def tpp_success(request):
+    print(request.GET)
+    uuid: str = request.GET.get('reference')
+    uuid = uuid.replace('-', '')
+    if Orden.objects.filter(pk=uuid).exists():
+        orden = Orden.objects.get(pk=uuid)
+        import time
+        t_end = time.time() + 5
+        while time.time() < t_end:
+            if orden.status == '1':
+                mensaje = create_message_order(request, orden)
+                return redirect(
+                    f'https://api.whatsapp.com/send/?phone=+{GeneralData.objects.all().first().phone_number}&text='
+                    + mensaje.replace(" <br/> ", "\n") + '&app_absent=1')
+        # Mandar pal fail
+        return render(request, 'order_fail.html', {'uuid': uuid, 'business': GeneralData.objects.first()})
+    return render(request, 'order_fail.html', {'uuid': uuid, 'business': GeneralData.objects.first()})
+
+
+# TPP_Notification
+@method_decorator(csrf_exempt)
+def tpp_verificar(request: HttpRequest):
     if request.method == 'POST':
-        payload = json.loads(str(request.data).replace('\'', '"'))
-        bankOrderCode = ""
-        originalCurrencyAmount = ""
-        signature = ""
+        print('debería ir post', request.POST)
+        print('body', request.body)
+
+        payload = json.loads(request.body)
+        bankOrderCode = payload['data']['bankOrderCode']
+        originalCurrencyAmount = payload['data']['originalCurrencyAmount']
+        signature = payload['data']['signature']
         status = payload['status']
-        referencia = ""
-        for key, value in payload.items():
-            if key == 'data':
-                datos = json.loads(str(payload['data']).replace('\'', '"'))
-                bankOrderCode = datos['bankOrderCode']
-                originalCurrencyAmount = datos['originalCurrencyAmount']
-                signature = datos['signature']
-                referencia = datos['reference']
+        referencia = payload['data']['reference']
+
         cadena = bankOrderCode + settings.TPP_CLIENT_EMAIL + sha1(
             settings.TPP_CLIENT_PASSWORD.encode('utf-8')).hexdigest() \
                  + originalCurrencyAmount
@@ -362,17 +428,24 @@ def tpp_verificar(request):
             orden = get_object_or_404(Orden, pk=referencia)
             if status == 'OK':
                 orden.status = '1'
+                # Hice el descuento
+                for i in orden.componente_orden.all():
+                    prod = i.producto
+                    prod.stock -= i.cantidad
+                    prod.sales += i.cantidad
+                    prod.save()
             else:
                 orden.status = '2'
             orden.link_de_pago = "CONSUMIDO"
             orden.save()
 
-            mensaje = create_message_order(request, orden)
-            return redirect(
-                f'https://api.whatsapp.com/send/?phone=+{GeneralData.objects.all().first().phone_number}&text=' +
-                mensaje.replace(" <br/> ", "\n") + '&app_absent=1')
-        return redirect('index-euro')
-    return redirect('index-euro')
+            return HttpResponse('Verificando...')
+    # fails alerta
+
+    return render(request, 'order_fail.html', {'uuid': request.session['last_order'], 'business': GeneralData.objects.first()})
+
+
+# return redirect('index-euro')
 
 
 def pagar_cup(request: HttpRequest):
@@ -413,6 +486,7 @@ def create_order(request: HttpRequest, moneda, **kwargs):
             if int(c['product']['delivery_time']) > tiempo_de_entrega:
                 tiempo_de_entrega = int(c['product']['delivery_time'])
         total += municipio.precio if moneda == 'CUP' else municipio.precio_euro
+        print('total aki', total)
 
         orden = Orden.objects.create(total=float(total), precio_envio=float(precio_envio), moneda=moneda,
                                      status='1' if moneda == 'CUP' else '2', nombre_comprador=comprador,
@@ -425,9 +499,12 @@ def create_order(request: HttpRequest, moneda, **kwargs):
             ComponenteOrden.objects.create(orden=orden, producto=prod,
                                            respaldo=float(c['product']['price'] / taza_cambio * c['quantity']),
                                            cantidad=int(c['quantity']))
-            prod.stock = prod.stock - int(c['quantity'])
-            prod.sales += int(c['quantity'])
-            prod.save()
+            # Aki se rebaja
+            if moneda == 'CUP':
+                prod.stock = prod.stock - int(c['quantity'])
+                prod.sales += int(c['quantity'])
+                prod.save()
+        request.session['last_order'] = str(orden.uuid)
         # Limpiar cart
         Cart(request).clear()
         return orden
@@ -467,6 +544,13 @@ def cancel_order(request, *args, **kwargs):
             prod.sales -= c.cantidad
             prod.save()
     return redirect('index-cup')
+
+
+def fail_order(request):
+    if 'last_order' in request.session:
+        return render(request, template_name='order_fail.html',
+                      context={'uuid': request.session['last_order'], 'business': GeneralData.objects.first()})
+    return redirect('index-euro')
 
 
 class OrdenAPIList(generics.ListCreateAPIView):
