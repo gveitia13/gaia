@@ -1,5 +1,6 @@
 import datetime
-import json, http.client
+import http.client
+import json
 from hashlib import sha256, sha1
 
 import pytz
@@ -9,10 +10,13 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic, View
 from django.views.decorators.http import require_POST
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 from app_cart.cart import Cart
 from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
     ComponenteOrden
+from app_main.serializers import OrdenSerializer
 from gaia import settings
 
 
@@ -463,3 +467,18 @@ def cancel_order(request, *args, **kwargs):
             prod.sales -= c.cantidad
             prod.save()
     return redirect('index-cup')
+
+
+class OrdenAPIList(generics.ListCreateAPIView):
+    serializer_class = OrdenSerializer
+    queryset = Orden.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        data = [i.toJSON() for i in self.get_queryset()]
+        return Response(data={'order_list': data}, status=status.HTTP_200_OK)
+
+
+class OrdenAPIDetails(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = OrdenSerializer
+    queryset = Orden.objects.all()
+    lookup_field = 'uuid'

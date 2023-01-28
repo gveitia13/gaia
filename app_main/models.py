@@ -284,6 +284,13 @@ class Orden(models.Model):
         verbose_name_plural = 'Ordenes'
         ordering = ('moneda', '-status', 'date_created',)
 
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['date_created'] = self.date_created.strftime('%d-%m-%Y')
+        item['uuid'] = str(self.uuid)
+        item['componentes'] = [i.toJSON() for i in self.componente_orden.all()]
+        return item
+
 
 class ComponenteOrden(models.Model):
     producto = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True,
@@ -298,6 +305,10 @@ class ComponenteOrden(models.Model):
 
     def Componente(self):
         return str(self)
+
+    def toJSON(self):
+        item = model_to_dict(self, exclude=['orden'])
+        return item
 
     class Meta:
         ordering = ('orden', 'producto')

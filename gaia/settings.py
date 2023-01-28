@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'corsheaders',
     'widget_tweaks',
+    'rest_framework',
     'django_cleanup.apps.CleanupConfig',
 ]
 

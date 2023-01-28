@@ -37,7 +37,9 @@
                         id="select-info">
                     <option selected disabled>Info Útil</option>
                     {% for info in infoUtil_list %}
-                        <option value="{{ info.id }}">{{ info.title }}</option>
+                        {% if info.contenidoinfo_set.exists %}
+                            <option value="{{ info.id }}">{{ info.title }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </li>

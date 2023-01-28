@@ -3,7 +3,7 @@ from django.urls import path
 
 from app_main.views import create_suscriptor, InfoView, delete_suscriptor, \
     StartPageCUP, StartPageEuro, CatalogoEuroView, CatalogoCUPView, pagar_euro, tpp_verificar, pagar_cup, \
-    cancel_order
+    cancel_order, OrdenAPIList, OrdenAPIDetails
 
 
 # def correo(request):
@@ -30,4 +30,7 @@ urlpatterns = [
     # CUP
     path('pagar/cup/', pagar_cup, name='pagar-cup'),
     path('cancelar_orden/<pk>/', cancel_order, name='cancelar'),
+    # API
+    path('orden/list/', OrdenAPIList.as_view(), name='orden-api-list'),
+    path('orden/<uuid>/', OrdenAPIDetails.as_view(), name='orden-api-details'),
 ]
