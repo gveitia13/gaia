@@ -475,7 +475,7 @@ class OrdenAPIList(generics.ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         data = [i.toJSON() for i in self.get_queryset()]
-        return Response(data={'order_list': data}, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class OrdenAPIDetails(generics.RetrieveUpdateDestroyAPIView):
