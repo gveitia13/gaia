@@ -148,6 +148,9 @@ class GeneralData(models.Model):
     enterprise_address = models.CharField(max_length=100, verbose_name='Dirección de la empresa', null=True, blank=True)
     taza_cambio = models.FloatField('Taza de cambio', validators=[MinValueValidator(0, 'Debe ser mayor que cero')],
                                     help_text='Valor del Euro en CUP')
+    tropipay_impuesto = models.FloatField('Impuesto de Tropipay', default=3.45,
+                                          help_text='Porciento del total de la orden aumentado',
+                                          validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
     email = models.EmailField('Correo', unique=True,
                               error_messages={'unique': 'Este correo ya existe'})
     phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True, error_messages={

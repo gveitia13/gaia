@@ -298,7 +298,8 @@ def pagar_euro(request):
                 "countryId": 0,
                 "termsAndConditions": "true"
             }
-            orden_total = int(orden.total * 100)
+            impuesto = orden.total * GeneralData.objects.first().tropipay_impuesto / 100
+            orden_total = int(orden.total * impuesto * 100 + 0.5)
             spain_timezone = pytz.timezone("Europe/Madrid")
             spain_time = datetime.datetime.now(spain_timezone)
             payload_tpp = {
@@ -442,7 +443,8 @@ def tpp_verificar(request: HttpRequest):
             return HttpResponse('Verificando...')
     # fails alerta
 
-    return render(request, 'order_fail.html', {'uuid': request.session['last_order'], 'business': GeneralData.objects.first()})
+    return render(request, 'order_fail.html',
+                  {'uuid': request.session['last_order'], 'business': GeneralData.objects.first()})
 
 
 # return redirect('index-euro')

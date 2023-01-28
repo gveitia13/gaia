@@ -35,12 +35,12 @@ class ContenidoInfoInline(admin.StackedInline):
 
 class GeneralDataAdmin(admin.ModelAdmin):
     list_display = (
-        'enterprise_name', 'email', 'phone_number', 'taza_cambio', 'logo_link',
+        'enterprise_name', 'email', 'phone_number', 'taza_cambio', 'tropipay_impuesto', 'logo_link',
         'img_principal_link',
     )
     fieldsets = [
         ('Datos principales', {
-            'fields': ('enterprise_name', 'taza_cambio', 'logo', 'img_principal',)
+            'fields': ('enterprise_name', 'taza_cambio', 'tropipay_impuesto', 'logo', 'img_principal',)
         },),
         ('Redes Sociales', {
             'fields': ('facebook', 'instagram',)
