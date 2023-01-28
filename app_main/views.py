@@ -473,10 +473,6 @@ class OrdenAPIList(generics.ListCreateAPIView):
     serializer_class = OrdenSerializer
     queryset = Orden.objects.all()
 
-    def list(self, request, *args, **kwargs):
-        data = [i.toJSON() for i in self.get_queryset()]
-        return Response(data=data, status=status.HTTP_200_OK)
-
 
 class OrdenAPIDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OrdenSerializer
