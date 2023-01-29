@@ -97,6 +97,7 @@ class StartPage(BaseView, generic.ListView, ):
         return context
 
     def dispatch(self, request, *args, **kwargs):
+        self.request.session['active_cart'] = None
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request: HttpRequest, *args: list, **kwargs: dict):
@@ -131,6 +132,9 @@ class StartPage(BaseView, generic.ListView, ):
 
 class StartPageCUP(StartPage):
     queryset = Product.objects.filter(is_active=True, stock__gt=0).exclude(moneda='Euro')
+
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
