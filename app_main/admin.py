@@ -200,7 +200,7 @@ class OrdenAdmin(admin.ModelAdmin):
         output.seek(0)  # Reposición al principio
         response = HttpResponse(output.getvalue(), content_type='application/vnd.ms-excel')
         ctime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        file_name = 'Información registrada % s.xls' % ctime
+        file_name = 'Información registrada % s.xlsx' % ctime
         response['Content-Disposition'] = 'attachment; filename=%s' % file_name
         return response
         for i in qs:
