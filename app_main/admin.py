@@ -1,6 +1,11 @@
+import os
+from datetime import datetime
+from pathlib import Path
+
 import xlsxwriter
 from django.contrib import admin
 from django.db.models import QuerySet
+from django.http import FileResponse
 
 from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
     ComponenteOrden, ContenidoInfo
@@ -142,11 +147,45 @@ class OrdenAdmin(admin.ModelAdmin):
                     set(ComponenteOrden.objects.filter(orden__in=queryset).values_list('producto_id'))]
         columnas2 = [p.name for p in columnas]
         print(columnas2)
-        workbook = xlsxwriter.Workbook('hello.xlsx')
-        worksheet = workbook.add_worksheet()
+        matriz = []
+        # for i in queryset:
+        #     lista = []
+        #     for a in i.componente_orden.all():
+        #         for c in columnas:
+        #             if c == a.producto:
+        #                 lista.append(a.cantidad)
+        #             else:
+        #                 lista.append('')
+        #     matriz.append(lista)
 
-        for i in filas:
-            pass
+        for i in queryset:
+            lista = []
+            for c in columnas:
+                if i.componente_orden.filter(producto=c).exists():
+                    lista.append(i.componente_orden.filter(producto=c).first().cantidad)
+                else:
+                    lista.append('')
+            matriz.append(lista)
+
+        ruta = Path(os.getcwd())
+        archivo = 'Ordenes {}.xlsx'.format(str(datetime.now().strftime("%m_%d_%Y")))
+        workbook = xlsxwriter.Workbook(ruta.joinpath(archivo))
+        cell_format = workbook.add_format()
+        cell_format.set_text_wrap()
+        # cell_format.set_align('fill')
+        cell_format.set_align('vcenter')
+        cell_format.set_font_size(10)
+        worksheet = workbook.add_worksheet()
+        worksheet.set_column_pixels(0, 0, 300)
+        worksheet.write_column(1, 0, filas, cell_format)
+        worksheet.write_row(0, 1, columnas2, cell_format)
+        row = 1
+        for i in matriz:
+            worksheet.write_row(row, 1, i, cell_format)
+            row += 1
+        workbook.close()
+        response = FileResponse(open(ruta.joinpath(archivo), 'rb'))
+        return response
 
 
 class ComponenteOrdenAdmin(admin.ModelAdmin):
