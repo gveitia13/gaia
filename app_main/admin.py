@@ -138,41 +138,28 @@ class OrdenAdmin(admin.ModelAdmin):
     actions = ['Exportar_Excel']
 
     def Exportar_Excel(self, request, queryset: QuerySet[Orden]):
-        filas = [i[0] for i in set(queryset.values_list('correo'))]
         filas = [
             f'{i.nombre_receptor}\n{i.telefono_receptor}\n{i.municipio} calle: {i.calle} entre: {i.calle1} y ' \
             f'{i.calle2} No: {i.numero_edificio} {i.detalles_direccion}' for i in queryset]
-        print(filas)
+        filas += ['TOTAL']
         columnas = [Product.objects.get(pk=i[0]) for i in
                     set(ComponenteOrden.objects.filter(orden__in=queryset).values_list('producto_id'))]
         columnas2 = [p.name for p in columnas]
-        print(columnas2)
         matriz = []
-        # for i in queryset:
-        #     lista = []
-        #     for a in i.componente_orden.all():
-        #         for c in columnas:
-        #             if c == a.producto:
-        #                 lista.append(a.cantidad)
-        #             else:
-        #                 lista.append('')
-        #     matriz.append(lista)
-
         for i in queryset:
             lista = []
             for c in columnas:
                 if i.componente_orden.filter(producto=c).exists():
-                    lista.append(i.componente_orden.filter(producto=c).first().cantidad)
+                    cant = i.componente_orden.filter(producto=c).first().cantidad
+                    lista.append(cant)
                 else:
                     lista.append('')
             matriz.append(lista)
-
         ruta = Path(os.getcwd())
         archivo = 'Ordenes {}.xlsx'.format(str(datetime.now().strftime("%m_%d_%Y")))
         workbook = xlsxwriter.Workbook(ruta.joinpath(archivo))
         cell_format = workbook.add_format()
         cell_format.set_text_wrap()
-        # cell_format.set_align('fill')
         cell_format.set_align('vcenter')
         cell_format.set_font_size(10)
         worksheet = workbook.add_worksheet()
@@ -183,6 +170,15 @@ class OrdenAdmin(admin.ModelAdmin):
         for i in matriz:
             worksheet.write_row(row, 1, i, cell_format)
             row += 1
+        last_row = [0 for i in range(len(columnas))]
+        casd = 0
+        for i in matriz:
+            for j in i:
+                if type(j) == int:
+                    last_row[casd] += j
+                casd += 1
+            casd = 0
+        worksheet.write_row(row, 1, last_row, cell_format)
         workbook.close()
         response = FileResponse(open(ruta.joinpath(archivo), 'rb'))
         return response
