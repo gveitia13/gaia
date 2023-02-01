@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/mini_bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom_styles.css' %}">
+    {#    <link rel="icon" href="{% static 'img/logo-pill.png' %}" type="image/x-icon">#}
+
+    <title>{{ title }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.0cm;
+        }
+
+        body {
+            font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+            color: black;
+            width: 85%;
+            margin-right: auto;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+<div class=" " id="mi" style="width: 100%">
+    <div class="card-body table-responsive">
+        <div class="row mb-3" style="align-items: center">
+            <div class="col-6">
+                <img src="{{ business.img_principal.url }}" alt="Imagen de la empresa" style="height: 70px">
+            </div>
+            <div class="col-6 text-end">
+                <p class="mb-0 mt-0"><b>{{ business.enterprise_name }}</b></p>
+                <p class="mb-0 mt-0">{{ business.enterprise_address }}</p>
+                <p class="mb-0 mt-0">{{ business.phone_number }}</p>
+            </div>
+        </div>
+        <h3 class="text-center">Orden de Entrega de Pedido</h3>
+        <div class="row mb-3">
+            <div class="col-8">
+                <p class="mb-0 mt-0"><b>Orden No. </b>{{ orden.uuid }}</p>
+                <p class="mb-0 mt-0"><b>Fecha </b>{{ orden.date_created|date:'d/m/Y - g:i a' }}</p>
+            </div>
+
+            <div class="col-4">
+                <p class="mb-0 mt-0"><b>Cliente </b>{{ orden.nombre_comprador }}</p>
+                <p class="mb-0 mt-0"><b>Pago </b>{% if orden.moneda == 'Euro' %}Tropipay{% else %} Whatsapp
+                {% endif %} </p>
+            </div>
+        </div>
+        {#        <div class="row">#}
+        <h3 class="mt-0 mb-0">{{ business.enterprise_name }}</h3>
+        {#        </div>#}
+        <hr>
+        <table class="table border-dark table-sm fs-7">
+            <thead>
+            <tr class="text-start">
+                <th style="width: 80%">Productos</th>
+                <th style="width: 20%" class="text-center">Cantidad</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for comp in orden.componente_orden.filter %}
+                <tr>
+                    <td>{{ comp.producto.name }}</td>
+                    <td class="text-center">{{ comp.cantidad }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row mb-3">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">ENVIADO A</div>
+                    <div class="card-body">
+                        datos
+                    </div>
+                </div>
+            </div>
+            <div class="col-6"></div>
+            <div class="col-6"></div>
+            <div class="col-6"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -6,6 +6,7 @@ import xlsxwriter
 from django.contrib import admin
 from django.db.models import QuerySet
 from django.http import FileResponse
+from django.shortcuts import render
 
 from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
     ComponenteOrden, ContenidoInfo
@@ -135,7 +136,7 @@ class OrdenAdmin(admin.ModelAdmin):
     list_display = ('status', 'uuid', 'date_created', 'total', 'moneda', 'correo', 'municipio')
     list_filter = ('status', 'moneda', 'municipio')
     search_fields = ('uuid',)
-    actions = ['Exportar_Excel']
+    actions = ['Exportar_Excel', 'Exportar_PDF']
 
     def Exportar_Excel(self, request, queryset: QuerySet[Orden]):
         filas = [
@@ -182,6 +183,13 @@ class OrdenAdmin(admin.ModelAdmin):
         workbook.close()
         response = FileResponse(open(ruta.joinpath(archivo), 'rb'))
         return response
+
+    def Exportar_PDF(self, request, queryset: QuerySet[Orden]):
+        return render(request, 'ordenes_pdf.html', {
+            'orden_list': queryset,
+            'business': GeneralData.objects.all().first(),
+            'orden': Orden.objects.first()
+        })
 
 
 class ComponenteOrdenAdmin(admin.ModelAdmin):
