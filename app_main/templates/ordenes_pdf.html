@@ -137,5 +137,15 @@
     {% endfor %}
 
 </div>
+<script>
+  function printHTML() {
+    if (window.print) {
+      window.print();
+    }
+  }
+  document.addEventListener("DOMContentLoaded", function (event) {
+    printHTML();
+  });
+</script>
 </body>
 </html>
