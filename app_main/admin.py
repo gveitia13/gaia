@@ -185,10 +185,25 @@ class OrdenAdmin(admin.ModelAdmin):
         return response
 
     def Exportar_PDF(self, request, queryset: QuerySet[Orden]):
+
+        # contents = render_to_string(template_name='test-pdf.html', context={
+        #     'orden_list': queryset,
+        #     'business': GeneralData.objects.all().first(),
+        #     'orden': Orden.objects.first()
+        # }, request=request)
+        # response = HttpResponse(content_type='application/pdf')
+        # ruta = Path(os.getcwd())
+        # name = 'Ordenes {}.pdf'.format(str(datetime.now().strftime("%m_%d_%Y")))
+        # response['Content-Disposition'] = 'inline; filename={}.pdf'.format(name)
+        # result = BytesIO()
+        # pisa.pisaDocument(BytesIO(contents.encode('iso-8859-1')), result, show_error_as_pdf=True,
+        #                   encoding='iso-8859-1')
+        # response.write(result.getvalue())
+        # result.close()
+        # return response
         return render(request, 'ordenes_pdf.html', {
             'orden_list': queryset,
             'business': GeneralData.objects.all().first(),
-            'orden': Orden.objects.first()
         })
 
 
