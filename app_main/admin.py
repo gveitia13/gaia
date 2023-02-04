@@ -134,9 +134,10 @@ class MunicipioAdmin(admin.ModelAdmin):
 
 class OrdenAdmin(admin.ModelAdmin):
     list_display = ('status', 'uuid', 'date_created', 'total', 'moneda', 'correo', 'municipio')
+    list_display_links = ('status', 'uuid')
     list_filter = ('status', 'moneda', 'municipio')
     search_fields = ('uuid',)
-    actions = ['Exportar_Excel', 'Exportar_PDF']
+    actions = ['Exportar_Excel', 'Exportar_PDF_de_entrega', 'Exportar_PDF_de_detalles']
 
     def Exportar_Excel(self, request, queryset: QuerySet[Orden]):
         filas = [
@@ -184,7 +185,7 @@ class OrdenAdmin(admin.ModelAdmin):
         response = FileResponse(open(ruta.joinpath(archivo), 'rb'))
         return response
 
-    def Exportar_PDF(self, request, queryset: QuerySet[Orden]):
+    def Exportar_PDF_de_entrega(self, request, queryset: QuerySet[Orden]):
 
         # contents = render_to_string(template_name='test-pdf.html', context={
         #     'orden_list': queryset,
@@ -202,6 +203,12 @@ class OrdenAdmin(admin.ModelAdmin):
         # result.close()
         # return response
         return render(request, 'ordenes_pdf.html', {
+            'orden_list': queryset,
+            'business': GeneralData.objects.all().first(),
+        })
+
+    def Exportar_PDF_de_detalles(self, request, queryset: QuerySet[Orden]):
+        return render(request, 'ordenes_detalles_pdf.html', {
             'orden_list': queryset,
             'business': GeneralData.objects.all().first(),
         })

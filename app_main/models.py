@@ -75,27 +75,36 @@ class Product(models.Model):
         ('Euro', 'Euro'),
         ('Ambas', 'Ambas'),
     ), default='CUP', max_length=200)
+    codigo = models.CharField('Código', max_length=100, editable=False, )
 
     def __str__(self):
         return self.name
 
-    def toJSON(self):
-        item = model_to_dict(self)
-        item['category'] = self.category.toJSON()
-        item['image'] = self.get_image()
-        item['info'] = self.info_tag()
-        item['about'] = self.about_tag()
-        item['price'] = float(self.get_price())
-        item['get_price'] = float(self.get_price())
-        # item['old_price'] = float(self.old_price) if self.old_price else ''
-        item['old_price'] = self.get_old_price()
-        item['get_old_price'] = self.get_old_price()
-        item['date_updated'] = self.date_updated.strftime('%d-%m-%Y')
-        return item
+    def calculate_codigo(self):
+        cat = f'00{self.category_id}' if self.category.pk < 10 else f'{self.category_id}' if self.category.pk > 99 else f'0{self.category_id}'
+        pk = f'00{self.pk}' if self.pk < 10 else f'{self.pk}' if self.pk > 99 else f'0{self.pk}'
+        return 'GAIA-' + cat + '-' + pk
+
+    def save(self, *args, **kwargs):
+        self.codigo = self.calculate_codigo()
+        return super().save(*args, **kwargs)
+
+        def toJSON(self):
+            item = model_to_dict(self)
+            item['category'] = self.category.toJSON()
+            item['image'] = self.get_image()
+            item['info'] = self.info_tag()
+            item['about'] = self.about_tag()
+            item['price'] = float(self.get_price())
+            item['get_price'] = float(self.get_price())
+            # item['old_price'] = float(self.old_price) if self.old_price else ''
+            item['old_price'] = self.get_old_price()
+            item['get_old_price'] = self.get_old_price()
+            item['date_updated'] = self.date_updated.strftime('%d-%m-%Y')
+            return item
 
     def get_price(self):
         request: HttpRequest = get_current_request()
-        # print(request.path)
         if request.path.__contains__('Euro'):
             return float(self.price) / float(GeneralData.objects.first().taza_cambio)
         return float(self.price)
