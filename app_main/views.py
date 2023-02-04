@@ -303,7 +303,8 @@ def pagar_euro(request):
                 "termsAndConditions": "true"
             }
             impuesto = orden.total * GeneralData.objects.first().tropipay_impuesto / 100
-            orden_total = int(orden.total * impuesto * 100 + 0.5)
+            # orden_total = int(orden.total * impuesto * 100 + 0.5)
+            orden_total = round((orden.total * impuesto + 0.5), 2) * 100
             spain_timezone = pytz.timezone("Europe/Madrid")
             spain_time = datetime.datetime.now(spain_timezone)
             payload_tpp = {
@@ -340,8 +341,7 @@ def pagar_euro(request):
             retorno = retorno.split(',')
             retorno = retorno[len(retorno) - 2].replace('"shortUrl":"', '').replace('"', '')
             orden.link_de_pago = retorno
-            orden.total = float('{:.2f}'.format(orden.total)) / 100
-
+            orden.total = float('{:.2f}'.format(orden_total)) / 100
             orden.save()
             print('orden d pago va aki', orden.link_de_pago)
             return redirect(orden.link_de_pago)

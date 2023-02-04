@@ -72,3 +72,14 @@ def restar(value, arg):
             return value + arg
         except Exception:
             return ""
+
+@register.filter(is_safe=False)
+def restar_decimal(value, arg):
+    try:
+        return float(value) - float(arg)
+    except (ValueError, TypeError):
+        try:
+            return value + arg
+        except Exception:
+            return ""
+

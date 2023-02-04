@@ -1,3 +1,4 @@
+{% load cart_tag %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -8,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/custom_styles.css' %}">
-    <title>Registro de Ordenes {% now 'd-m-Y - g:i a' %}</title>
+    <title>Detalles de Ordenes {% now 'd-m-Y - g:i a' %}</title>
     <style>
         @page {
             size: A4;
@@ -48,23 +49,106 @@
                     <p class="mb-0 mt-0"><b>Fecha y hora </b>{{ orden.date_created|date:'d/m/Y - g:i a' }}</p>
                 </div>
             </div>
-            <table class="table border-dark table-sm fs-7">
-                <thead>
-                <tr>
-                    <th colspan="2" class="fs-3">{{ business.enterprise_name }}</th>
-                </tr>
-                <tr class="text-start">
-                    <th style="width: 80%">Productos</th>
-                    <th style="width: 20%" class="text-center">Cantidad</th>
-                </tr>
-                </thead>
+            <table class="table table-sm fs-7">
                 <tbody>
                 {% for comp in orden.componente_orden.filter %}
                     <tr>
-                        <td>{{ comp.producto.name }} [{{ comp.producto. }}</td>
-                        <td class="text-center">{{ comp.cantidad }}</td>
+                        <td>
+                            <p class="mb-1">
+                                <asd class="text-orange">{{ comp.producto.name }}</asd>
+                                [{{ comp.producto.codigo }}]
+                            </p>
+                            <small class="text-muted">{{ comp.producto.category }}</small>
+                        </td>
+                        <td class="text-end">
+                            <small>{{ comp.cantidad }} x {% if orden.moneda == 'CUP' %}${{ comp.producto.price }} =
+                                ${% else %}
+                                €{{ comp.producto.price |dividir:business.taza_cambio | floatformat:2 }} =
+                                €{% endif %}{{ comp.respaldo | floatformat:2 }}
+                            </small>
+                        </td>
                     </tr>
                 {% endfor %}
+                </tbody>
+            </table>
+            <table class="table table-borderless table-sm fs-7">
+                <tbody>
+                {% if orden.moneda != 'CUP' %}
+                    <tr>
+                        <td>
+                        </td>
+                        <td class="text-end">
+                            <small class="text-muted">El valor del precio total aumentará
+                                por las tarifas de la pasarela</small>
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>
+                        <p class="mb-1">Subtotal</p>
+                    </td>
+                    <td class="text-end">
+                        <small>{% if orden.moneda == 'CUP' %}${% else %}
+                            €{% endif %}{{ orden.total | restar_decimal:orden.precio_envio | floatformat:2 }}</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="mb-1">Costo de envío</p>
+                    </td>
+                    <td class="text-end">
+                        <small>{% if orden.moneda == 'CUP' %}${% else %}
+                            €{% endif %}{{ orden.precio_envio | floatformat:2 }}</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="mb-1">Total de envío</p>
+                    </td>
+                    <td class="text-end">
+                        <small>{% if orden.moneda == 'CUP' %}${% else %}
+                            €{% endif %}{{ orden.total | floatformat:2 }}</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class=""><b>Envío GAIA - Hasta {{ orden.tiempo_de_entrega }}
+                            {% if orden.tiempo_de_entrega > 1 %}días{% else %}día{% endif %}</b></p>
+                    </td>
+                    <td class="text-end">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="mb-1">Total: {% if orden.moneda == 'CUP' %}${% else %}
+                            €{% endif %}{{ orden.total | floatformat:2 }}</p>
+                    </td>
+                    <td class="text-end">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        <p class="mb-2">Contacto y dirección de entrega:</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ orden.nombre_receptor }}</td>
+                </tr>
+                <tr>
+                    <td>Calle {{ orden.calle }} No {{ orden.numero_edificio }}, entre {{ orden.calle1 }}
+                        y {{ orden.calle2 }}. Reparto {{ orden.reparto }}. {{ orden.detalles_direccion }}</td>
+                </tr>
+                <tr>
+                    <td>{{ orden.municipio }}</td>
+                </tr>
+                <tr>
+                    <td>Teléfono: {{ orden.telefono_receptor }}</td>
+                </tr>
                 </tbody>
             </table>
         </div>

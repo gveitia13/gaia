@@ -81,7 +81,7 @@ class ProductInline(admin.StackedInline):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'category', 'img_link', 'moneda', 'price', 'info_tag', 'sales', 'stock', 'has_old_price', 'is_active')
+        'name', 'category', 'img_link', 'moneda', 'price', 'codigo', 'sales', 'stock', 'has_old_price', 'is_active')
     fieldsets = [
         ('Datos Principales:', {
             'fields': ('name', 'category', 'moneda', 'price', 'old_price', 'stock', 'delivery_time')
@@ -90,12 +90,12 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('image', 'img_link', 'is_active', 'is_important', 'info', 'about')
         })
     ]
-    search_fields = ('name',)
+    search_fields = ('name', 'codigo')
     list_filter = ('category',)
     actions = ['Desactivar_productos', 'Activar_productos', 'Activar_destacados', 'Quitar_destacados',
                'Quitar_descuento']
     change_list_template = 'admin/custom_list.html'
-    readonly_fields = ('date_updated', 'sales', 'img_link')
+    readonly_fields = ('date_updated', 'sales', 'img_link', 'codigo')
 
     def Desactivar_productos(self, request, queryset):
         for p in queryset:
@@ -133,7 +133,7 @@ class MunicipioAdmin(admin.ModelAdmin):
 
 
 class OrdenAdmin(admin.ModelAdmin):
-    list_display = ('status', 'uuid', 'date_created', 'total', 'moneda', 'correo', 'municipio')
+    list_display = ('status', 'uuid', 'date_created', 'get_total', 'moneda', 'correo', 'municipio')
     list_display_links = ('status', 'uuid')
     list_filter = ('status', 'moneda', 'municipio')
     search_fields = ('uuid',)
