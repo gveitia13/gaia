@@ -1,9 +1,20 @@
-from django.test import TestCase
+lista = [123, 233, 34, 23, 34, 12]
+lista2 = []
+diccionario = {}
+cant = 0
 
-import datetime
-import pytz
+for i in range(len(lista)):
+    j = i + 1
+    for j in range(len(lista)):
+        if lista[i] == lista[j]:
+            cant += 1
+            lista2.append(lista[i])
+        cant = 0
 
-spain_timezone = pytz.timezone("Europe/Madrid")
-spain_time = datetime.datetime.now(spain_timezone)
-print(spain_time)
+print(lista2)
 
+for i in lista:
+    if diccionario.get(i) is not None:
+        diccionario[i] += 1
+    else:
+        diccionario[i] = 1

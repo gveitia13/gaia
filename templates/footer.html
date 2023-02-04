@@ -20,10 +20,10 @@
 
 <footer class="bd-footer mt-3 bg-orange footer-2">
     <div class="container pt-3">
-        <div class="row">
+        <div class="row justify-content-center text-center">
             {% if catalogo_url %}
 
-                <div class="col-6 col-md-3  mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <h5>CATEGORÍAS</h5>
                     <ul class="list-unstyled">
                         {% for category in categories %}
@@ -36,7 +36,7 @@
             {% endif %}
 
             <div class="col-6 col-md-3  mb-3">
-                <h5>INFO ÚTIL</h5>
+                <h5>SOBRE NOSOTROS</h5>
                 <ul class="list-unstyled">
                     {% for info in infoUtil_list %}
                         {% if info.contenidoinfo_set.exists %}
@@ -59,7 +59,7 @@
                                         class="text-decoration-none text-white">{{ business.email }}</a></li>
                 </ul>
             </div>
-            <div class="col-6 col-md-3  mb-3">
+            <div class="col-6 col-md-3 mb-3">
                 <h5>SÍGUENOS</h5>
                 <div>
                     <a href="{{ business.instagram }}"><i class="mdi mdi-instagram mdi-48px text-white"></i></a>
