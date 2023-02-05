@@ -192,10 +192,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'gaia.store.cuba@gmail.com'
-EMAIL_HOST_USER = 'technostar.cuba@gmail.com'
-# EMAIL_HOST_PASSWORD = 'ehyqfphlarwlrizj'  # past the key or password app here
-EMAIL_HOST_PASSWORD = 'reumhmwfkrqrpnsv'  # past the key or password app here
+EMAIL_HOST_USER = 'gaia.store.cuba@gmail.com'
+# EMAIL_HOST_USER = 'technostar.cuba@gmail.com'
+EMAIL_HOST_PASSWORD = 'ehyqfphlarwlrizj'  # past the key or password app here
+# EMAIL_HOST_PASSWORD = 'reumhmwfkrqrpnsv'  # past the key or password app here
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
