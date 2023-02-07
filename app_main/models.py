@@ -243,6 +243,9 @@ class ContenidoInfo(models.Model):
     def text_tag(self):
         return mark_safe(self.text)
 
+    def __str__(self):
+        return 'Contenido de '+ self.info.__str__()
+
     def image_tag(self):
         if self.image:
             return mark_safe(f'<img src="{self.image.url}" alt="" width="80" height="50">')
