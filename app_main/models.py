@@ -301,7 +301,11 @@ class Orden(models.Model):
     def get_total(self):
         return '{:.2f}'.format(self.total)
 
+    def get_componente(self):
+        return mark_safe(''.join(['•' + i.__str__() + '<br>' for i in self.componente_orden.all()]))
+
     get_total.short_description = 'Importe total'
+    get_componente.short_description = 'Componentes'
 
     class Meta:
         verbose_name = 'Orden'

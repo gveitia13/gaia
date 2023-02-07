@@ -132,12 +132,20 @@ class MunicipioAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'precio', 'precio_euro')
 
 
+class ComponenteOrdenInline(admin.TabularInline):
+    model = ComponenteOrden
+    extra = 0
+
+
 class OrdenAdmin(admin.ModelAdmin):
-    list_display = ('status', 'uuid', 'date_created', 'get_total', 'moneda', 'correo', 'municipio')
+    list_display = ('status', 'uuid', 'date_created', 'get_componente', 'get_total', 'moneda', 'correo', 'municipio')
     list_display_links = ('status', 'uuid')
     list_filter = ('status', 'moneda', 'municipio')
     search_fields = ('uuid',)
     actions = ['Exportar_Excel', 'Exportar_PDF_de_entrega', 'Exportar_PDF_de_detalles']
+    list_per_page = 10
+    inlines = [ComponenteOrdenInline]
+    readonly_fields = ['get_componente']
 
     def Exportar_Excel(self, request, queryset: QuerySet[Orden]):
         filas = [
@@ -186,22 +194,6 @@ class OrdenAdmin(admin.ModelAdmin):
         return response
 
     def Exportar_PDF_de_entrega(self, request, queryset: QuerySet[Orden]):
-
-        # contents = render_to_string(template_name='test-pdf.html', context={
-        #     'orden_list': queryset,
-        #     'business': GeneralData.objects.all().first(),
-        #     'orden': Orden.objects.first()
-        # }, request=request)
-        # response = HttpResponse(content_type='application/pdf')
-        # ruta = Path(os.getcwd())
-        # name = 'Ordenes {}.pdf'.format(str(datetime.now().strftime("%m_%d_%Y")))
-        # response['Content-Disposition'] = 'inline; filename={}.pdf'.format(name)
-        # result = BytesIO()
-        # pisa.pisaDocument(BytesIO(contents.encode('iso-8859-1')), result, show_error_as_pdf=True,
-        #                   encoding='iso-8859-1')
-        # response.write(result.getvalue())
-        # result.close()
-        # return response
         return render(request, 'ordenes_pdf.html', {
             'orden_list': queryset,
             'business': GeneralData.objects.all().first(),
