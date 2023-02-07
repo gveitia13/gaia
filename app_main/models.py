@@ -212,6 +212,9 @@ class Banner(models.Model):
     gnd = models.ForeignKey(GeneralData, on_delete=models.CASCADE)
     banner = models.ImageField(upload_to='datos_generales/banner', verbose_name='Banner', null=True)
 
+    def __str__(self):
+        return 'Banner de ' + self.gnd.__str__()
+
 
 class Suscriptor(models.Model):
     email = models.EmailField('Correo', unique=True)
@@ -244,7 +247,7 @@ class ContenidoInfo(models.Model):
         return mark_safe(self.text)
 
     def __str__(self):
-        return 'Contenido de '+ self.info.__str__()
+        return 'Contenido de ' + self.info.__str__()
 
     def image_tag(self):
         if self.image:
