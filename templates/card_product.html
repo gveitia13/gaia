@@ -13,17 +13,22 @@
             </div>
         </div>
         <div class="card-footer text-center bg-white rounded-0 border-0">
-            <Button Class="Button add_to_cart btn btn-success mb-1" name="{{ prod.id }}">
-                <Span>COMPRAR</Span>
-                <div Class="Cart">
-                    <Svg ViewBox="0 0 36 26">
-                        <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>
-                        <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>
-                    </Svg>
-                </div>
-            </Button>
+            {% if prod.stock > 0 %}
+                <Button Class="Button add_to_cart btn btn-success mb-1" name="{{ prod.id }}">
+                    <Span>COMPRAR</Span>
+                    <div Class="Cart">
+                        <Svg ViewBox="0 0 36 26">
+                            <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>
+                            <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>
+                        </Svg>
+                    </div>
+                </Button>
+            {% else %}
+                <span class="badge py-2 fs-6 fw-normal rounded-pill bg-secondary"><i
+                        class="mdi mdi-cancel"></i> AGOTADO</span>
+            {% endif %}
             <button type="button" class="btn btn-success border-0 mb-1 bg-semi-success btn-sm rounded-pill"
-                    data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}" >
+                    data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}">
                 <i class="mdi mdi-magnify-plus-outline"></i> VER
             </button>
         </div>

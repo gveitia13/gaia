@@ -56,7 +56,7 @@ class BaseView(View):
 
 class StartPage(BaseView, generic.ListView, ):
     template_name = 'startpage.html'
-    queryset = Product.objects.filter(is_active=True, stock__gt=0)
+    queryset = Product.objects.filter(is_active=True)
     paginate_by = 10
 
     def get_queryset(self):
@@ -131,7 +131,7 @@ class StartPage(BaseView, generic.ListView, ):
 
 
 class StartPageCUP(StartPage):
-    queryset = Product.objects.filter(is_active=True, stock__gt=0).exclude(moneda='Euro')
+    queryset = Product.objects.filter(is_active=True,).exclude(moneda='Euro')
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -166,7 +166,7 @@ class StartPageCUP(StartPage):
 
 
 class StartPageEuro(StartPage):
-    queryset = Product.objects.filter(is_active=True, stock__gt=0).exclude(moneda='CUP')
+    queryset = Product.objects.filter(is_active=True,).exclude(moneda='CUP')
     template_name = 'startpage_euro.html'
 
     def get_context_data(self, **kwargs):
@@ -290,8 +290,10 @@ def pagar_euro(request):
             address += 'Calle: ' + orden.calle + '. '
             address += 'Entre calle : ' + orden.calle1 + ' y calle ' + orden.calle2 + '. '
             address += 'Número: ' + orden.numero_edificio + '. '
-            address += 'Reparto: ' + orden.reparto + '. '
-            address += 'Detalles : ' + orden.detalles_direccion + '.'
+            if orden.reparto != '':
+                address += 'Reparto: ' + orden.reparto + '. '
+            if orden.detalles_direccion != '':
+                address += 'Detalles : ' + orden.detalles_direccion + '.'
             client = {
                 'name': user_comprador.split(' ')[0],
                 'lastName': ''.join(a + ' ' for a in [i for i in user_comprador.split(' ')[1:]]) if len(
@@ -478,8 +480,8 @@ def create_order(request: HttpRequest, moneda, **kwargs):
     entre1 = request.POST.get('entre1')
     entre2 = request.POST.get('entre2')
     numero = request.POST.get('numero')
-    reparto = request.POST.get('reparto')
-    detalle = request.POST.get('detalle')
+    reparto = request.POST.get('reparto', '')
+    detalle = request.POST.get('detalle', '')
     precio_envio = municipio.precio if moneda == 'CUP' else municipio.precio_euro
     # Calcular total
     cart = Cart(request)
@@ -530,11 +532,19 @@ def create_message_order(request, orden):
     mensaje += 'Productos comprados: \n'
     for c in orden.componente_orden.all():
         mensaje += str(c) + '\n'
-    mensaje += '\nPara cancelar su orden abra el siguiente enlace: \n'
-    host = 'http://' if request.get_host().__contains__("127.0.0.1") or request.get_host().__contains__(
-        "localhost") or request.get_host().__contains__("192.168") else 'https://'
-
-    mensaje += f'{host}' + request.get_host() + reverse_lazy('cancelar', kwargs={'pk': orden.pk})
+    # if orden.moneda != 'CUP':
+    #     mensaje += '\nPara cancelar su orden abra el siguiente enlace: \n'
+    #     host = 'http://' if request.get_host().__contains__("127.0.0.1") or request.get_host().__contains__(
+    #         "localhost") or request.get_host().__contains__("192.168") else 'https://'
+    #
+    #     mensaje += f'{host}' + request.get_host() + reverse_lazy('cancelar', kwargs={'pk': orden.pk})
+    # else:
+    mensaje += '\nDatos de entrega:\n'
+    mensaje += f'Municipio: {orden.municipio}.\n'
+    mensaje += f'Calle: {orden.calle}, entre {orden.calle1} y {orden.calle2}, No {orden.numero_edificio}.'
+    if orden.reparto != '':
+        mensaje += f' Reparto: {orden.reparto}.'
+    mensaje += f' {orden.detalles_direccion}'
     print(mensaje)
     return mensaje
 

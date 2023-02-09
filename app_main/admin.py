@@ -138,11 +138,13 @@ class ComponenteOrdenInline(admin.TabularInline):
 
 
 class OrdenAdmin(admin.ModelAdmin):
-    list_display = ('status', 'uuid', 'date_created', 'get_componente', 'get_total', 'moneda', 'correo', 'municipio')
+    list_display = (
+        'status', 'uuid', 'date_created', 'get_componente', 'get_total', 'moneda', 'correo', 'municipio',
+    )
     list_display_links = ('status', 'uuid')
     list_filter = ('status', 'moneda', 'municipio')
     search_fields = ('uuid',)
-    actions = ['Exportar_Excel', 'Exportar_PDF_de_entrega', 'Exportar_PDF_de_detalles']
+    actions = ['Exportar_Excel', 'Exportar_PDF_de_entrega', 'Exportar_PDF_de_detalles', 'Cancelar_Orden']
     list_per_page = 10
     inlines = [ComponenteOrdenInline]
     readonly_fields = ['get_componente']
@@ -204,6 +206,18 @@ class OrdenAdmin(admin.ModelAdmin):
             'orden_list': queryset,
             'business': GeneralData.objects.all().first(),
         })
+
+    def Cancelar_Orden(self, request, queryset):
+        for o in queryset:
+            if o.status != '3':
+                o.status = '3'
+                o.save()
+                for c in o.componente_orden.all():
+                    if c.producto:
+                        prod = c.producto
+                        prod.stock = prod.stock + c.cantidad
+                        prod.sales -= c.cantidad
+                        prod.save()
 
 
 class ComponenteOrdenAdmin(admin.ModelAdmin):

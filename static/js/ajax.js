@@ -155,6 +155,8 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     document.querySelector('#input-hidden-id-modal').value = data.product.id
     if (data.product.old_price)
       document.querySelector('#old-price-modal').innerHTML = parseFloat(data.product.old_price).toFixed() + ` ${data.tipo_moneda}`
+    if (data.product.stock <= 0)
+      document.querySelector('#agotado').innerHTML = '<b>Producto agotado</b>'
   },
   limpiarModal = () => {
     document.querySelector('#img-modal').src = ''
@@ -165,6 +167,7 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     document.querySelector('#info-modal').innerHTML = ''
     document.querySelector('#about-modal').innerHTML = ''
     document.querySelector('#old-price-modal').innerHTML = ''
+    document.querySelector('#agotado').innerHTML = ''
   },
   updateCart = (value = 0) => {
     let cant = 0

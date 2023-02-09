@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.forms import model_to_dict
 from django.http import HttpRequest
+from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 
 from gaia.settings import STATIC_URL
@@ -277,7 +278,7 @@ class Orden(models.Model):
     status = models.CharField('Estado', choices=(
         ('1', 'Completada'),
         ('2', 'Pendiente'),
-        ('3', 'Cancelada por cliente'),
+        ('3', 'Cancelada'),
     ), max_length=10, default='2')
     date_created = models.DateTimeField('Fecha', auto_now_add=True, )
     # Campos del form
@@ -292,8 +293,8 @@ class Orden(models.Model):
     calle1 = models.CharField('Entre calle 1', max_length=200)
     calle2 = models.CharField('Entre calle 2', max_length=200)
     numero_edificio = models.CharField('Número de edificio', max_length=200)
-    reparto = models.CharField('Reparto', max_length=200)
-    detalles_direccion = models.CharField('Detalles de dirección', max_length=200)
+    reparto = models.CharField('Reparto', max_length=200, null=True, blank=True)
+    detalles_direccion = models.CharField('Detalles de dirección', max_length=200, null=True, blank=True)
 
     def __str__(self):
         return '{}'.format(str(self.uuid))
@@ -304,7 +305,16 @@ class Orden(models.Model):
     def get_componente(self):
         return mark_safe(''.join(['•' + i.__str__() + '<br>' for i in self.componente_orden.all()]))
 
+    def get_cancel_link(self):
+        if self.status != '3':
+            return mark_safe(
+                f'<a href="{reverse_lazy("cancelar", kwargs={"pk": self.pk})}" class="btn btn-danger rounded-pill '
+                f'">Cancelar<a/>')
+        else:
+            return ''
+
     get_total.short_description = 'Importe total'
+    get_cancel_link.short_description = 'Opciones'
     get_componente.short_description = 'Componentes'
 
     class Meta:
