@@ -1,6 +1,7 @@
 import datetime
 import http.client
 import json
+import random
 from hashlib import sha256, sha1
 
 import pytz
@@ -131,7 +132,7 @@ class StartPage(BaseView, generic.ListView, ):
 
 
 class StartPageCUP(StartPage):
-    queryset = Product.objects.filter(is_active=True,).exclude(moneda='Euro')
+    queryset = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -139,10 +140,15 @@ class StartPageCUP(StartPage):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['moneda'] = 'CUP'
-        context['categories'] = sorted(
+        cate = sorted(
             Category.objects.filter(product__isnull=False, destacado=True,
                                     product__moneda__in=['CUP', 'Ambas']).distinct(),
-            key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+            key=lambda cat: cat.get_prods_count, reverse=True)
+        if len(cate) > 4:
+            context['categories'] = random.sample(cate, 4)
+        else:
+            context['categories'] = random.sample(cate, len(cate))
+
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
             moneda='Euro')[0:10]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False).exclude(
@@ -166,16 +172,20 @@ class StartPageCUP(StartPage):
 
 
 class StartPageEuro(StartPage):
-    queryset = Product.objects.filter(is_active=True,).exclude(moneda='CUP')
+    queryset = Product.objects.filter(is_active=True, ).exclude(moneda='CUP')
     template_name = 'startpage_euro.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['moneda'] = 'Euro'
-        context['categories'] = sorted(
+        cate = sorted(
             Category.objects.filter(product__isnull=False, destacado=True,
                                     product__moneda__in=['Euro', 'Ambas']).distinct(),
-            key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+            key=lambda cat: cat.get_prods_count, reverse=True)
+        if len(cate) > 4:
+            context['categories'] = random.sample(cate, 4)
+        else:
+            context['categories'] = random.sample(cate, len(cate))
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
             moneda='CUP')[0:10]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False).exclude(

@@ -133,29 +133,58 @@ button.text-semi-success:hover {
     margin: 0;
 }
 
-@media only screen and (min-width: 350px) {
-    .img-carousel {
-        height: 30vh !important;
-    }
+.img-carousel {
+    height: 55vh !important;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (max-width: 800px) {
     .img-carousel {
         height: 40vh !important;
     }
 }
 
-@media only screen and (min-width: 800px) {
+@media only screen and (max-width: 600px) {
     .img-carousel {
-        height: 50vh !important;
+        height: 30vh !important;
     }
 }
 
-@media only screen and (min-width: 1000px) {
+@media only screen and (max-width: 500px) {
     .img-carousel {
-        height: 60vh !important;
+        height: 25vh !important;
     }
 }
+
+@media only screen and (max-width: 400px) {
+    .img-carousel {
+        height: 20vh !important;
+    }
+}
+
+
+/*@media only screen and (min-width: 450px) {*/
+/*    .img-carousel {*/
+/*        height: 32vh !important;*/
+/*    }*/
+/*}*/
+
+/*@media only screen and (min-width: 600px) {*/
+/*    .img-carousel {*/
+/*        height: 40vh !important;*/
+/*    }*/
+/*}*/
+
+/*@media only screen and (min-width: 800px) {*/
+/*    .img-carousel {*/
+/*        height: 50vh !important;*/
+/*    }*/
+/*}*/
+
+/*@media only screen and (min-width: 1000px) {*/
+/*    .img-carousel {*/
+/*        height: 60vh !important;*/
+/*    }*/
+/*}*/
 
 /*.img-carousel{*/
 /*    width: 1200px;*/
