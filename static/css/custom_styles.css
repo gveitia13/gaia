@@ -167,7 +167,7 @@ button.text-semi-success:hover {
     height: 30vh !important;
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 500px) {
     .div-card-product div.card img, .img-category {
         height: 20vh !important;
     }
