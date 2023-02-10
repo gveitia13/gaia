@@ -15,12 +15,35 @@ phone_regex = RegexValidator(
     message='El teléfono debe estar en este formato: +9999999999. Hasta 15 dígitos permitidos.'
 )
 
+colors = (
+    ('198754', 'Verde'),
+    ('ffc107', 'Amarillo'),
+    ('8cbf44', 'Verde Claro'),
+    ('fd7e14', 'Anaranjado'),
+    ('dc3545', 'Rojo'),
+    ('6c757d', 'Gris'),
+    ('0d6efd', 'Azul'),
+)
+
 
 class Category(models.Model):
-    # description = models.TextField(verbose_name='Descripción', null=True, blank=True)
     name = models.CharField(max_length=100, verbose_name='Nombre')
-    image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True)
+    image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True, blank=True)
     destacado = models.BooleanField('Destacada', default=False)
+    color = models.CharField('Color', max_length=100, choices=colors, default='198754')
+
+    def get_color(self):
+        return mark_safe(
+            f'<span class="badge text-white rounded-pill" '
+            f'style="background-color: #{self.color}">{self.get_color_display()}</span>')
+
+    def get_colores(self):
+        html = ''
+        print(colors)
+        for i in range(len(colors)):
+            html += f'<span class="badge mx-1 text-white rounded-pill"style="background-color: #{colors[i][0]}">{colors[i][1]}</span>'
+        print(html)
+        return mark_safe(html)
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -53,7 +76,9 @@ class Category(models.Model):
             f'<a href="{STATIC_URL}img/empty.png"><img src="{STATIC_URL}img/empty.png" class="agrandar mb-2 mr-2" '
             f'width="40" height="40" /></a>')
 
-    img_link.short_description = 'Imagen'
+    img_link.short_description = 'Vista previa'
+    get_color.short_description = 'Color'
+    get_colores.short_description = 'Colores disponibles'
 
 
 class Product(models.Model):

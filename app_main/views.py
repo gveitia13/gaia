@@ -223,8 +223,15 @@ class InfoView(generic.ListView, BaseView):
         context.update(self.get_my_context_data())
         context['title'] = 'Informaciones'
         context['index_url'] = reverse_lazy('index-cup')
-        context['categories'] = sorted(Category.objects.filter(product__isnull=False, destacado=True).distinct(),
-                                       key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+        cate = sorted(
+            Category.objects.filter(product__isnull=False, destacado=True,
+                                    product__moneda__in=['CUP', 'Ambas']).distinct(),
+            key=lambda cat: cat.get_prods_count, reverse=True)
+        if len(cate) > 4:
+            context['categories'] = random.sample(cate, 4)
+        else:
+            context['categories'] = random.sample(cate, len(cate))
+        context['catalogo_url'] = reverse_lazy('catalogo-cup')
         return context
 
 
