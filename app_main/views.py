@@ -50,8 +50,8 @@ class BaseView(View):
             'infoUtil_list': InfoUtil.objects.filter(title__isnull=False)[:4],
             'all_categories': sorted(Category.objects.filter(product__isnull=False).distinct(),
                                      key=lambda cat: cat.get_prods_count, reverse=True),
-            # 'host': host + self.request.get_host() + '/',
-            'host': 'https://gaia-mercado.com/',
+            'host': host + self.request.get_host() + '/' if settings.TECHNOSTAR else 'https://gaia-mercado.com/',
+            # 'host': 'https://gaia-mercado.com/',
             'address': Municipio.objects.all()
         }
 
