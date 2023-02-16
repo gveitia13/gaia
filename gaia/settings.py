@@ -20,7 +20,8 @@ ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['https://*.ngrok.io', 'https://*.gaia-kla9.onrender.com', 'https://*.127.0.0.1',
-                        'https://*.cubasuper-production.up.railway.app', 'https://*.gaia-production.up.railway.app']
+                        'https://*.cubasuper-production.up.railway.app', 'https://*.gaia-production.up.railway.app',
+                        'https://gaia-mercado.com/', 'https://*.gaia-mercado.com/']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
