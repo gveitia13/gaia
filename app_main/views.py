@@ -34,7 +34,7 @@ class BaseView(View):
         # print(c_x_p)
         print('host', self.request.get_host())
         if self.request.get_host().__contains__("127.0.0.1") or self.request.get_host().__contains__(
-                "localhost") or self.request.get_host().__contains__("192.168"):
+                "localhost"):
             host = 'http://'
         else:
             host = 'https://'
