@@ -134,30 +134,49 @@ button.text-semi-success:hover {
 }
 
 .img-carousel {
-    height: 55vh !important;
+    /*height: 55vh !important;*/
+    height: 25rem !important;
+}
+
+@media only screen and (max-width: 1200px) {
+    .img-carousel {
+        /*height: 40vh !important;*/
+        height: 23rem !important;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .img-carousel {
+        /*height: 40vh !important;*/
+        height: 20rem !important;
+    }
 }
 
 @media only screen and (max-width: 800px) {
     .img-carousel {
-        height: 40vh !important;
+        /*height: 40vh !important;*/
+        height: 15rem !important;
     }
 }
 
 @media only screen and (max-width: 600px) {
     .img-carousel {
-        height: 30vh !important;
+        /*height: 30vh !important;*/
+        height: 12rem !important;
     }
 }
 
 @media only screen and (max-width: 500px) {
     .img-carousel {
-        height: 25vh !important;
+        /*height: 25vh !important;*/
+        height: 9rem !important;
     }
 }
 
 @media only screen and (max-width: 400px) {
     .img-carousel {
-        height: 20vh !important;
+        /*height: 20vh !important;*/
+        height: 8rem !important;
     }
 }
 
@@ -193,12 +212,24 @@ button.text-semi-success:hover {
 /*}*/
 
 .div-card-product div.card img, .img-category {
-    height: 30vh !important;
+    /*height: 30vh !important;*/
+    height: 10rem !important;
+}
+
+.img-category {
+    height: 13rem !important;
+}
+
+@media only screen and (max-width: 1400px) {
+    .img-category {
+        height: 10rem !important;
+    }
 }
 
 @media only screen and (max-width: 500px) {
     .div-card-product div.card img, .img-category {
-        height: 20vh !important;
+        /*height: 20vh !important;*/
+        height: 8rem !important;
     }
 
     div.wrapper {
