@@ -166,6 +166,10 @@
       } catch (e) {
         console.log(e)
       }
-
+      document.querySelectorAll('.category-card').forEach(e => e.addEventListener('click', function () {
+        document.querySelector('#nav-profile-tab').click()
+        let id = this.id.slice(1)
+        document.querySelector(`#cat${id}`).click()
+      }))
     </script>
 {% endblock %}
