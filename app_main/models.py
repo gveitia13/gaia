@@ -113,7 +113,7 @@ class Product(models.Model):
         return 'GAIA-' + cat + '-' + pk
 
     def save(self, *args, **kwargs):
-        self.codigo = self.calculate_codigo()
+        # self.codigo = self.calculate_codigo()
         return super().save(*args, **kwargs)
 
     def toJSON(self):

@@ -27,7 +27,7 @@ CSRF_TRUSTED_ORIGINS = ['https://*.ngrok.io', 'https://*.gaia-kla9.onrender.com'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5s5r7(&3kc#x&(a3%@$ienldvsj$axcl7k(81s&aojt)%zk5jl'
-TECHNOSTAR = False
+TECHNOSTAR = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 # Application definition
@@ -137,7 +137,7 @@ WSGI_APPLICATION = 'gaia.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'test.sqlite3',
     }
 }
 
@@ -200,7 +200,7 @@ EMAIL_HOST_PASSWORD = 'ehyqfphlarwlrizj'  # past the key or password app here
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/admin/'
 
 LOGOUT_REDIRECT_URL = reverse_lazy('admin:login')
 

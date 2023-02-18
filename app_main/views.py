@@ -1,6 +1,7 @@
 import datetime
 import http.client
 import json
+import os
 import random
 from hashlib import sha256, sha1
 
@@ -13,9 +14,7 @@ from django.utils.decorators import method_decorator
 from django.views import generic, View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import generics
 
 from app_cart.cart import Cart
 from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
@@ -38,7 +37,6 @@ class BaseView(View):
             host = 'http://'
         else:
             host = 'https://'
-
         return {
             'icon': settings.BUSINESS_LOGO_PATH,
             'title': settings.BUSINESS_NAME,
@@ -90,12 +88,11 @@ class StartPage(BaseView, generic.ListView, ):
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True)[0:10]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False)[0:10]
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
-
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
-            settings.STATIC_URL / settings.BUSINESS_BANNER]
+            os.path.join(settings.STATIC_URL, settings.BUSINESS_BANNER)]
         # context['index_url'] = self.request.session['index_url']
-        print(self.request.META.get('HTTP_REFERER'))
-        print(self.request.path)
+        # print(self.request.META.get('HTTP_REFERER'))
+        # print(self.request.path)
         return context
 
     def dispatch(self, request, *args, **kwargs):

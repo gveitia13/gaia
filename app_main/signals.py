@@ -15,6 +15,11 @@ from gaia import settings
 def save_hash(sender, instance: Product, created, **kwargs):
     prod = instance
     if created:
+        cat = f'00{prod.category_id}' if prod.category.pk < 10 else f'{prod.category_id}' if prod.category.pk > 99 \
+            else f'0{prod.category_id}'
+        pk = f'00{prod.pk}' if prod.pk < 10 else f'{prod.pk}' if prod.pk > 99 else f'0{prod.pk}'
+        prod.codigo = 'GAIA-' + cat + '-' + pk
+        prod.save()
         if Suscriptor.objects.exists():
             remitente = settings.EMAIL_HOST_USER
             destinatarios = [i.email for i in Suscriptor.objects.all()]
