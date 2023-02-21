@@ -227,15 +227,32 @@ button.text-semi-success:hover {
 }
 
 @media only screen and (max-width: 500px) {
-    .div-card-product div.card img, .img-category {
+    .img-category {
         /*height: 20vh !important;*/
         height: 8rem !important;
+    }
+
+    .div-card-product div.card img {
+        height: 9.5rem !important;
     }
 
     div.wrapper {
         width: 100% !important;
     }
 }
+
+/*@media only screen and (max-width: 450px) {
+    .div-card-product div.card img {
+        height: 9rem !important;
+    }
+}*/
+
+@media only screen and (max-width: 400px) {
+    .div-card-product div.card img {
+        height: 8rem !important;
+    }
+}
+
 
 .imgProdDetails {
     width: 100%;
