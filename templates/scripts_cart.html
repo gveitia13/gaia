@@ -111,6 +111,8 @@
       action: 'details',
       pk: this.name,
     }
+    this.children[0].classList.remove('mdi-cart-plus')
+    this.children[0].classList.add('mdi-loading', 'mdi-spin')
     http.post(`{{ host }}cart/add/${this.name}/`, data, '{{ csrf_token }}')
       .then(data => {
         console.log(data)

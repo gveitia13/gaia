@@ -17,7 +17,7 @@ from gaia.settings import CART_SESSION_ID
 def add(request: HttpRequest, id: int):
     cart = Cart(request)
     cart.add(product=Product.objects.filter(id=id).first())
-    # print(str(cart))
+    print(str(cart))
     for i in cart.all():
         print(i)
     request.session['active'] = '1'

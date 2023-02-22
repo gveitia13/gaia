@@ -27,7 +27,7 @@ CSRF_TRUSTED_ORIGINS = ['https://*.ngrok.io', 'https://*.gaia-kla9.onrender.com'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5s5r7(&3kc#x&(a3%@$ienldvsj$axcl7k(81s&aojt)%zk5jl'
-TECHNOSTAR = False
+TECHNOSTAR = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 # Application definition
