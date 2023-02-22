@@ -12,8 +12,8 @@ from app_main.models import Product
 from gaia.settings import CART_SESSION_ID
 
 
-@require_POST
-# @method_decorator(csrf_exempt, require_POST)
+# @require_POST
+@method_decorator(csrf_exempt, require_POST)
 def add(request: HttpRequest, id: int):
     cart = Cart(request)
     cart.add(product=Product.objects.filter(id=id).first())
@@ -28,19 +28,21 @@ def add(request: HttpRequest, id: int):
     })
 
 
-@require_POST
+# @require_POST
+@method_decorator(csrf_exempt, require_POST)
 def cart_detail(request: HttpRequest, id: int):
     return JsonResponse({"result": Cart(request).get_item(id)})
 
 
-@require_POST
+# @require_POST
+@method_decorator(csrf_exempt, require_POST)
 def cart_clear(request: HttpRequest):
     Cart(request).clear()
     return JsonResponse({"result": "ok", "amount": 0})
 
 
-@require_POST
-# @method_decorator(csrf_exempt, require_POST)
+# @require_POST
+@method_decorator(csrf_exempt, require_POST)
 def item_clear(request: HttpRequest, id: int):
     cart = Cart(request)
     cart.remove(product=Product.objects.filter(id=id).first())
@@ -52,7 +54,8 @@ def item_clear(request: HttpRequest, id: int):
     })
 
 
-@require_POST
+# @require_POST
+@method_decorator(csrf_exempt, require_POST)
 def remove_quant(request: HttpRequest, id: int, quantity: int):
     Cart(request).add(product=Product.objects.filter(id=id).first(), quantity=quantity, action="remove")
     request.session['active'] = '3'
@@ -60,6 +63,7 @@ def remove_quant(request: HttpRequest, id: int, quantity: int):
 
 
 # @method_decorator(require_POST)
+@method_decorator(csrf_exempt, require_POST)
 def update_quant(request: HttpRequest, id: int, value: int):
     cart = Cart(request)
     product = Product.objects.get(pk=id)
@@ -74,14 +78,16 @@ def update_quant(request: HttpRequest, id: int, value: int):
     })
 
 
-@require_POST
+# @require_POST
+@method_decorator(csrf_exempt, require_POST)
 def remove(request: HttpRequest, id: int):
     Cart(request).decrement(product=Product.objects.filter(id=id).first())
     request.session['active'] = '3'
     return JsonResponse({"result": "ok"})
 
 
-@require_POST
+# @require_POST
+@method_decorator(csrf_exempt, require_POST)
 def cart_pop(request: HttpRequest, ):
     cart = Cart(request)
     cart.pop()
@@ -92,7 +98,8 @@ def cart_pop(request: HttpRequest, ):
     })
 
 
-@require_POST
+# @require_POST
+@method_decorator(csrf_exempt, require_POST)
 def add_quant(request: HttpRequest, id: int, quantity: int):
     cart = Cart(request)
     cart.add(Product.objects.filter(id=id).first(), quantity)
