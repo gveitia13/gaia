@@ -537,6 +537,7 @@ def create_order(request: HttpRequest, moneda, **kwargs):
 def create_message_order(request, orden):
     mensaje = 'Orden de compra:\n'
     print(orden)
+    mensaje += 'Ticket: ' + f'{str(orden.uuid)}\n'
     mensaje += 'Comprador: ' + orden.nombre_comprador + '\n'
     mensaje += 'Teléfono del comprador: ' + orden.telefono_comprador + '\n'
     mensaje += 'Receptor: ' + orden.nombre_receptor + '\n'

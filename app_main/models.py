@@ -345,7 +345,7 @@ class Orden(models.Model):
     class Meta:
         verbose_name = 'Orden'
         verbose_name_plural = 'Ordenes'
-        ordering = ('moneda', '-status', 'date_created',)
+        ordering = ('-date_created', '-status',)
 
     def toJSON(self):
         item = model_to_dict(self)
