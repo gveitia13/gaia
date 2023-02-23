@@ -10,13 +10,13 @@
             <div class="">
                 {% csrf_token %}
                 {% for p in products_in_cart %}
-                    <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
+                    <div id="product-{{ p.id }}" class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
                         <div class="row no-gutters">
                             <input type="hidden"
                                    value="{{ p.product.price |dividir:business.taza_cambio | multiply:p.quantity | floatformat:2 }}">
                             <div class=" col-2 my-auto px-0">
                                 <img class="card-img rounded-0" src="{{ p.product.image }}"
-                                     alt="Suresh Dasari Card">
+                                     alt="{{ p.product.name }}">
                             </div>
                             <div class=" col-8">
                                 <div class="card-body px-0 pt-1">
@@ -25,7 +25,7 @@
                                     <input type="number" min="1" max="{{ p.product.stock }}"
                                            class="form-control d-inline-block text-center form-control-sm input-cantidad"
                                            placeholder="cantidad" value="{{ p.quantity }}"
-                                           style="width: 85px" id="p{{ p.product.id }}">
+                                           style="width: 85px" id="product-quantity-{{ p.product.id }}">
                                     <button class="btn btn-danger btn-sm btn-delete rounded-pill"
                                             id="{{ p.product.name }}" name="{{ p.product.id }}">
                                         <i class="mdi mdi-trash-can-outline"></i>
