@@ -77,6 +77,24 @@ def update_quant(request: HttpRequest, id: int, value: int):
         'price': f'{product.price}'
     })
 
+# @method_decorator(require_POST)
+@method_decorator(csrf_exempt, require_POST)
+def update_quant_bl(request: HttpRequest, id: int, value: int):
+    cart = Cart(request)
+    product = Product.objects.get(pk=id)
+    cart.update_quant(product=product, value=value)
+    # return redirect(reverse_lazy('index'))
+    request.session['active'] = '3'
+    total = 0
+    for item in cart.session[CART_SESSION_ID]:
+        total = total + (cart.session[CART_SESSION_ID].get(item)['product']['price']*cart.session[CART_SESSION_ID].get(item)['quantity'])
+    return JsonResponse({
+        "result": "ok",
+        "total": total,
+        'product': product.toJSON(),
+        "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": value})["quantity"],
+        'price': f'{product.price}'
+    })
 
 # @require_POST
 @method_decorator(csrf_exempt, require_POST)
