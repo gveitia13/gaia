@@ -48,8 +48,8 @@ class BaseView(View):
             'infoUtil_list': InfoUtil.objects.filter(title__isnull=False)[:4],
             'all_categories': sorted(Category.objects.filter(product__isnull=False).distinct(),
                                      key=lambda cat: cat.get_prods_count, reverse=True),
-            # 'host': host + self.request.get_host() + '/' if settings.TECHNOSTAR else 'https://gaia-mercado.com/',
-            'host': host + self.request.get_host() + '/' if settings.TECHNOSTAR else 'http://185.101.227.197:8080/',
+            'host': host + self.request.get_host() + '/' if settings.TECHNOSTAR else 'https://gaia-mercado.com/',
+            # 'host': host + self.request.get_host() + '/' if settings.TECHNOSTAR else 'http://185.101.227.197:8080/',
             'address': Municipio.objects.all()
         }
 
