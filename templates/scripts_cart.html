@@ -2,10 +2,21 @@
     function getExchangeRate() {
         return parseFloat({{ business.taza_cambio }})
     }
-    
+
     function overwatchTPPPrice() {
-        
+        if (parseFloat($('#sidebar-total-amount').html()) > 10 && window.location.pathname.toLowerCase().includes('euro')){
+            $('#button-verbosity-lateral').html("Comprar")
+            $('#checkout-button-lateral').prop("disabled",false)
+            $('#button-verbosity').html("Comprar")
+            $('#checkout-button').prop("disabled",false)
+        }else {
+            $('#button-verbosity-lateral').html("La factura debe exceder los 10 euros")
+            $('#checkout-button-lateral').prop("disabled",true)
+            $('#button-verbosity').html("La factura debe exceder los 10 euros")
+            $('#checkout-button').prop("disabled",true)
+        }
     }
+
 
     //Iniciar el touch spin
     $("#input-touchspin").TouchSpin({
@@ -81,6 +92,7 @@
             `<b>Total</b>: (<span id="sidebar-total-quantity">${cant}</span> ${product}) <b>${tipo_moneda} <span id="sidebar-total-amount">${parseFloat($('#botoncito-verde-precio').html())}</span></b>`)
         d.querySelector('#botoncito-verde').innerHTML = `${tipo_moneda} <span id="botoncito-verde-precio">${parseFloat($('#botoncito-verde-precio').html())}</span> / <span id="botoncito-verde-cantidad">${cant}</span> ${product}`
         total = 0
+        overwatchTPPPrice()
     }
 
     function deleteBLMode(id) {
@@ -980,4 +992,5 @@
             });
         }
     })
+    overwatchTPPPrice()
 </script>
