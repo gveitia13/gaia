@@ -15,8 +15,10 @@ urlpatterns = [
     path('info/', InfoView.as_view(), name='info'),
     path('catalogo/CUP/', CatalogoCUPView.as_view(), name='catalogo-cup'),
     path('catalogo/Euro/', CatalogoEuroView.as_view(), name='catalogo-euro'),
-    path('suscriptor_create/', create_suscriptor, name='suscriptor'),
-    path('suscriptor_delete/<email>/', delete_suscriptor, name='del-suscriptor'),
+    path('CUP/suscriptor_create/', create_suscriptor, name='suscriptor'),
+    path('Euro/suscriptor_create/', create_suscriptor, name='suscriptor'),
+    path('CUP/suscriptor_delete/<email>/', delete_suscriptor, name='del-suscriptor'),
+    path('Euro/suscriptor_delete/<email>/', delete_suscriptor, name='del-suscriptor'),
     # EURO
     path('pagar/euro/', pagar_euro, name='pagar-euro'),
     path('tropipay/verificar/', tpp_verificar, name='tpp_verificar'),

@@ -89,6 +89,13 @@
             $('#cat' + parseInt(id)).addClass('success')
             $('#cat' + parseInt(id)).removeClass('bg-semi-success')
             $('#collapse' + parseInt(id)).show()
+            let Offset = 100;
+            // Fade Duration
+            let Duration = 500;
+            $('Html, Body').animate({
+                    scrollTop: 0
+                }, Duration);
+
         }
     </script>
 </footer>
