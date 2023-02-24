@@ -184,9 +184,9 @@ let submit_with_ajax_alert = function (url, title, content, parameters, callback
     d.querySelectorAll('#total-hidden').forEach(e => e.value = total)
 
     d.querySelectorAll('#total-price').forEach(e => e.innerHTML =
-      `<b>Total</b>: (${cant} ${product}) <b>${tipo_moneda} ${total.toFixed(2)}</b>`)
+      `<b>Total</b>: (<span id="sidebar-total-quantity">${cant}</span> ${product}) <b>${tipo_moneda} <span id="sidebar-total-amount">${total.toFixed(2)}</span></b>`)
 
-    d.querySelector('#botoncito-verde').innerHTML = `${tipo_moneda} ${total.toFixed(2)} / ${cant} ${product}`
+    d.querySelector('#botoncito-verde').innerHTML = `${tipo_moneda} <span id="botoncito-verde-precio">${total.toFixed(2)}</span> / <span id="botoncito-verde-cantidad">${cant}</span> ${product}`
     total = 0
   }
 

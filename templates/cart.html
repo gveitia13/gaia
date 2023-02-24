@@ -3,15 +3,17 @@
     <h4 class="d-inline-block"><i class="mdi mdi-cart"></i>Carrito de compra</h4>
     <span class="d-inline-block float-end pe-3 ">Precio</span>
     <hr class="mt-0">
-    <div class="cards-horizontal">
+    <div class="cards-horizontal" id="cart-section-products">
         {% csrf_token %}
         {% for p in products_in_cart %}
-            <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">
+            <div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3"
+                 id="cart-section-product-{{ p.product.id }}">
                 <div class="row no-gutters">
-                    <input type="hidden" value="{{ p.product.price | multiply:p.quantity | floatformat:2 }}">
+                    <input id="cart-section-product-hidden-{{ p.product.id }}" type="hidden"
+                           value="{{ p.product.price | multiply:p.quantity | floatformat:2 }}">
                     <div class="col-sm-2 col-3 my-auto col-xl-1">
                         <img class="card-img rounded-0" src="{{ p.product.image }}"
-                             alt="Suresh Dasari Card">
+                             alt="{{ p.product.image }}">
                     </div>
                     <div class="col-sm-8 col-7 col-xl-9">
                         <div class="card-body pe-0 px-sm-3 ps-0 pt-1">
@@ -21,7 +23,7 @@
                                    placeholder="cantidad" value="{{ p.quantity }}"
                                    style="width: 85px" id="p{{ p.product.id }}">
                             <button class="btn btn-danger btn-sm btn-delete mt-1 mt-sm-0 rounded-circle"
-                                    id="{{ p.product.name }}" name="{{ p.product.id }}">
+                                    id="cart-section-product-delete-{{ p.product.id }}" name="{{ p.product.id }}">
                                 <i class="mdi mdi-trash-can-outline"></i>
                             </button>
                         </div>
@@ -34,21 +36,22 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="row">
-            <div class="col-12 col-sm-6">
-                <form action="" method="post" name="clear-cart">
-                    {% csrf_token %}
-                    <button class="btn btn-danger rounded-pill"><i class="mdi-cart-remove mdi"></i>
-                        Limpiar carrito
-                    </button>
-                </form>
-            </div>
-            <div class="col-12 col-sm-6 text-end">
-                <span class="fs-4 pe-1" id="total-price"><b>Total</b> (2 items): <b>$29.97</b></span>
-            </div>
-        </div>
-        <input type="hidden" value="0" id="total-hidden">
+
     </div>
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <form action="" method="post" name="clear-cart">
+                {% csrf_token %}
+                <button class="btn btn-danger rounded-pill"><i class="mdi-cart-remove mdi"></i>
+                    Limpiar carrito
+                </button>
+            </form>
+        </div>
+        <div class="col-12 col-sm-6 text-end">
+            <span class="fs-4 pe-1" id="total-price"><b>Total</b> (2 items): <b>$29.97</b></span>
+        </div>
+    </div>
+    <input type="hidden" value="0" id="total-hidden">
     <hr>
     {% include 'form_cart.html' %}
 </div>

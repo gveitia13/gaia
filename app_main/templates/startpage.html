@@ -37,8 +37,8 @@
                         <button class="btn btn-outline-success btn-sm rounded-pill" type="button"
                                 data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="botoncito-verde">
-                            $0.00
-                            / {{ products_in_cart|length }} productos
+                            $<span id="botoncito-verde-precio">0.00</span>
+                            / <span id="botoncito-verde-cantidad">{{ products_in_cart|length }}</span> productos
                         </button>
                         {% comment %}<button class="btn btn-outline-success btn-sm rounded-pill"><i
                                 class="mdi mdi-heart"></i></button>{% endcomment %}

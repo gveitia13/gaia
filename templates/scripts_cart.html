@@ -1,233 +1,983 @@
 <script>
-  //Iniciar el touch spin
-  $("#input-touchspin").TouchSpin({
-    min: 0,
-    max: 10,
-    step: 1,
-    maxboostedstep: 10,
-    buttondown_class: 'btn btn-success bg-semi-success btn-up ',
-    buttonup_class: 'btn btn-success bg-semi-success btn-down ',
-    buttondown_txt: ' - '
-  });
-</script>
-<script>
-  updateCart()
-</script>
-<script>
-  //actualizar cantidad
-  document.querySelectorAll('.input-cantidad').forEach(e => e.addEventListener('change', function (e) {
-    let parent = this.parentElement.parentElement.parentElement,
-      input = parent.children[parent.children.length - 1].children[0].children[0].children[0]
+    function getExchangeRate() {
+        return parseFloat({{ business.taza_cambio }})
+    }
+    
+    function overwatchTPPPrice() {
+        
+    }
 
-    let id = this.id
-    this.value = Math.floor(parseFloat(this.value))
-    if (parseInt(this.value) >= parseInt(this.max))
-      this.value = this.max
-    document.querySelectorAll(`#${id}`).forEach(e => e.value = this.value)
-
-    let http = new EasyHTTP
-    http.post(`{{ host }}cart/update_quantity/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
-      .then(data => {
-        if (!data.hasOwnProperty('error')) {
-          console.log(data)
-          let amount = parseFloat(data.amount),
-            original_price = parseFloat(data.price)
-          setTimeout(() => {
-            document.querySelectorAll(`#${input.id}`).forEach(e => {
-              let asd = amount * original_price
-              if (location.pathname.includes('Euro'))
-                asd /= parseFloat('{{ business.taza_cambio }}')
-              e.innerHTML = `${parseFloat(asd).toFixed(2)}`
-            })
-            setTimeout(() => updateCart())
-          })
-
-        } else {
-          console.log(data)
-          Swal.fire({
-            title: 'Error',
-            text: data['error'],
-            icon: 'error'
-          })
-        }
-      }).catch(err => {
-      console.error(err)
-      Swal.fire({
-        title: 'Error',
-        text: 'Hay un problema de conexión con el servidor.',
-        icon: 'error'
-      })
+    //Iniciar el touch spin
+    $("#input-touchspin").TouchSpin({
+        min: 0,
+        max: 10,
+        step: 1,
+        maxboostedstep: 10,
+        buttondown_class: 'btn btn-success bg-semi-success btn-up ',
+        buttonup_class: 'btn btn-success bg-semi-success btn-down ',
+        buttondown_txt: ' - '
     });
-  }))
-
-  //Actualizar precio direccion
-  document.querySelectorAll('select[name=municipio]').forEach(e => e.addEventListener('change', function () {
-    let value = this.options[this.selectedIndex].attributes.name.value.toString().trim()
-      ? this.options[this.selectedIndex].attributes.name.value : 0
-    updateCart(parseFloat(value))
-  }))
 </script>
 <script>
-  //Abrir el modal
-  document.querySelectorAll('[data-bs-toggle="modal"]').forEach(e => e.addEventListener('click', function () {
-    const http = new EasyHTTP;
-    const data = {
-      action: 'details',
-      pk: this.name,
+    updateCart()
+</script>
+<script>
+    function handleGeneratedInputChange(id) {
+        fetchLikeStarButItsBLMode(id, parseInt($('#product-quantity-' + id).val()), parseInt($('#product-quantity-' + id).attr('max')))
+
     }
-    http.post(location.pathname, data, '{{ csrf_token }}')
-      .then(data => {
-        console.log(data)
-        if (!data.hasOwnProperty('error')) {
-          console.log('no error')
-          document.querySelector('#my-loader').classList.add('d-none')
-          document.querySelector('#response').classList.add('d-block')
-          document.querySelector('#response').classList.remove('d-none')
-          llenarModal(data)
-          return false
-        } else {
-          console.log(data)
-          Swal.fire({
-            title: 'Error',
-            text: data['error'],
-            icon: 'error'
-          })
-        }
-      })
-      .catch(err => {
-        console.error(err)
-        Swal.fire({
-          title: 'Error',
-          text: 'Hay un problema de conexión con el servidor.',
-          icon: 'error'
-        })
-      });
-  }))
 
-  //Annadir al carro
-  document.querySelectorAll('.add_to_cart').forEach(e => e.addEventListener('click', function () {
-    const http = new EasyHTTP;
-    const data = {
-      action: 'details',
-      pk: this.name,
-    }
-    this.children[0].classList.remove('mdi-cart-plus')
-    this.children[0].classList.add('mdi-loading', 'mdi-spin')
-    http.post(`{{ host }}cart/add/${this.name}/`, data, '{{ csrf_token }}')
-      .then(data => {
-        console.log(data)
-        if (!data.hasOwnProperty('error')) {
-          console.log('no error')
-          Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
-          setTimeout(() => location.reload(),)
-          return false
-        } else {
-          console.log(data)
-          Swal.fire({
-            title: 'Error',
-            text: data['error'],
-            icon: 'error'
-          })
-        }
-      })
-      .catch(err => {
-        console.error(err)
-        Swal.fire({
-          title: 'Error',
-          text: 'Hay un problema de conexión con el servidor.',
-          icon: 'error'
-        })
-      });
-  }))
+    function fetchLikeStarButItsBLMode(id, value, max) {
+        value = Math.floor(parseFloat(value))
+        if (parseInt(value) >= parseInt(max))
+            value = max
+        document.querySelectorAll(`#product-quantity-${id}`).forEach(e => e.value = value)
+        let http = new EasyHTTP
+        http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${id}/${value}/`, {}, '{{ csrf_token }}')
+            .then(data => {
+                if (!data.hasOwnProperty('error')) {
+                    let amount = parseFloat(data.amount),
+                        original_price = parseFloat(data.price)
+                    setTimeout(() => {
+                        document.querySelectorAll(`#product-quantity-${id}`).forEach(e => {
+                            let asd = amount * original_price
+                            if (location.pathname.includes('Euro'))
+                                asd /= parseFloat('{{ business.taza_cambio }}')
+                            e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                        })
+                        setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                    })
 
-  //Eliminar del carro
-  document.querySelectorAll('.btn-delete').forEach(e => e.addEventListener('click', function () {
-    alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar el producto <b>${this.id}</b> del carrito?`,
-      () => {
-        const http = new EasyHTTP;
-        http.post(`{{ host }}cart/clear/${this.name}/`, {}, '{{ csrf_token }}')
-          .then(data => {
-            console.log(data)
-            if (!data.hasOwnProperty('error')) {
-              location.reload()
-            } else {
-              console.log(data)
-              Swal.fire({
-                title: 'Error',
-                text: data['error'],
-                icon: 'error'
-              })
-            }
-          }).catch(err => {
-          console.error(err)
-          Swal.fire({
-            title: 'Error',
-            text: 'Hay un problema de conexión con el servidor.',
-            icon: 'error'
-          })
-        });
-      }, 'text-danger mdi mdi-cart-minus')
-  }))
-
-  //Limpiar carrito
-  document.querySelectorAll('form[name=clear-cart]').forEach(e => e.addEventListener('submit', function (e) {
-    e.preventDefault()
-    alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
-      const http = new EasyHTTP
-      http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
-        console.log(data)
-        if (!data.hasOwnProperty('error')) {
-          location.reload()
-        } else {
-          console.log(data)
-          Swal.fire({
-            title: 'Error',
-            text: data['error'],
-            icon: 'error'
-          })
-        }
-      }).catch(err => {
-        console.error(err)
-        Swal.fire({
-          title: 'Error',
-          text: 'Hay un problema de conexión con el servidor.',
-          icon: 'error'
-        })
-      });
-    }, 'text-danger mdi mdi-cart-minus')
-  }))
-
-  //Comprar del modal
-  document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
-    let value = $('#input-touchspin').val()
-    if (!value || value <= 0)
-      return null
-    else {
-      document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')
-      document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
-      const http = new EasyHTTP
-      let id = document.querySelector('#input-hidden-id-modal').value
-      http.post(`{{ host }}cart/add/${id}/${value}/`, {}, '{{ csrf_token }}')
-        .then(data => {
-          console.log(data)
-          if (!data.hasOwnProperty('error')) {
-            location.reload()
-          } else {
-            console.log(data)
+                } else {
+                    console.log(data)
+                    Swal.fire({
+                        title: 'Error',
+                        text: data['error'],
+                        icon: 'error'
+                    })
+                }
+            }).catch(err => {
+            console.error(err)
             Swal.fire({
-              title: 'Error',
-              text: data['error'],
-              icon: 'error'
+                title: 'Error',
+                text: 'Hay un problema de conexión con el servidor.',
+                icon: 'error'
             })
-          }
-        }).catch(err => {
-        console.error(err)
-        Swal.fire({
-          title: 'Error',
-          text: 'Hay un problema de conexión con el servidor.',
-          icon: 'error'
-        })
-      });
+        });
     }
-  })
+
+    updateCartBLMode = (value = 0, cant) => {
+        const d = document
+        let product = cant === 1 ? `producto` : 'productos',
+            total = 0,
+            tipo_moneda = location.pathname.includes('Euro') ? '€' : '$'
+
+        d.querySelectorAll('.cards-horizontal .card-s-cart div div > span.span-price b').forEach(e =>
+            total += parseFloat(e.children[0].innerText.replace(',', '.')))
+        total += value
+        d.querySelectorAll('#total-hidden').forEach(e => e.value = parseFloat($('#botoncito-verde-precio').html()))
+
+        d.querySelectorAll('#total-price').forEach(e => e.innerHTML =
+            `<b>Total</b>: (<span id="sidebar-total-quantity">${cant}</span> ${product}) <b>${tipo_moneda} <span id="sidebar-total-amount">${parseFloat($('#botoncito-verde-precio').html())}</span></b>`)
+        d.querySelector('#botoncito-verde').innerHTML = `${tipo_moneda} <span id="botoncito-verde-precio">${parseFloat($('#botoncito-verde-precio').html())}</span> / <span id="botoncito-verde-cantidad">${cant}</span> ${product}`
+        total = 0
+    }
+
+    function deleteBLMode(id) {
+        alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar este producto del carrito?`,
+            () => {
+                const http = new EasyHTTP;
+                http.post(`http://192.168.137.1:8000/cart/clear/${id}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        console.log(data)
+                        if (!data.hasOwnProperty('error')) {
+                            location.reload()
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            }, 'text-danger mdi mdi-cart-minus')
+    }
+
+    function asignarEventos() {
+        document.querySelectorAll('.input-cantidad').forEach(e => e.addEventListener('change', function (e) {
+            let parent = this.parentElement.parentElement.parentElement,
+                input = parent.children[parent.children.length - 1].children[0].children[0].children[0]
+            let id = this.id
+            this.value = Math.floor(parseFloat(this.value))
+            if (parseInt(this.value) >= parseInt(this.max))
+                this.value = this.max
+            document.querySelectorAll(`#${id}`).forEach(e => e.value = this.value)
+
+            let http = new EasyHTTP
+            if (!isNaN(parseInt(this.id.slice(1)))) {
+                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            console.log(data)
+                            let amount = parseFloat(data.amount),
+                                original_price = parseFloat(data.price)
+                            setTimeout(() => {
+                                document.querySelectorAll(`#${input.id}`).forEach(e => {
+                                    let asd = amount * original_price
+                                    if (location.pathname.includes('Euro'))
+                                        asd /= parseFloat('{{ business.taza_cambio }}')
+                                    e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                                })
+                                $('#product-price-sidebar-' + parseInt(this.id.slice(1))).html($('#span'.concat(this.id.slice(1))).html())
+                                $('#product-quantity-' + parseInt(this.id.slice(1))).val($('#p'.concat(this.id.slice(1))).val())
+                                $("#botoncito-verde-precio").html(parseFloat(data.total))
+                                setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                            })
+
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            } else {
+                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            console.log(data)
+                            let amount = parseFloat(data.amount),
+                                original_price = parseFloat(data.price)
+                            setTimeout(() => {
+                                document.querySelectorAll(`#${input.id}`).forEach(e => {
+                                    let asd = amount * original_price
+                                    if (location.pathname.includes('Euro'))
+                                        asd /= parseFloat('{{ business.taza_cambio }}')
+                                    e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                                })
+                                $('#span' + parseInt(this.id.replace('product-quantity-', ''))).html($('#product-price-sidebar-'.concat(this.id.replace('product-quantity-', ''))).html())
+                                $('#p' + parseInt(this.id.replace('product-quantity-', ''))).val($('#product-quantity-'.concat(this.id.replace('product-quantity-', ''))).val())
+                                $("#botoncito-verde-precio").html(parseFloat(data.total))
+                                setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                            })
+
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            }
+
+        }))
+        document.querySelectorAll('.btn-delete').forEach(e => e.addEventListener('click', function () {
+            alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar este producto del carrito?`,
+                () => {
+                    const http = new EasyHTTP;
+                    if (!isNaN(parseInt(this.id.replace('delete-product-', '')))) {
+                        http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
+                            .then(data => {
+                                console.log(data)
+                                if (!data.hasOwnProperty('error')) {
+                                    location.reload()
+                                } else {
+                                    console.log(data)
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: data['error'],
+                                        icon: 'error'
+                                    })
+                                }
+                            }).catch(err => {
+                            console.error(err)
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Hay un problema de conexión con el servidor.',
+                                icon: 'error'
+                            })
+                        });
+
+                    } else {
+                        http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
+                            .then(data => {
+                                if (!data.hasOwnProperty('error')) {
+                                    location.reload()
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: data['error'],
+                                        icon: 'error'
+                                    })
+                                }
+                            }).catch(err => {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Hay un problema de conexión con el servidor.',
+                                icon: 'error'
+                            })
+                        });
+                    }
+                }, 'text-danger mdi mdi-cart-minus')
+        }))
+    }
+
+    function asignarEventosEuro() {
+        document.querySelectorAll('.input-cantidad').forEach(e => e.addEventListener('change', function (e) {
+            let parent = this.parentElement.parentElement.parentElement,
+                input = parent.children[parent.children.length - 1].children[0].children[0].children[0]
+            let id = this.id
+            this.value = Math.floor(parseFloat(this.value))
+            if (parseInt(this.value) >= parseInt(this.max))
+                this.value = this.max
+            document.querySelectorAll(`#${id}`).forEach(e => e.value = this.value)
+
+            let http = new EasyHTTP
+            if (!isNaN(parseInt(this.id.slice(1)))) {
+                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            console.log(data)
+                            let amount = parseFloat(data.amount),
+                                original_price = parseFloat(data.price)
+                            setTimeout(() => {
+                                document.querySelectorAll(`#${input.id}`).forEach(e => {
+                                    let asd = amount * original_price
+                                    if (location.pathname.includes('Euro'))
+                                        asd /= parseFloat('{{ business.taza_cambio }}')
+                                    e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                                })
+                                $('#product-price-sidebar-' + parseInt(this.id.slice(1))).html($('#span'.concat(this.id.slice(1))).html())
+                                $('#product-quantity-' + parseInt(this.id.slice(1))).val($('#p'.concat(this.id.slice(1))).val())
+                                $("#botoncito-verde-precio").html((parseFloat(data.total / getExchangeRate())).toFixed(2))
+                                setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                            })
+
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            } else {
+                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            console.log(data)
+                            let amount = parseFloat(data.amount),
+                                original_price = parseFloat(data.price)
+                            setTimeout(() => {
+                                document.querySelectorAll(`#${input.id}`).forEach(e => {
+                                    let asd = amount * original_price
+                                    if (location.pathname.includes('Euro'))
+                                        asd /= parseFloat('{{ business.taza_cambio }}')
+                                    e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                                })
+                                $('#span' + parseInt(this.id.replace('product-quantity-', ''))).html($('#product-price-sidebar-'.concat(this.id.replace('product-quantity-', ''))).html())
+                                $('#p' + parseInt(this.id.replace('product-quantity-', ''))).val($('#product-quantity-'.concat(this.id.replace('product-quantity-', ''))).val())
+                                $("#botoncito-verde-precio").html((parseFloat(data.total / getExchangeRate())).toFixed(2))
+                                setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                            })
+
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            }
+
+        }))
+        document.querySelectorAll('.btn-delete').forEach(e => e.addEventListener('click', function () {
+            alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar este producto del carrito?`,
+                () => {
+                    const http = new EasyHTTP;
+                    if (!isNaN(parseInt(this.id.replace('delete-product-', '')))) {
+                        http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
+                            .then(data => {
+                                console.log(data)
+                                if (!data.hasOwnProperty('error')) {
+                                    location.reload()
+                                } else {
+                                    console.log(data)
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: data['error'],
+                                        icon: 'error'
+                                    })
+                                }
+                            }).catch(err => {
+                            console.error(err)
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Hay un problema de conexión con el servidor.',
+                                icon: 'error'
+                            })
+                        });
+
+                    } else {
+                        http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
+                            .then(data => {
+                                if (!data.hasOwnProperty('error')) {
+                                    location.reload()
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: data['error'],
+                                        icon: 'error'
+                                    })
+                                }
+                            }).catch(err => {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Hay un problema de conexión con el servidor.',
+                                icon: 'error'
+                            })
+                        });
+                    }
+                }, 'text-danger mdi mdi-cart-minus')
+        }))
+    }
+
+    //actualizar cantidad
+    if (!window.location.pathname.toLowerCase().includes('euro')) {
+        document.querySelectorAll('.input-cantidad').forEach(e => e.addEventListener('change', function (e) {
+            let parent = this.parentElement.parentElement.parentElement,
+                input = parent.children[parent.children.length - 1].children[0].children[0].children[0]
+
+            let id = this.id
+            this.value = Math.floor(parseFloat(this.value))
+            if (parseInt(this.value) >= parseInt(this.max))
+                this.value = this.max
+            document.querySelectorAll(`#${id}`).forEach(e => e.value = this.value)
+
+            let http = new EasyHTTP
+            if (!isNaN(parseInt(this.id.slice(1)))) {
+                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            console.log(data)
+                            let amount = parseFloat(data.amount),
+                                original_price = parseFloat(data.price)
+                            setTimeout(() => {
+                                document.querySelectorAll(`#${input.id}`).forEach(e => {
+                                    let asd = amount * original_price
+                                    if (location.pathname.includes('Euro'))
+                                        asd /= parseFloat('{{ business.taza_cambio }}')
+                                    e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                                })
+                                $('#product-price-sidebar-' + parseInt(this.id.slice(1))).html($('#span'.concat(this.id.slice(1))).html())
+                                $('#product-quantity-' + parseInt(this.id.slice(1))).val($('#p'.concat(this.id.slice(1))).val())
+                                $("#botoncito-verde-precio").html(parseFloat(data.total))
+                                setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                            })
+
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            } else {
+                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            console.log(data)
+                            let amount = parseFloat(data.amount),
+                                original_price = parseFloat(data.price)
+                            setTimeout(() => {
+                                document.querySelectorAll(`#${input.id}`).forEach(e => {
+                                    let asd = amount * original_price
+                                    if (location.pathname.includes('Euro'))
+                                        asd /= parseFloat('{{ business.taza_cambio }}')
+                                    e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                                })
+                                $('#span' + parseInt(this.id.replace('product-quantity-', ''))).html($('#product-price-sidebar-'.concat(this.id.replace('product-quantity-', ''))).html())
+                                $('#p' + parseInt(this.id.replace('product-quantity-', ''))).val($('#product-quantity-'.concat(this.id.replace('product-quantity-', ''))).val())
+                                $("#botoncito-verde-precio").html(parseFloat(data.total))
+                                setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                            })
+
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            }
+        }))
+    } else {
+        document.querySelectorAll('.input-cantidad').forEach(e => e.addEventListener('change', function (e) {
+            let parent = this.parentElement.parentElement.parentElement,
+                input = parent.children[parent.children.length - 1].children[0].children[0].children[0]
+            let id = this.id
+            this.value = Math.floor(parseFloat(this.value))
+            if (parseInt(this.value) >= parseInt(this.max))
+                this.value = this.max
+            document.querySelectorAll(`#${id}`).forEach(e => e.value = this.value)
+
+            let http = new EasyHTTP
+            if (!isNaN(parseInt(this.id.slice(1)))) {
+                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            console.log(data)
+                            let amount = parseFloat(data.amount),
+                                original_price = parseFloat(data.price)
+                            setTimeout(() => {
+                                document.querySelectorAll(`#${input.id}`).forEach(e => {
+                                    let asd = amount * original_price
+                                    if (location.pathname.includes('Euro'))
+                                        asd /= parseFloat('{{ business.taza_cambio }}')
+                                    e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                                })
+                                $('#product-price-sidebar-' + parseInt(this.id.slice(1))).html($('#span'.concat(this.id.slice(1))).html())
+                                $('#product-quantity-' + parseInt(this.id.slice(1))).val($('#p'.concat(this.id.slice(1))).val())
+                                $("#botoncito-verde-precio").html((parseFloat(data.total / getExchangeRate())).toFixed(2))
+                                setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                            })
+
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            } else {
+                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            console.log(data)
+                            let amount = parseFloat(data.amount),
+                                original_price = parseFloat(data.price)
+                            setTimeout(() => {
+                                document.querySelectorAll(`#${input.id}`).forEach(e => {
+                                    let asd = amount * original_price
+                                    if (location.pathname.includes('Euro'))
+                                        asd /= parseFloat('{{ business.taza_cambio }}')
+                                    e.innerHTML = `${parseFloat(asd).toFixed(2)}`
+                                })
+                                $('#span' + parseInt(this.id.replace('product-quantity-', ''))).html($('#product-price-sidebar-'.concat(this.id.replace('product-quantity-', ''))).html())
+                                $('#p' + parseInt(this.id.replace('product-quantity-', ''))).val($('#product-quantity-'.concat(this.id.replace('product-quantity-', ''))).val())
+                                $("#botoncito-verde-precio").html((parseFloat(data.total / getExchangeRate())).toFixed(2))
+                                setTimeout(() => updateCartBLMode(parseFloat(data.total), parseInt($("#botoncito-verde-cantidad").html())))
+                            })
+
+                        } else {
+                            console.log(data)
+                            Swal.fire({
+                                title: 'Error',
+                                text: data['error'],
+                                icon: 'error'
+                            })
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            }
+
+        }))
+    }
+
+
+    //Actualizar precio direccion
+    document.querySelectorAll('select[name=municipio]').forEach(e => e.addEventListener('change', function () {
+        let value = this.options[this.selectedIndex].attributes.name.value.toString().trim()
+            ? this.options[this.selectedIndex].attributes.name.value : 0
+        updateCart(parseFloat(value))
+    }))
+</script>
+<script>
+    //Abrir el modal
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(e => e.addEventListener('click', function () {
+        const http = new EasyHTTP;
+        const data = {
+            action: 'details',
+            pk: this.name,
+        }
+        http.post(location.pathname, data, '{{ csrf_token }}')
+            .then(data => {
+                console.log(data)
+                if (!data.hasOwnProperty('error')) {
+                    console.log('no error')
+                    document.querySelector('#my-loader').classList.add('d-none')
+                    document.querySelector('#response').classList.add('d-block')
+                    document.querySelector('#response').classList.remove('d-none')
+                    llenarModal(data)
+                    return false
+                } else {
+                    console.log(data)
+                    Swal.fire({
+                        title: 'Error',
+                        text: data['error'],
+                        icon: 'error'
+                    })
+                }
+            })
+            .catch(err => {
+                console.error(err)
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hay un problema de conexión con el servidor.',
+                    icon: 'error'
+                })
+            });
+    }))
+
+    //Annadir al carro
+    if (!window.location.pathname.toLowerCase().includes('euro')) {
+        document.querySelectorAll('.add_to_cart').forEach(e => e.addEventListener('click', function () {
+            const http = new EasyHTTP;
+            const data = {
+                action: 'details',
+                pk: this.name,
+            }
+            this.children[0].classList.remove('mdi-cart-plus')
+            this.children[0].classList.add('mdi-loading', 'mdi-spin')
+            var component = this.children[0]
+            http.post(`http://192.168.137.1:8000/cart/add/${this.name}/`, data, '{{ csrf_token }}')
+                .then(data => {
+                    if (!data.hasOwnProperty('error')) {
+                        Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
+                        setTimeout(function () {
+                            component.classList.remove('mdi-loading', 'mdi-spin')
+                            component.classList.add('mdi-cart-plus')
+                        }, 250);
+                        var found = false
+                        for (let i = 0; i < $('#products').children().length; i++) {
+                            var actual = $('#products').children()[i]
+                            if ($(actual).attr('id') === 'product-' + data['product']['id']) {
+                                found = true
+                                if (parseInt(data['product']['stock']) < parseInt($('#product-quantity-' + data['product']['id']).val()) + 1) {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'No se puede agregar más existencias de ' + data['product']['name'],
+                                        icon: 'error'
+                                    })
+                                } else {
+                                    $('#product-quantity-' + data['product']['id']).val(parseInt($('#product-quantity-' + data['product']['id']).val()) + 1)
+                                    $('#product-price-sidebar-' + data['product']['id']).html(parseFloat($('#product-price-sidebar-' + data['product']['id']).html()) + parseFloat(data['product']['price']))
+                                    $('#p' + data['product']['id']).val($('#product-quantity-' + data['product']['id']).val())
+                                    $('#span' + data['product']['id']).html($('#product-price-sidebar-' + data['product']['id']).html())
+                                    $("#botoncito-verde-precio").html(parseFloat($("#botoncito-verde-precio").html()) + parseFloat(data['product']['price']))
+                                    updateCartBLMode(parseFloat(data['product']['price']), parseInt($("#botoncito-verde-cantidad").html()))
+                                }
+
+                            }
+
+                        }
+                        if (!found) {
+                            if (parseInt(data['product']['stock']) === 0) {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'No se puede agregar más existencias de ' + data['product']['name'],
+                                    icon: 'error'
+                                })
+                            } else {
+                                var elemento = '<div id="product-' + data['product']['id'] + '" class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">' +
+                                    '<div class="row no-gutters">' +
+                                    '<input type="hidden" value="3300.0">' +
+                                    '<div class=" col-2 my-auto px-0">' +
+                                    '<img class="card-img rounded-0" src="' + data['product']['image'] + '" alt="' + data['product']['name'] + '">' +
+                                    '</div>' +
+                                    '<div class=" col-8">' +
+                                    '<div class="card-body px-0 pt-1">' +
+                                    '<h6 class="me-2">' + data['product']['name'] + '</h6>' +
+                                    '<input type="number" min="1" max="' + data['product']['stock'] + '"' +
+                                    ' class="form-control d-inline-block text-center form-control-sm input-cantidad"' +
+                                    ' placeholder="cantidad" value="' + data['amount'] + '" ' +
+                                    'style="width: 85px" id="product-quantity-' + data['product']['id'] + '" ' +
+                                    '>' +
+                                    '<button onclick="deleteBLMode(' + data['product']['id'] + ')" class="btn btn-danger btn-sm btn-delete rounded-pill" ' +
+                                    'id="delete-product-' + data['product']['id'] + '" name="delete-product-name-' + data['product']['id'] + '">' +
+                                    '<i class="mdi mdi-trash-can-outline"></i>' +
+                                    '</button>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class=" col-2">' +
+                                    '<span class="float-end pt-1 span-price text-nowrap">' +
+                                    '<b>$ <span id="product-price-sidebar-' + data['product']['id'] + '">' + parseFloat(data['product']['price']) + '</span></b></span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>'
+                                $('#products').prepend(elemento)
+                                elemento = '<div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3"' +
+                                    'id="cart-section-product-' + data['product']['id'] + '">' +
+                                    '<div class="row no-gutters">' +
+                                    '<input id="cart-section-product-hidden-' + data['product']['id'] + '" type="hidden"' +
+                                    'value="' + parseFloat(data['product']['price']) * parseInt(data['quantity']) + '">' +
+                                    '<div class="col-sm-2 col-3 my-auto col-xl-1">' +
+                                    '<img class="card-img rounded-0" src="' + data['product']['image'] + '"' +
+                                    'alt="' + data['product']['image'] + '">' +
+                                    '</div>' +
+                                    '<div class="col-sm-8 col-7 col-xl-9">' +
+                                    '<div class="card-body pe-0 px-sm-3 ps-0 pt-1">' +
+                                    '<h5 class="">' + data['product']['name'] + '</h5>' +
+                                    '<input type="number" min="1" max="' + data['product']['stock'] + '"' +
+                                    'class="form-control d-inline-block text-center form-control-sm input-cantidad"' +
+                                    'placeholder="cantidad" value="' + parseInt(data['amount']) + '"' +
+                                    'style="width: 85px" id="p' + data['product']['id'] + '">' +
+                                    '<button class="btn btn-danger btn-sm btn-delete mt-1 mt-sm-0 rounded-circle"' +
+                                    'id="cart-section-product-delete-' + data['product']['id'] + '" name="' + data['product']['id'] + '">' +
+                                    '<i class="mdi mdi-trash-can-outline"></i>' +
+                                    '</button>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="col-sm-2 col-2">' +
+                                    '<span class="float-end pe-2 pt-1 span-price text-nowrap">' +
+                                    '<b>$ <span id="span' + data['product']['id'] + '">' + parseFloat(data['product']['price']) * parseInt(data['amount']) + '</span></b></span>' +
+                                    '</div>' +
+                                    '</div>'
+                                $('#cart-section-products').append(elemento)
+                                asignarEventos()
+                                $("#botoncito-verde-precio").html(parseFloat($("#botoncito-verde-precio").html()) + parseFloat(data['product']['price']))
+                                $("#botoncito-verde-cantidad").html(parseInt($("#botoncito-verde-cantidad").html()) + parseInt(1))
+                                updateCartBLMode(parseFloat($("#botoncito-verde-precio").html()), parseInt($("#botoncito-verde-cantidad").html()))
+                            }
+                        }
+
+                        return false
+                    } else {
+                        console.log(data)
+                        Swal.fire({
+                            title: 'Error',
+                            text: data['error'],
+                            icon: 'error'
+                        })
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+        }))
+    } else {
+        document.querySelectorAll('.add_to_cart').forEach(e => e.addEventListener('click', function () {
+            const http = new EasyHTTP;
+            const data = {
+                action: 'details',
+                pk: this.name,
+            }
+            this.children[0].classList.remove('mdi-cart-plus')
+            this.children[0].classList.add('mdi-loading', 'mdi-spin')
+            var component = this.children[0]
+            http.post(`http://192.168.137.1:8000/cart/add/${this.name}/`, data, '{{ csrf_token }}')
+                .then(data => {
+                    if (!data.hasOwnProperty('error')) {
+                        Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
+                        setTimeout(function () {
+                            component.classList.remove('mdi-loading', 'mdi-spin')
+                            component.classList.add('mdi-cart-plus')
+                        }, 250);
+                        var found = false
+                        for (let i = 0; i < $('#products').children().length; i++) {
+                            var actual = $('#products').children()[i]
+                            if ($(actual).attr('id') === 'product-' + data['product']['id']) {
+                                found = true
+                                if (parseInt(data['product']['stock']) < parseInt($('#product-quantity-' + data['product']['id']).val()) + 1) {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'No se puede agregar más existencias de ' + data['product']['name'],
+                                        icon: 'error'
+                                    })
+                                } else {
+                                    $('#product-quantity-' + data['product']['id']).val(parseInt($('#product-quantity-' + data['product']['id']).val()) + 1)
+                                    $('#product-price-sidebar-' + data['product']['id']).html((parseFloat($('#product-price-sidebar-' + data['product']['id']).html()) + parseFloat((parseFloat(data['product']['price']) / getExchangeRate()).toFixed(2))).toFixed(2))
+                                    $('#p' + data['product']['id']).val($('#product-quantity-' + data['product']['id']).val())
+                                    $('#span' + data['product']['id']).html($('#product-price-sidebar-' + data['product']['id']).html())
+                                    $("#botoncito-verde-precio").html((parseFloat($("#botoncito-verde-precio").html()) + parseFloat((parseFloat(data['product']['price']) / getExchangeRate()).toFixed(2))).toFixed(2))
+                                    updateCartBLMode(parseFloat(data['product']['price']), parseInt($("#botoncito-verde-cantidad").html()))
+                                }
+
+                            }
+
+                        }
+                        if (!found) {
+                            if (parseInt(data['product']['stock']) === 0) {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'No se puede agregar más existencias de ' + data['product']['name'],
+                                    icon: 'error'
+                                })
+                            } else {
+                                var elemento = '<div id="product-' + data['product']['id'] + '" class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">' +
+                                    '<div class="row no-gutters">' +
+                                    '<input type="hidden" value="3300.0">' +
+                                    '<div class=" col-2 my-auto px-0">' +
+                                    '<img class="card-img rounded-0" src="' + data['product']['image'] + '" alt="' + data['product']['name'] + '">' +
+                                    '</div>' +
+                                    '<div class=" col-8">' +
+                                    '<div class="card-body px-0 pt-1">' +
+                                    '<h6 class="me-2">' + data['product']['name'] + '</h6>' +
+                                    '<input type="number" min="1" max="' + data['product']['stock'] + '"' +
+                                    ' class="form-control d-inline-block text-center form-control-sm input-cantidad"' +
+                                    ' placeholder="cantidad" value="' + data['amount'] + '" ' +
+                                    'style="width: 85px" id="product-quantity-' + data['product']['id'] + '" ' +
+                                    '>' +
+                                    '<button onclick="deleteBLMode(' + data['product']['id'] + ')" class="btn btn-danger btn-sm btn-delete rounded-pill" ' +
+                                    'id="delete-product-' + data['product']['id'] + '" name="delete-product-name-' + data['product']['id'] + '">' +
+                                    '<i class="mdi mdi-trash-can-outline"></i>' +
+                                    '</button>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class=" col-2">' +
+                                    '<span class="float-end pt-1 span-price text-nowrap">' +
+                                    '<b>$ <span id="product-price-sidebar-' + data['product']['id'] + '">' + parseFloat((parseFloat(data['product']['price']) / getExchangeRate()).toFixed(2)) + '</span></b></span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>'
+                                $('#products').prepend(elemento)
+                                elemento = '<div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3"' +
+                                    'id="cart-section-product-' + data['product']['id'] + '">' +
+                                    '<div class="row no-gutters">' +
+                                    '<input id="cart-section-product-hidden-' + data['product']['id'] + '" type="hidden"' +
+                                    'value="' + (parseFloat((parseFloat(data['product']['price']) / getExchangeRate()).toFixed(2)) * parseInt(data['quantity'])).toFixed(2) + '">' +
+                                    '<div class="col-sm-2 col-3 my-auto col-xl-1">' +
+                                    '<img class="card-img rounded-0" src="' + data['product']['image'] + '"' +
+                                    'alt="' + data['product']['image'] + '">' +
+                                    '</div>' +
+                                    '<div class="col-sm-8 col-7 col-xl-9">' +
+                                    '<div class="card-body pe-0 px-sm-3 ps-0 pt-1">' +
+                                    '<h5 class="">' + data['product']['name'] + '</h5>' +
+                                    '<input type="number" min="1" max="' + data['product']['stock'] + '"' +
+                                    'class="form-control d-inline-block text-center form-control-sm input-cantidad"' +
+                                    'placeholder="cantidad" value="' + parseInt(data['amount']) + '"' +
+                                    'style="width: 85px" id="p' + data['product']['id'] + '">' +
+                                    '<button class="btn btn-danger btn-sm btn-delete mt-1 mt-sm-0 rounded-circle"' +
+                                    'id="cart-section-product-delete-' + data['product']['id'] + '" name="' + data['product']['id'] + '">' +
+                                    '<i class="mdi mdi-trash-can-outline"></i>' +
+                                    '</button>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="col-sm-2 col-2">' +
+                                    '<span class="float-end pe-2 pt-1 span-price text-nowrap">' +
+                                    '<b>$ <span id="span' + data['product']['id'] + '">' + (parseFloat((parseFloat(data['product']['price']) / getExchangeRate()).toFixed(2)) * parseInt(data['amount'])).toFixed(2) + '</span></b></span>' +
+                                    '</div>' +
+                                    '</div>'
+                                $('#cart-section-products').append(elemento)
+                                asignarEventosEuro()
+                                $("#botoncito-verde-precio").html((parseFloat($("#botoncito-verde-precio").html()) + parseFloat((parseFloat(data['product']['price']) / getExchangeRate()).toFixed(2))).toFixed(2))
+                                $("#botoncito-verde-cantidad").html(parseInt($("#botoncito-verde-cantidad").html()) + parseInt(1))
+                                updateCartBLMode(parseFloat($("#botoncito-verde-precio").html()), parseInt($("#botoncito-verde-cantidad").html()))
+                            }
+                        }
+
+                        return false
+                    } else {
+                        console.log(data)
+                        Swal.fire({
+                            title: 'Error',
+                            text: data['error'],
+                            icon: 'error'
+                        })
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+        }))
+    }
+
+    //Eliminar del carro
+    document.querySelectorAll('.btn-delete').forEach(e => e.addEventListener('click', function () {
+        alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar este producto del carrito?`,
+            () => {
+                const http = new EasyHTTP;
+                if (!isNaN(parseInt(this.id.replace('delete-product-', '')))) {
+                    http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
+                        .then(data => {
+                            console.log(data)
+                            if (!data.hasOwnProperty('error')) {
+                                location.reload()
+                            } else {
+                                console.log(data)
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data['error'],
+                                    icon: 'error'
+                                })
+                            }
+                        }).catch(err => {
+                        console.error(err)
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Hay un problema de conexión con el servidor.',
+                            icon: 'error'
+                        })
+                    });
+
+                } else {
+                    http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
+                        .then(data => {
+                            if (!data.hasOwnProperty('error')) {
+                                location.reload()
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data['error'],
+                                    icon: 'error'
+                                })
+                            }
+                        }).catch(err => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Hay un problema de conexión con el servidor.',
+                            icon: 'error'
+                        })
+                    });
+                }
+            }, 'text-danger mdi mdi-cart-minus')
+    }))
+
+    //Limpiar carrito
+    document.querySelectorAll('form[name=clear-cart]').forEach(e => e.addEventListener('submit', function (e) {
+        e.preventDefault()
+        alert_action_yes_not('Vaciar!!', 'Desea vaciar completo el carrito de compras?', () => {
+            const http = new EasyHTTP
+            http.post(`{% url 'cart_clear' %}`, {}, '{{ csrf_token }}').then(data => {
+                console.log(data)
+                if (!data.hasOwnProperty('error')) {
+                    location.reload()
+                } else {
+                    console.log(data)
+                    Swal.fire({
+                        title: 'Error',
+                        text: data['error'],
+                        icon: 'error'
+                    })
+                }
+            }).catch(err => {
+                console.error(err)
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hay un problema de conexión con el servidor.',
+                    icon: 'error'
+                })
+            });
+        }, 'text-danger mdi mdi-cart-minus')
+    }))
+
+    //Comprar del modal
+    document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
+        let value = $('#input-touchspin').val()
+        if (!value || value <= 0)
+            return null
+        else {
+            document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')
+            document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
+            const http = new EasyHTTP
+            let id = document.querySelector('#input-hidden-id-modal').value
+            http.post(`http://192.168.137.1:8000/cart/add/${id}/${value}/`, {}, '{{ csrf_token }}')
+                .then(data => {
+                    console.log(data)
+                    if (!data.hasOwnProperty('error')) {
+                        location.reload()
+                    } else {
+                        console.log(data)
+                        Swal.fire({
+                            title: 'Error',
+                            text: data['error'],
+                            icon: 'error'
+                        })
+                    }
+                }).catch(err => {
+                console.error(err)
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hay un problema de conexión con el servidor.',
+                    icon: 'error'
+                })
+            });
+        }
+    })
 </script>
