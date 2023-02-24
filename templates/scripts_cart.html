@@ -44,7 +44,7 @@
             value = max
         document.querySelectorAll(`#product-quantity-${id}`).forEach(e => e.value = value)
         let http = new EasyHTTP
-        http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${id}/${value}/`, {}, '{{ csrf_token }}')
+        http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${id}/${value}/`, {}, '{{ csrf_token }}')
             .then(data => {
                 if (!data.hasOwnProperty('error')) {
                     let amount = parseFloat(data.amount),
@@ -99,7 +99,7 @@
         alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar este producto del carrito?`,
             () => {
                 const http = new EasyHTTP;
-                http.post(`http://192.168.137.1:8000/cart/clear/${id}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/clear/${id}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         console.log(data)
                         if (!data.hasOwnProperty('error')) {
@@ -135,7 +135,7 @@
 
             let http = new EasyHTTP
             if (!isNaN(parseInt(this.id.slice(1)))) {
-                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         if (!data.hasOwnProperty('error')) {
                             console.log(data)
@@ -171,7 +171,7 @@
                     })
                 });
             } else {
-                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         if (!data.hasOwnProperty('error')) {
                             console.log(data)
@@ -214,7 +214,7 @@
                 () => {
                     const http = new EasyHTTP;
                     if (!isNaN(parseInt(this.id.replace('delete-product-', '')))) {
-                        http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
+                        http.post(`https://gaia-mercado.com/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
                             .then(data => {
                                 console.log(data)
                                 if (!data.hasOwnProperty('error')) {
@@ -237,7 +237,7 @@
                         });
 
                     } else {
-                        http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
+                        http.post(`https://gaia-mercado.com/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
                             .then(data => {
                                 if (!data.hasOwnProperty('error')) {
                                     location.reload()
@@ -272,7 +272,7 @@
 
             let http = new EasyHTTP
             if (!isNaN(parseInt(this.id.slice(1)))) {
-                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         if (!data.hasOwnProperty('error')) {
                             console.log(data)
@@ -308,7 +308,7 @@
                     })
                 });
             } else {
-                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         if (!data.hasOwnProperty('error')) {
                             console.log(data)
@@ -351,7 +351,7 @@
                 () => {
                     const http = new EasyHTTP;
                     if (!isNaN(parseInt(this.id.replace('delete-product-', '')))) {
-                        http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
+                        http.post(`https://gaia-mercado.com/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
                             .then(data => {
                                 console.log(data)
                                 if (!data.hasOwnProperty('error')) {
@@ -374,7 +374,7 @@
                         });
 
                     } else {
-                        http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
+                        http.post(`https://gaia-mercado.com/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
                             .then(data => {
                                 if (!data.hasOwnProperty('error')) {
                                     location.reload()
@@ -411,7 +411,7 @@
 
             let http = new EasyHTTP
             if (!isNaN(parseInt(this.id.slice(1)))) {
-                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         if (!data.hasOwnProperty('error')) {
                             console.log(data)
@@ -447,7 +447,7 @@
                     })
                 });
             } else {
-                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         if (!data.hasOwnProperty('error')) {
                             console.log(data)
@@ -496,7 +496,7 @@
 
             let http = new EasyHTTP
             if (!isNaN(parseInt(this.id.slice(1)))) {
-                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${this.id.slice(1)}/${this.value}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         if (!data.hasOwnProperty('error')) {
                             console.log(data)
@@ -532,7 +532,7 @@
                     })
                 });
             } else {
-                http.post(`http://192.168.137.1:8000/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
+                http.post(`https://gaia-mercado.com/cart/update_quantity/bl/${this.id.replace('product-quantity-', '')}/${this.value}/`, {}, '{{ csrf_token }}')
                     .then(data => {
                         if (!data.hasOwnProperty('error')) {
                             console.log(data)
@@ -628,7 +628,7 @@
             this.children[0].classList.remove('mdi-cart-plus')
             this.children[0].classList.add('mdi-loading', 'mdi-spin')
             var component = this.children[0]
-            http.post(`http://192.168.137.1:8000/cart/add/${this.name}/`, data, '{{ csrf_token }}')
+            http.post(`https://gaia-mercado.com/cart/add/${this.name}/`, data, '{{ csrf_token }}')
                 .then(data => {
                     if (!data.hasOwnProperty('error')) {
                         Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
@@ -758,7 +758,7 @@
             this.children[0].classList.remove('mdi-cart-plus')
             this.children[0].classList.add('mdi-loading', 'mdi-spin')
             var component = this.children[0]
-            http.post(`http://192.168.137.1:8000/cart/add/${this.name}/`, data, '{{ csrf_token }}')
+            http.post(`https://gaia-mercado.com/cart/add/${this.name}/`, data, '{{ csrf_token }}')
                 .then(data => {
                     if (!data.hasOwnProperty('error')) {
                         Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
@@ -886,7 +886,7 @@
             () => {
                 const http = new EasyHTTP;
                 if (!isNaN(parseInt(this.id.replace('delete-product-', '')))) {
-                    http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
+                    http.post(`https://gaia-mercado.com/cart/clear/${this.id.replace('delete-product-', '')}/`, {}, '{{ csrf_token }}')
                         .then(data => {
                             console.log(data)
                             if (!data.hasOwnProperty('error')) {
@@ -909,7 +909,7 @@
                     });
 
                 } else {
-                    http.post(`http://192.168.137.1:8000/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
+                    http.post(`https://gaia-mercado.com/cart/clear/${this.id.replace('cart-section-product-delete-', '')}/`, {}, '{{ csrf_token }}')
                         .then(data => {
                             if (!data.hasOwnProperty('error')) {
                                 location.reload()
@@ -969,7 +969,7 @@
             document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
             const http = new EasyHTTP
             let id = document.querySelector('#input-hidden-id-modal').value
-            http.post(`http://192.168.137.1:8000/cart/add/${id}/${value}/`, {}, '{{ csrf_token }}')
+            http.post(`https://gaia-mercado.com/cart/add/${id}/${value}/`, {}, '{{ csrf_token }}')
                 .then(data => {
                     console.log(data)
                     if (!data.hasOwnProperty('error')) {
