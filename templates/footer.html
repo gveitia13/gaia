@@ -23,7 +23,7 @@
         <div class="row justify-content-center text-center">
             {% if catalogo_url %}
                 <div class="col-6 col-md-3 mb-3">
-                    <h5>CATEGORÍAS</h5>
+                    <h5 onclick="goToCat('todos')">CATEGORÍAS</h5>
                     <ul class="list-unstyled">
                         {% for category in categories %}
                             <li class="mb-2"><a style="cursor: pointer" onclick="goToCat({{ category.id }})"
@@ -69,33 +69,39 @@
         </div>
     </div>
     <script>
-      function goToCat(id) {
-        $('#nav-home').removeClass('active')
-        $('#nav-contact').removeClass('active')
-        $('#nav-home').removeClass('show')
-        $('#nav-contact').removeClass('show')
-        $('#nav-home-tab').removeClass('active')
-        $('#nav-contact-tab').removeClass('active')
-        $('#nav-profile').addClass('active')
-        $('#nav-profile-tab').addClass('active')
-        $('#nav-profile').addClass('show')
-        $('#todos').removeClass('success')
-        $('#todos').addClass('bg-semi-success')
-        {% for category in categories %}
-          $('#cat{{ category.id }}').removeClass('success')
-          $('#cat{{ category.id }}').addClass('bg-semi-success')
-          $('#collapse{{ category.id }}').hide()
-        {% endfor %}
-        $('#cat' + parseInt(id)).addClass('success')
-        $('#cat' + parseInt(id)).removeClass('bg-semi-success')
-        $('#collapse' + parseInt(id)).show()
-        let Offset = 100;
-        // Fade Duration
-        let Duration = 500;
-        $('Html, Body').animate({
-          scrollTop: 0
-        }, Duration);
+        function goToCat(id) {
+            $('#nav-home').removeClass('active')
+            $('#nav-contact').removeClass('active')
+            $('#nav-home').removeClass('show')
+            $('#nav-contact').removeClass('show')
+            $('#nav-home-tab').removeClass('active')
+            $('#nav-contact-tab').removeClass('active')
+            $('#nav-profile').addClass('active')
+            $('#nav-profile-tab').addClass('active')
+            $('#nav-profile').addClass('show')
+            if (id != 'todos') {
+                $('#todos').removeClass('success')
+                $('#todos').addClass('bg-semi-success')
+            } else {
+                $('#todos').addClass('success')
+            }
+            if (id != 'todos') {
+                {% for category in categories %}
+                    $('#cat{{ category.id }}').removeClass('success')
+                    $('#cat{{ category.id }}').addClass('bg-semi-success')
+                    $('#collapse{{ category.id }}').hide()
+                {% endfor %}
+                $('#cat' + parseInt(id)).addClass('success')
+                $('#cat' + parseInt(id)).removeClass('bg-semi-success')
+                $('#collapse' + parseInt(id)).show()
+            }
+            let Offset = 100;
+            let Duration = 500;
+            $('Html, Body').animate({
+                scrollTop: 0
+            }, Duration);
+        }
 
-      }
+
     </script>
 </footer>
