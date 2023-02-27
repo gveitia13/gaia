@@ -4,17 +4,20 @@
     }
 
     function overwatchTPPPrice() {
-        if (parseFloat($('#sidebar-total-amount').html()) > 10 && window.location.pathname.toLowerCase().includes('euro')){
-            $('#button-verbosity-lateral').html("Comprar")
-            $('#checkout-button-lateral').prop("disabled",false)
-            $('#button-verbosity').html("Comprar")
-            $('#checkout-button').prop("disabled",false)
-        }else {
-            $('#button-verbosity-lateral').html("La factura debe exceder los 10 euros")
-            $('#checkout-button-lateral').prop("disabled",true)
-            $('#button-verbosity').html("La factura debe exceder los 10 euros")
-            $('#checkout-button').prop("disabled",true)
+        if (window.location.pathname.toLowerCase().includes('euro')) {
+            if (parseFloat($('#sidebar-total-amount').html()) > 10) {
+                $('#button-verbosity-lateral').html("Comprar")
+                $('#checkout-button-lateral').prop("disabled", false)
+                $('#button-verbosity').html("Comprar")
+                $('#checkout-button').prop("disabled", false)
+            } else {
+                $('#button-verbosity-lateral').html("La factura debe exceder los 10 euros")
+                $('#checkout-button-lateral').prop("disabled", true)
+                $('#button-verbosity').html("La factura debe exceder los 10 euros")
+                $('#checkout-button').prop("disabled", true)
+            }
         }
+
     }
 
 
@@ -96,31 +99,7 @@
     }
 
     function deleteBLMode(id) {
-        alert_action_yes_not('Eliminar!!', `Estás seguro de que desea quitar este producto del carrito?`,
-            () => {
-                const http = new EasyHTTP;
-                http.post(`https://gaia-mercado.com/cart/clear/${id}/`, {}, '{{ csrf_token }}')
-                    .then(data => {
-                        console.log(data)
-                        if (!data.hasOwnProperty('error')) {
-                            location.reload()
-                        } else {
-                            console.log(data)
-                            Swal.fire({
-                                title: 'Error',
-                                text: data['error'],
-                                icon: 'error'
-                            })
-                        }
-                    }).catch(err => {
-                    console.error(err)
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Hay un problema de conexión con el servidor.',
-                        icon: 'error'
-                    })
-                });
-            }, 'text-danger mdi mdi-cart-minus')
+
     }
 
     function asignarEventos() {
@@ -811,7 +790,7 @@
                                     ' placeholder="cantidad" value="' + data['amount'] + '" ' +
                                     'style="width: 85px" id="product-quantity-' + data['product']['id'] + '" ' +
                                     '>' +
-                                    '<button onclick="deleteBLMode(' + data['product']['id'] + ')" class="btn btn-danger btn-sm btn-delete rounded-pill" ' +
+                                    '<button onclick="" class="btn btn-danger btn-sm btn-delete rounded-pill" ' +
                                     'id="delete-product-' + data['product']['id'] + '" name="delete-product-name-' + data['product']['id'] + '">' +
                                     '<i class="mdi mdi-trash-can-outline"></i>' +
                                     '</button>' +
