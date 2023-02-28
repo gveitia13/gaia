@@ -59,25 +59,3 @@ def save_hash(sender, instance: Product, created, **kwargs):
             sesion_smtp.sendmail(remitente, destinatarios, texto)
             # Cerramos la conexión
             sesion_smtp.quit()
-            print('se envio el correo')
-            # Render the HTML template
-            # try:
-            #     for sus in Suscriptor.objects.all():
-            #         html_content = render_to_string('correo/index.html',
-            #                                         {'prod': prod, 'cfg': GeneralData.objects.first(),
-            #                                          'email': sus.email})
-            #
-            #         # Create the email and send it
-            #         email = EmailMultiAlternatives(
-            #             asunto,
-            #             'This is the plain text version of the email',
-            #             remitente,
-            #             [sus.email],
-            #             headers={'Message-ID': 'GAIA'},
-            #         )
-            #
-            #         email.attach_alternative(html_content, "text/html")
-            #         email.send()
-            #         print('se envio el mail')
-            # except Exception as e:
-            #     print(str(e))

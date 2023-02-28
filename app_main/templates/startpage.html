@@ -40,8 +40,7 @@
                             $<span id="botoncito-verde-precio">0.00</span>
                             / <span id="botoncito-verde-cantidad">{{ products_in_cart|length }}</span> productos
                         </button>
-                        {% comment %}<button class="btn btn-outline-success btn-sm rounded-pill"><i
-                                class="mdi mdi-heart"></i></button>{% endcomment %}
+
                     </div>
                 </div>
             </nav>
@@ -50,35 +49,7 @@
                 <div class="tab-pane fade {% if active == '1' %} show active {% endif %}" id="nav-home" role="tabpanel"
                      aria-labelledby="nav-home-tab"
                      tabindex="0">
-                    {% comment %}       <div class="row user-select-none">
-                        <div class="col-md-12 col-lg-8 ">
-                            <div class="p-5 user-select-none bg-semi-success">
-                                <h4 class="text-uppercase text-white">¡La alimentación sana es tu opción!</h4>
-                                <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">
-                                    Nuestros</h1>
-                                <h1 class="text-uppercase text-white display-4 m-0" style="font-weight: bold">
-                                    productos</h1>
-                                <p class="text-white fs-5">Alimentos escogidos con amor, garantizando la producción
-                                    local.
-                                    Productos orgánicos frescos, verduras,frutas, carnes, lácteos, pescados y más...</p>
-                                <a href="{% url 'catalogo' %}" class="btn bg-orange rounded-0 btn-sm fs-6"><b>VER CATÁLOGO</b></a>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-lg-4 ">
-                            <div class="row pt-2 px-3 ps-lg-0 pt-lg-0">
-                                {% for prod in products4 %}
-                                    <div class="col-6 col-md-3 col-lg-6 p-0">
-                                        <div class="card rounded-0 border-0 h-100">
-                                            <img src="{{ prod.image.url }}"
-                                                 class="card-img-top cursor-pointer rounded-0 border-0 algo"
-                                                 alt="..." name="{{ prod.id }}" data-bs-toggle="modal"
-                                                 data-bs-target="#product_modal">
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>{% endcomment %}
+
                     {% include 'cat_carousel_letricas.html' %}
                     {% include 'products_destacados.html' %}
                     {% include 'products_descuento.html' %}
@@ -100,9 +71,7 @@
             </div>
         </div>
     {% endblock %}
-    {#    products cards#}
 
-    {#    products cards end#}
     {% include 'product_modal.html' %}
     {% include 'loader.html' %}
 {% endblock %}
@@ -149,7 +118,6 @@
       try {
         document.querySelector("#select-trampa").addEventListener('change', function (e) {
           let moneda = this.options[this.options.selectedIndex].value
-          {#location.replace(`/index/${moneda}`)#}
           if (moneda === 'CUP')
             location.replace('{% url "index-cup" %}')
           else

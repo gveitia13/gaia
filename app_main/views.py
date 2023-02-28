@@ -27,11 +27,7 @@ class BaseView(View):
 
     def get_my_context_data(self, **kwargs):
         cart = Cart(self.request)
-        # print('products_in_cart', json.dumps(cart.all(), indent=3))
-        # print('products_in_cart', cart.all())
         c_x_p = len(cart.all())
-        # print(c_x_p)
-        print('host', self.request.get_host())
         if self.request.get_host().__contains__("127.0.0.1") or self.request.get_host().__contains__(
                 "localhost"):
             host = 'http://'
@@ -69,14 +65,12 @@ class StartPage(BaseView, generic.ListView, ):
             del self.request.session['search']
             del self.request.session['active']
         self.request.session['index_url'] = str(reverse_lazy('index-cup'))
-        # print(qs)
         return qs
 
     def get_context_data(self, **kwargs):
         context = super(StartPage, self).get_context_data()
         context.update(self.get_my_context_data())
         gnd = GeneralData.objects.first() if GeneralData.objects.exists() else None
-
         if 'search' in self.request.session:
             context['search'] = self.request.session['search']
         context['active'] = '1'
@@ -90,9 +84,6 @@ class StartPage(BaseView, generic.ListView, ):
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             os.path.join(settings.STATIC_URL, settings.BUSINESS_BANNER)]
-        # context['index_url'] = self.request.session['index_url']
-        # print(self.request.META.get('HTTP_REFERER'))
-        # print(self.request.path)
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -119,11 +110,9 @@ class StartPage(BaseView, generic.ListView, ):
                     "amount": cart.cart[str(product.id)]['quantity'] if cart.cart.get(str(product.id)) else 0,
                     'tipo_moneda': tipo_moneda
                 }
-                print(data)
             else:
                 data['error'] = 'Ha ocurrido un error en el servidor.'
         except Exception as e:
-            print(str(e))
             data['error'] = str(e)
             return JsonResponse(data, )
         return JsonResponse(data, )
@@ -165,7 +154,6 @@ class StartPageCUP(StartPage):
         context['catalogo_url'] = reverse_lazy('catalogo-cup')
         context['index_url'] = reverse_lazy('index-cup')
         context['tipo_moneda'] = 'CUP'
-        # self.request.session['index_url'] = reverse_lazy('index-cup')
         return context
 
 
@@ -203,7 +191,6 @@ class StartPageEuro(StartPage):
         context['index_url'] = reverse_lazy('index-euro')
         context['is_euro'] = True
         context['tipo_moneda'] = 'EUR'
-        # self.request.session['index_url'] = reverse_lazy('index-euro')
         return context
 
 
@@ -249,7 +236,6 @@ class CatalogoEuroView(StartPageEuro):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
-        # context.update(self.get_my_context_data())
         context['title'] = 'Catálogo | Productos CUP'
         context['tipo_moneda'] = 'EUR'
         context['is_euro'] = True
@@ -272,7 +258,6 @@ def create_suscriptor(request: HttpRequest, *args, **kwargs: dict):
 
 def delete_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     email = kwargs.get('email')
-    print(email)
     susc = Suscriptor.objects.get(email=email)
     susc.delete()
     return redirect(reverse_lazy('index'))
@@ -283,7 +268,6 @@ def pagar_euro(request):
         orden = create_order(request, 'Euro', **{})
         if orden:
             mensaje = create_message_order(request, orden)
-
             conn = http.client.HTTPSConnection("" + settings.TPP_URL + "")
             # genera un request json
             payload_tpp = {"grant_type": "client_credentials", "client_id": settings.TPP_CLIENT_ID,
@@ -297,9 +281,7 @@ def pagar_euro(request):
             data = res.read()
             token = data.decode("utf-8")
             token = token.split(':')[1].split(',')[0].replace('"', '').replace(' ', '')
-
             user_comprador = orden.nombre_comprador
-
             # Convertir total a 2 decimales
             address = 'Municipio: ' + orden.municipio + '. '
             address += 'Calle: ' + orden.calle + '. '
@@ -320,7 +302,6 @@ def pagar_euro(request):
                 "termsAndConditions": "true"
             }
             impuesto = orden.total * GeneralData.objects.first().tropipay_impuesto / 100
-            # orden_total = int(orden.total * impuesto * 100 + 0.5)
             orden_total = round((orden.total * impuesto + 0.5), 2) * 100
             spain_timezone = pytz.timezone("Europe/Madrid")
             spain_time = datetime.datetime.now(spain_timezone)
@@ -329,7 +310,6 @@ def pagar_euro(request):
                 "concept": "Orden de GAIA a nombre de " + client['email'],
                 "favorite": "false",
                 "description": mensaje,
-                # "amount": float('{:.2f}'.format(orden.total)) * 100,  # para quitar decimales
                 "amount": orden_total,  # para quitar decimales
                 "currency": 'EUR',
                 "singleUse": "true",
@@ -354,62 +334,16 @@ def pagar_euro(request):
             res = conn.getresponse()
             data = res.read()
             retorno = data.decode("utf-8")
-            print('retorno aki', retorno)
             retorno = retorno.split(',')
             retorno = retorno[len(retorno) - 2].replace('"shortUrl":"', '').replace('"', '')
             orden.link_de_pago = retorno
             orden.total = float('{:.2f}'.format(orden_total)) / 100
             orden.save()
-            print('orden d pago va aki', orden.link_de_pago)
             return redirect(orden.link_de_pago)
 
 
-# class CheckoutPayloadTTPSuccess(APIView):
-#     """Concreta un checkout de tropipay"""
-#     serializer_class = OrdenSerializer
-#     authentication_classes = []
-#     permission_classes = []
-#
-#     def get_queryset(self, request, *args, **kwargs):
-#         payload = json.loads(str(request.data).replace('\'', '"'))
-#         bankOrderCode = ""
-#         originalCurrencyAmount = ""
-#         signature = ""
-#         status = payload['status']
-#         referencia = ""
-#         for key, value in payload.items():
-#             if key == 'data':
-#                 datos = json.loads(str(payload['data']).replace('\'', '"'))
-#                 bankOrderCode = datos['bankOrderCode']
-#                 originalCurrencyAmount = datos['originalCurrencyAmount']
-#                 signature = datos['signature']
-#                 referencia = datos['reference']
-#         cadena = bankOrderCode + settings.TPP_CLIENT_EMAIL + sha1(
-#             settings.TPP_CLIENT_PASSWORD.encode('utf-8')).hexdigest() \
-#                  + originalCurrencyAmount
-#         cadena = cadena.encode('utf-8')
-#         firma = sha256(cadena).hexdigest()
-#         if firma == signature:
-#             orden = get_object_or_404(Orden, pk=referencia)
-#             if status == 'OK':
-#                 if completar_orden(orden_id=orden.pk):
-#                     orden.status = 'COMPLETED'
-#                 else:
-#                     orden.status = 'HOLDED'
-#             else:
-#                 orden.status = 'REJECTED'
-#             orden.enlace = "CONSUMIDO"
-#             orden.save()
-#             return 200
-#         return 403
-#
-#     def post(self, request, *args, **kwargs):
-#         if self.get_queryset(request=request) == 403:
-#             return Response(data={"status": "K.O"}, content_type='application/json', status=403)
-#         return Response(data={"status": "O.K"}, content_type='application/json', status=200)
 @method_decorator(csrf_exempt)
 def tpp_success(request):
-    print(request.GET)
     uuid: str = request.GET.get('reference')
     uuid = uuid.replace('-', '')
     if Orden.objects.filter(pk=uuid).exists():
@@ -431,16 +365,12 @@ def tpp_success(request):
 @method_decorator(csrf_exempt)
 def tpp_verificar(request: HttpRequest):
     if request.method == 'POST':
-        print('debería ir post', request.POST)
-        print('body', request.body)
-
         payload = json.loads(request.body)
         bankOrderCode = payload['data']['bankOrderCode']
         originalCurrencyAmount = payload['data']['originalCurrencyAmount']
         signature = payload['data']['signature']
         status = payload['status']
         referencia = payload['data']['reference']
-
         cadena = bankOrderCode + settings.TPP_CLIENT_EMAIL + sha1(
             settings.TPP_CLIENT_PASSWORD.encode('utf-8')).hexdigest() \
                  + originalCurrencyAmount
@@ -460,16 +390,10 @@ def tpp_verificar(request: HttpRequest):
                 orden.status = '2'
             orden.link_de_pago = "CONSUMIDO"
             orden.save()
-
             return HttpResponse('Verificando...')
     # fails alerta
-
     return render(request, 'order_fail.html',
                   {'uuid': request.session['last_order'], 'business': GeneralData.objects.first()})
-
-
-# return redirect('index-euro')
-
 
 def pagar_cup(request: HttpRequest):
     if request.method == 'POST':
@@ -509,8 +433,6 @@ def create_order(request: HttpRequest, moneda, **kwargs):
             if int(c['product']['delivery_time']) > tiempo_de_entrega:
                 tiempo_de_entrega = int(c['product']['delivery_time'])
         total += municipio.precio if moneda == 'CUP' else municipio.precio_euro
-        print('total aki', total)
-
         orden = Orden.objects.create(total=float(total), precio_envio=float(precio_envio), moneda=moneda,
                                      status='1' if moneda == 'CUP' else '2', nombre_comprador=comprador,
                                      telefono_comprador=phone_comprador, nombre_receptor=receptor,
@@ -536,7 +458,6 @@ def create_order(request: HttpRequest, moneda, **kwargs):
 
 def create_message_order(request, orden):
     mensaje = 'Orden de compra:\n'
-    print(orden)
     mensaje += 'Ticket: ' + f'{str(orden.uuid)}\n'
     mensaje += 'Comprador: ' + orden.nombre_comprador + '\n'
     mensaje += 'Teléfono del comprador: ' + orden.telefono_comprador + '\n'
@@ -548,20 +469,12 @@ def create_message_order(request, orden):
     mensaje += 'Productos comprados: \n'
     for c in orden.componente_orden.all():
         mensaje += str(c) + '\n'
-    # if orden.moneda != 'CUP':
-    #     mensaje += '\nPara cancelar su orden abra el siguiente enlace: \n'
-    #     host = 'http://' if request.get_host().__contains__("127.0.0.1") or request.get_host().__contains__(
-    #         "localhost") or request.get_host().__contains__("192.168") else 'https://'
-    #
-    #     mensaje += f'{host}' + request.get_host() + reverse_lazy('cancelar', kwargs={'pk': orden.pk})
-    # else:
     mensaje += '\nDatos de entrega:\n'
     mensaje += f'Municipio: {orden.municipio}.\n'
     mensaje += f'Calle: {orden.calle}, entre {orden.calle1} y {orden.calle2}, No {orden.numero_edificio}.'
     if orden.reparto != '':
         mensaje += f' Reparto: {orden.reparto}.'
     mensaje += f' {orden.detalles_direccion}'
-    print(mensaje)
     return mensaje
 
 

@@ -14,15 +14,6 @@
         </div>
         <div class="card-footer text-center bg-white rounded-0 border-0">
             {% if prod.stock > 0 %}
-                {% comment %}                <Button Class="Button add_to_cart btn btn-success mb-1" name="{{ prod.id }}">
-                    <Span>COMPRAR</Span>
-                    <div Class="Cart">
-                        <Svg ViewBox="0 0 36 26">
-                            <Polyline Points="1 2.5 6 2.5 10 18.5 25.5 18.5 28.5 7.5 7.5 7.5"></Polyline>
-                            <Polyline Points="15 13.5 17 15.5 22 10.5"></Polyline>
-                        </Svg>
-                    </div>
-                </Button>{% endcomment %}
                 <button class="btn btn-sm btn-success bg-semi-success add_to_cart rounded-pill mb-1" name="{{ prod.id }}">
                     <i class="mdi mdi-cart-plus"></i>COMPRAR
                 </button>

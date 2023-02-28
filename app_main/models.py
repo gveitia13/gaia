@@ -39,10 +39,8 @@ class Category(models.Model):
 
     def get_colores(self):
         html = ''
-        print(colors)
         for i in range(len(colors)):
             html += f'<span class="badge mx-1 text-white rounded-pill"style="background-color: #{colors[i][0]}">{colors[i][1]}</span>'
-        print(html)
         return mark_safe(html)
 
     def toJSON(self):

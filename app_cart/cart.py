@@ -1,7 +1,6 @@
 import json
 from django.conf import settings
 from django.shortcuts import redirect
-
 from app_main.models import Product
 
 
@@ -35,11 +34,9 @@ class Cart(object):
                 'product': product.toJSON(),
                 'quantity': q if q <= stock else stock
             }
-            print(self.cart[str(product.id)])
         else:
             amount = int(self.cart[str(product.id)]['quantity'])
             self.cart[str(product.id)]['quantity'] = amount + q if (amount + q) <= stock else stock
-            print(self.cart[str(product.id)])
         self.save()
 
     def save(self):
@@ -104,18 +101,6 @@ class Cart(object):
             return
         self.cart[str(product.id)]['quantity'] = q
         self.save()
-        # if str(product.id) not in self.cart.keys():
-        #     self.cart[str(product.id)] = {
-        #         "id": str(product.id),
-        #         'user_id': self.request.user.id,
-        #         'product': product.toJSON(),
-        #         'quantity': int(value)
-        #     }
-        #     print(self.cart[str(product.id)])
-        # else:
-        #     self.cart[str(product.id)]['quantity'] = int(value)
-        #     print(self.cart[str(product.id)])
-        # self.save()
 
     def clear(self):
         # empty cart
