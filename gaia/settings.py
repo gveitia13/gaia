@@ -94,7 +94,7 @@ JAZZMIN_SETTINGS = {
     "login_logo_dark": False,
     'site_header': BUSINESS_NAME,
     "custom_css": 'css/admin.css',
-    'copyright': 'By Techno$tar',
+    'copyright': 'GAIA',
     'custom_js': 'js/admin.js',
 }
 
