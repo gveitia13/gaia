@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description"
-          content="Compre los productos de Gaia, le garantizamos calidad!!"/>
+    <meta name="description" content="{{ meta_desc }}"/>
+    <meta name="keywords" content="{{ meta_kw }}">
     <link rel="icon" href="{% if business.logo %} {{ business.logo.url }} {% else %} {% static icon %} {% endif %}"
           type="image/x-icon">
     <!--    material icons-->
@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="{% static 'css/loader.css' %}">
     <link rel="stylesheet" href="{% static 'lib/go_to_top_button/style.css' %}">
     <link rel="stylesheet" href="{% static 'lib/boton-whatapp/whatsapp.css' %}">
-    <title>{{ title }}</title>
+    <title>{{ meta_title }}</title>
     {% block head %}
 
     {% endblock %}

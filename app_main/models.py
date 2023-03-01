@@ -192,6 +192,12 @@ class GeneralData(models.Model):
     }, verbose_name='Celular', null=True, blank=True)
     facebook = models.URLField(verbose_name='Link de Facebook', null=True, blank=True)
     instagram = models.URLField(verbose_name='Link de Instagram', null=True, blank=True)
+    meta_tittle = models.CharField(max_length=255, verbose_name='Meta etiqueta título',
+                                   help_text='Search Engine Optimization (SEO)', default='GAIA')
+    meta_description = models.TextField(verbose_name='Meta etiqueta descripción',
+                                        help_text='Search Engine Optimization (SEO)', default='GAIA')
+    meta_kw = models.TextField(verbose_name='Meta etiqueta palabras clave',
+                               help_text='Search Engine Optimization (SEO)', default='GAIA')
 
     def __str__(self):
         return self.enterprise_name

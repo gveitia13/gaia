@@ -71,6 +71,10 @@ class StartPage(BaseView, generic.ListView, ):
         context = super(StartPage, self).get_context_data()
         context.update(self.get_my_context_data())
         gnd = GeneralData.objects.first() if GeneralData.objects.exists() else None
+        if gnd is not None:
+            context['meta_tittle'] = gnd.meta_tittle
+            context['meta_desc'] = gnd.meta_description
+            context['meta_kw'] = gnd.meta_kw
         if 'search' in self.request.session:
             context['search'] = self.request.session['search']
         context['active'] = '1'

@@ -54,6 +54,9 @@ class GeneralDataAdmin(admin.ModelAdmin):
         ('Redes Sociales', {
             'fields': ('facebook', 'instagram',)
         },),
+        ('SEO', {
+            'fields': ('meta_tittle', 'meta_description', 'meta_kw')
+        },),
         ('Contacto', {
             'fields': ('enterprise_address', 'email', 'phone_number')
         },),
