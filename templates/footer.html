@@ -103,6 +103,8 @@
 
         function addSubscriber(email) {
             $('#suscriptor-email').prop('disabled', true);
+            document.querySelector('#button-addon2 i').classList.remove('mdi-arrow-right-bol')
+            document.querySelector('#button-addon2 i').classList.add('mdi-loading', 'mdi-spin')
             var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
             if ($('#suscriptor-email').val().toString().replaceAll(' ', '') != '' && testEmail.test($('#suscriptor-email').val())) {
                 $.ajax({
@@ -138,6 +140,8 @@
                 })
             }
             $('#suscriptor-email').prop('disabled', false);
+            document.querySelector('#button-addon2 i').classList.remove('mdi-loading', 'mdi-spin')
+            document.querySelector('#button-addon2 i').classList.add('mdi-arrow-right-bol')
 
         }
     </script>
