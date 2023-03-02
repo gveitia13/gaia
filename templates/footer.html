@@ -129,6 +129,8 @@
                                     icon: 'success'
                                 })
                             }
+                            $('#form-div').removeClass('no-visible')
+                            $('#header-subscribe').html('SUSCRÍBETE')
                         }, 2500);
                     },
                 });
@@ -139,11 +141,6 @@
                     icon: 'error'
                 })
             }
-            setTimeout(function () {
-                $('#form-div').removeClass('no-visible')
-                $('#header-subscribe').html('SUSCRÍBETE')
-            }, 100);
-
         }
     </script>
 </footer>
