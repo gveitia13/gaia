@@ -83,8 +83,9 @@
         {% include 'scripts_cart.html' %}
     {% endblock %}
     <script>
-      //Crear suscriptor
-      document.querySelector('#suscriptor-form').addEventListener('submit', function (e) {
+      // Crear suscriptor
+      /*
+      * document.querySelector('#suscriptor-form').addEventListener('submit', function (e) {
         e.preventDefault()
         let data = {
           email: document.querySelector('#suscriptor-email').value
@@ -114,7 +115,8 @@
               icon: 'error'
             })
           });
-      })
+      })*/
+
       try {
         document.querySelector("#select-trampa").addEventListener('change', function (e) {
           let moneda = this.options[this.options.selectedIndex].value

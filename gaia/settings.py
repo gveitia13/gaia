@@ -145,6 +145,13 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -216,7 +223,7 @@ TPP_CLIENT_ID = 'f12538a0aa85242baa9f137380ab1926'
 TPP_CLIENT_SECRET = '323b25d45c305000cec8c8a70afc4cda'
 TPP_CLIENT_EMAIL = 'gaia.habana2021@gmail.com'
 TPP_CLIENT_PASSWORD = 'Gaia2021'
-TPP_URL = "tropipay.com"
+TPP_URL = "www.tropipay.com"
 TPP_SUCCESS_URL = 'https://gaia-mercado.com/tropipay/success/'
 TPP_FAILED_URL = 'https://gaia-mercado.com/tropipay/fails/'
 TPP_NOTIFICACION_URL = 'https://gaia-mercado.com/tropipay/verificar/'

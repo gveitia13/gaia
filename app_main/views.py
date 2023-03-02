@@ -158,6 +158,7 @@ class StartPageCUP(StartPage):
         context['catalogo_url'] = reverse_lazy('catalogo-cup')
         context['index_url'] = reverse_lazy('index-cup')
         context['tipo_moneda'] = 'CUP'
+
         return context
 
 
@@ -249,14 +250,13 @@ class CatalogoEuroView(StartPageEuro):
 @require_POST
 def create_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     data = {}
-    body = json.loads(request.body)
     try:
-        suscriptor = Suscriptor(email=body['email'])
+        suscriptor = Suscriptor(email=request.POST['email'])
         suscriptor.save()
         data = model_to_dict(suscriptor)
         data['url'] = request.path
     except Exception as e:
-        data['error'] = f'Ya existe un suscriptor con el correo {body["email"]}'
+        data['error'] = f'Ya existe un suscriptor con el correo {request.POST["email"]}'
     return JsonResponse(data=data, safe=False)
 
 
@@ -284,6 +284,7 @@ def pagar_euro(request):
             res = conn.getresponse()
             data = res.read()
             token = data.decode("utf-8")
+            print(conn)
             token = token.split(':')[1].split(',')[0].replace('"', '').replace(' ', '')
             user_comprador = orden.nombre_comprador
             # Convertir total a 2 decimales
@@ -306,7 +307,10 @@ def pagar_euro(request):
                 "termsAndConditions": "true"
             }
             impuesto = orden.total * GeneralData.objects.first().tropipay_impuesto / 100
-            orden_total = round((orden.total * impuesto + 0.5), 2) * 100
+            if impuesto > 0 :
+                orden_total = round((orden.total + impuesto + 0.5), 2) * 100
+            else:
+                orden_total = round((orden.total), 2) * 100
             spain_timezone = pytz.timezone("Europe/Madrid")
             spain_time = datetime.datetime.now(spain_timezone)
             payload_tpp = {
@@ -511,3 +515,8 @@ class OrdenAPIDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OrdenSerializer
     queryset = Orden.objects.all()
     lookup_field = 'uuid'
+
+def change_active_session_ajax(request):
+    del request.session['active']
+    request.session['active'] = str(request.POST['active_session'])
+    return JsonResponse({"result": "ok", "active":request.session['active']})

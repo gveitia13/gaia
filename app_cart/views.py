@@ -17,7 +17,7 @@ from gaia.settings import CART_SESSION_ID
 def add(request: HttpRequest, id: int):
     cart = Cart(request)
     cart.add(product=Product.objects.filter(id=id).first())
-    request.session['active'] = '1'
+
     return JsonResponse({
         'product': Product.objects.get(id=id).toJSON(),
         "result": "ok",
@@ -35,6 +35,7 @@ def cart_detail(request: HttpRequest, id: int):
 @method_decorator(csrf_exempt, require_POST)
 def cart_clear(request: HttpRequest):
     Cart(request).clear()
+    request.session['active'] = '2'
     return JsonResponse({"result": "ok", "amount": 0})
 
 
@@ -43,7 +44,7 @@ def cart_clear(request: HttpRequest):
 def item_clear(request: HttpRequest, id: int):
     cart = Cart(request)
     cart.remove(product=Product.objects.filter(id=id).first())
-    request.session['active'] = '3'
+    request.session['active'] = '2'
     return JsonResponse({
         'product': Product.objects.get(id=id).toJSON(),
         "result": "ok",
@@ -55,7 +56,6 @@ def item_clear(request: HttpRequest, id: int):
 @method_decorator(csrf_exempt, require_POST)
 def remove_quant(request: HttpRequest, id: int, quantity: int):
     Cart(request).add(product=Product.objects.filter(id=id).first(), quantity=quantity, action="remove")
-    request.session['active'] = '3'
     return JsonResponse({"result": "ok"})
 
 
@@ -65,7 +65,6 @@ def update_quant(request: HttpRequest, id: int, value: int):
     cart = Cart(request)
     product = Product.objects.get(pk=id)
     cart.update_quant(product=product, value=value)
-    request.session['active'] = '3'
     return JsonResponse({
         "result": "ok",
         'product': product.toJSON(),
@@ -79,7 +78,6 @@ def update_quant_bl(request: HttpRequest, id: int, value: int):
     cart = Cart(request)
     product = Product.objects.get(pk=id)
     cart.update_quant(product=product, value=value)
-    request.session['active'] = '3'
     total = 0
     for item in cart.session[CART_SESSION_ID]:
         total = total + (cart.session[CART_SESSION_ID].get(item)['product']['price']*cart.session[CART_SESSION_ID].get(item)['quantity'])
@@ -95,7 +93,7 @@ def update_quant_bl(request: HttpRequest, id: int, value: int):
 @method_decorator(csrf_exempt, require_POST)
 def remove(request: HttpRequest, id: int):
     Cart(request).decrement(product=Product.objects.filter(id=id).first())
-    request.session['active'] = '3'
+    request.session['active'] = '2'
     return JsonResponse({"result": "ok"})
 
 
@@ -104,7 +102,7 @@ def remove(request: HttpRequest, id: int):
 def cart_pop(request: HttpRequest, ):
     cart = Cart(request)
     cart.pop()
-    request.session['active'] = '3'
+    request.session['active'] = '2'
     return JsonResponse({
         "result": "ok",
         "amount": cart.get_sum_of("quantity")
@@ -116,7 +114,11 @@ def cart_pop(request: HttpRequest, ):
 def add_quant(request: HttpRequest, id: int, quantity: int):
     cart = Cart(request)
     cart.add(Product.objects.filter(id=id).first(), quantity)
-    request.session['active'] = '1'
+    values = json.loads(request.body.decode())
+    if values['active_session'] == '1':
+        request.session['active'] = '1'
+    else:
+        request.session['active'] = '2'
     return JsonResponse({"result": "ok",
                          'product': Product.objects.get(id=id).toJSON(),
                          "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": quantity})["quantity"]
