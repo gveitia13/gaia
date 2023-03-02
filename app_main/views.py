@@ -248,6 +248,7 @@ class CatalogoEuroView(StartPageEuro):
 
 
 @require_POST
+@method_decorator(csrf_exempt)
 def create_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     data = {}
     try:
