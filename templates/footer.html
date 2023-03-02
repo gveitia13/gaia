@@ -1,11 +1,12 @@
 {% load static %}
 <footer class="bd-footer mt-5 bg-semi-success">
     <div class="mx-auto py-3 w-75 px-md-5 px-0">
-        <h1 class="text-center text-white text-uppercase display-5 fw-bold user-select-none">suscríbete</h1>
+        <h1 id="header-subscribe" class="text-center text-white text-uppercase display-5 fw-bold user-select-none">
+            suscríbete</h1>
         <h2 class="text-white text-center ">Entérate de todas nuestras novedades y ofertas</h2>
         {% csrf_token %}
         <input type="hidden" name="action" value="suscriptor">
-        <div class="input-group mb-3">
+        <div id="form-div" class="input-group mb-3">
             <input type="email" name="email" class="form-control rounded-0" placeholder="Escriba su correo"
                    aria-label="Recipient's username" required aria-describedby="button-addon2"
                    id="suscriptor-email">
@@ -102,9 +103,8 @@
         }
 
         function addSubscriber(email) {
-            $('#suscriptor-email').prop('disabled', true);
-            document.querySelector('#button-addon2 i').classList.remove('mdi-arrow-right-bol')
-            document.querySelector('#button-addon2 i').classList.add('mdi-loading', 'mdi-spin')
+            $('#form-div').addClass('no-visible')
+            $('#header-subscribe').html('CARGANDO...')
             var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
             if ($('#suscriptor-email').val().toString().replaceAll(' ', '') != '' && testEmail.test($('#suscriptor-email').val())) {
                 $.ajax({
@@ -139,9 +139,10 @@
                     icon: 'error'
                 })
             }
-            $('#suscriptor-email').prop('disabled', false);
-            document.querySelector('#button-addon2 i').classList.remove('mdi-loading', 'mdi-spin')
-            document.querySelector('#button-addon2 i').classList.add('mdi-arrow-right-bol')
+            setTimeout(function () {
+                $('#form-div').removeClass('no-visible')
+                $('#header-subscribe').html('SUSCRÍBETE')
+            }, 100);
 
         }
     </script>
