@@ -11,9 +11,10 @@
         <div>
             <nav class="row align-items-end user-select-none">
                 <div class="justify-content-start col-sm-12 col-lg-4">
-                    <a href="{{ index_url }}"><img
+                    <img
+                            onclick="overwatchProductsAndRefresh()"
                             src="{% if business.img_principal %} {{ business.img_principal.url }} {% else %} {% static logo %} {% endif %}"
-                            class="" alt="gaia" height="100"></a>
+                            class="" alt="gaia" height="100">
                 </div>
                 <div class="nav nav-tabs justify-content-center col-sm-12 col-lg-8 border-bottom-0" id="nav-tab"
                      role="tablist">
@@ -83,63 +84,79 @@
         {% include 'scripts_cart.html' %}
     {% endblock %}
     <script>
-      // Crear suscriptor
-      /*
-      * document.querySelector('#suscriptor-form').addEventListener('submit', function (e) {
-        e.preventDefault()
-        let data = {
-          email: document.querySelector('#suscriptor-email').value
-        }
-        const http = new EasyHTTP
-        http.post('suscriptor_create/', data, '{{ csrf_token }}')
-          .then(data => {
-            console.log(data)
-            if (!data.hasOwnProperty('error')) {
-              Alerta(`Suscripción creada`)
-              {#location.replace(data['url'])#}
-              location.reload()
-            } else {
-              console.log(data)
-              Swal.fire({
-                title: 'Error',
-                text: data['error'],
-                icon: 'error'
-              })
-            }
-          })
-          .catch(err => {
-            console.error(err)
-            Swal.fire({
-              title: 'Error',
-              text: 'Hay un problema de conexión con el servidor.',
-              icon: 'error'
-            })
-          });
-      })*/
+        var products = ""
+        $.ajax({
+            type: 'get',
+            url: '{{ host }}whole_products/',
+            data: {},
+            success: function (response) {
+                products = response['result']
+            },
+        });
 
-      try {
-        document.querySelector("#select-trampa").addEventListener('change', function (e) {
-          let moneda = this.options[this.options.selectedIndex].value
-          if (moneda === 'CUP')
-            location.replace('{% url "index-cup" %}')
-          else
-            location.replace('{% url "index-euro" %}')
-        })
-      } catch (e) {
-        console.log(e)
-      }
-      try {
-        document.querySelector('#select-info').addEventListener('change', function (e) {
-          let id = this.value
-          location.replace(`{% url 'info' %}#${id}`)
-        })
-      } catch (e) {
-        console.log(e)
-      }
-      document.querySelectorAll('.category-card').forEach(e => e.addEventListener('click', function () {
-        document.querySelector('#nav-profile-tab').click()
-        let id = this.id.slice(1)
-        document.querySelector(`#cat${id}`).click()
-      }))
+        try {
+            document.querySelector("#select-trampa").addEventListener('change', function (e) {
+                let moneda = this.options[this.options.selectedIndex].value
+                if (moneda === 'CUP')
+                    location.replace('{% url "index-cup" %}')
+                else
+                    location.replace('{% url "index-euro" %}')
+            })
+        } catch (e) {
+            console.log(e)
+        }
+        try {
+            document.querySelector('#select-info').addEventListener('change', function (e) {
+                let id = this.value
+                location.replace(`{% url 'info' %}#${id}`)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+        document.querySelectorAll('.category-card').forEach(e => e.addEventListener('click', function () {
+            document.querySelector('#nav-profile-tab').click()
+            let id = this.id.slice(1)
+            document.querySelector(`#cat${id}`).click()
+        }))
+
+        function overwatchProductsAndRefresh() {
+
+            var newProducts = ""
+            $.ajax({
+                type: 'get',
+                url: '{{ host }}whole_products/',
+                data: {},
+                success: function (response) {
+                    newProducts = response['result']
+
+                    if (newProducts != products) {
+                        Swal.fire({
+                            title: 'Tienda actualizada!',
+                            text: "Se han detectado actualizaciones en la tienda",
+                            icon: 'success'
+                        })
+                        setTimeout(function () {
+                            if (window.location.pathname.includes("Euro")) {
+                                window.location.replace('/Euro/')
+                            } else {
+                                window.location.replace('/CUP/')
+                            }
+                        }, 1500);
+                    } else {
+                        $('#nav-profile').removeClass('active')
+                        $('#nav-profile').removeClass('show')
+                        $('#nav-profile-tab').removeClass('active')
+                        $('#nav-contact').removeClass('active')
+                        $('#nav-contact').removeClass('show')
+                        $('#nav-contact-tab').removeClass('active')
+                        $('#nav-home').addClass('show')
+                        $('#nav-home').addClass('active')
+                        $('#nav-home-tab').addClass('active')
+
+                    }
+                },
+            });
+
+        }
     </script>
 {% endblock %}

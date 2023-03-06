@@ -521,3 +521,9 @@ def change_active_session_ajax(request):
     del request.session['active']
     request.session['active'] = str(request.POST['active_session'])
     return JsonResponse({"result": "ok", "active":request.session['active']})
+
+def whole_products(request):
+    products = ""
+    for product in Product.objects.all():
+        products = products + '{} - {}'.format(product.name, str(product.price))
+    return JsonResponse({"result": products, "active": "1"})

@@ -30,5 +30,7 @@ urlpatterns = [
     # API
     path('orden/list/', OrdenAPIList.as_view(), name='orden-api-list'),
     path('orden/<uuid>/', OrdenAPIDetails.as_view(), name='orden-api-details'),
+    #AJAX
+    path('whole_products/', whole_products, name='whole_products'),
     path('session/change/', change_active_session_ajax, name='change_active_session_ajax'),
 ]
