@@ -24,7 +24,7 @@ def save_hash(sender, instance: Product, created, **kwargs):
             remitente = settings.EMAIL_HOST_USER
             destinatarios = [i.email for i in Suscriptor.objects.all()]
             asunto = 'Nuevo producto disponible'
-            cuerpo = f'Nombre: {prod.name}\nPrecio CUP: {str(prod.price)}\nPrecio Euro: {str(prod.price / GeneralData.objects.all().first().taza_cambio)}\nTiempo de entrega: {prod.delivery_time}\n'
+            cuerpo = f'Nombre: {prod.name}\nPrecio CUP: {str(prod.price)}\nPrecio Euro: {str(float(prod.price) / GeneralData.objects.all().first().taza_cambio)}\nTiempo de entrega: {prod.delivery_time}\n'
             ruta_adjunto = prod.image.path
             nombre_adjunto = f'{prod.name}.jpg'
             # Creamos el objeto mensaje
