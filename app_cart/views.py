@@ -119,7 +119,12 @@ def add_quant(request: HttpRequest, id: int, quantity: int):
         request.session['active'] = '1'
     else:
         request.session['active'] = '2'
+    total = 0
+    for item in cart.session[CART_SESSION_ID]:
+        total = total + (cart.session[CART_SESSION_ID].get(item)['product']['price'] *
+                         cart.session[CART_SESSION_ID].get(item)['quantity'])
     return JsonResponse({"result": "ok",
                          'product': Product.objects.get(id=id).toJSON(),
-                         "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": quantity})["quantity"]
+                         "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": quantity})["quantity"],
+                         "total":total
                          })

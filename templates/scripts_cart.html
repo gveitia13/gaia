@@ -939,37 +939,252 @@
     }))
 
     //Comprar del modal
-    document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
-        let value = $('#input-touchspin').val()
-        if (!value || value <= 0)
-            return null
-        else {
+    if (!window.location.pathname.toLowerCase().includes('euro')) {
+        document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
+            let value = $('#input-touchspin').val()
+            if (!value || value <= 0)
+                return null
+            else {
+                document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')
+                document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
+                const http = new EasyHTTP
+                let id = document.querySelector('#input-hidden-id-modal').value
+                http.post(`{{ host }}cart/add/${id}/${value}/`, {"active_session": 1}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
+                            setTimeout(function () {
+                                document.querySelector('#btn-comprar-modal i').classList.remove('mdi-loading', 'mdi-spin')
+                                document.querySelector('#btn-comprar-modal i').classList.add('mdi-cart-plus')
+                            }, 250);
+                            var found = false
+                            for (let i = 0; i < $('#products').children().length; i++) {
+                                var actual = $('#products').children()[i]
+                                if ($(actual).attr('id') === 'product-' + data['product']['id']) {
+                                    found = true
+                                    if (parseInt(data['product']['stock']) < parseInt($('#product-quantity-' + data['product']['id']).val()) + 1) {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'No se puede agregar más existencias de ' + data['product']['name'],
+                                            icon: 'error'
+                                        })
+                                    } else {
+                                        $('#product-quantity-' + data['product']['id']).val(parseInt(data['amount']))
+                                        $('#product-price-sidebar-' + data['product']['id']).html((parseFloat((parseFloat(data['product']['price']) * parseInt(data['amount'])).toFixed(2))).toFixed(2))
+                                        $('#p' + data['product']['id']).val($('#product-quantity-' + data['product']['id']).val())
+                                        $('#span' + data['product']['id']).html($('#product-price-sidebar-' + data['product']['id']).html())
+                                        $("#botoncito-verde-precio").html((parseFloat((parseFloat(data['total'])).toFixed(2))).toFixed(2))
+                                        updateCartBLMode(parseFloat(data['product']['price']), parseInt($("#botoncito-verde-cantidad").html()))
+                                    }
 
-            document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')
-            document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
-            const http = new EasyHTTP
-            let id = document.querySelector('#input-hidden-id-modal').value
-            http.post(`{{ host }}cart/add/${id}/${value}/`, {"active_session":1}, '{{ csrf_token }}')
-                .then(data => {
-                    if (!data.hasOwnProperty('error')) {
-                        location.reload()
-                    } else {
+                                }
 
-                        Swal.fire({
-                            title: 'Error',
-                            text: data['error'],
-                            icon: 'error'
-                        })
-                    }
-                }).catch(err => {
-                console.error(err)
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Hay un problema de conexión con el servidor.',
-                    icon: 'error'
-                })
-            });
-        }
-    })
+                            }
+                            if (!found) {
+                                if (parseInt(data['product']['stock']) === 0) {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'No se puede agregar más existencias de ' + data['product']['name'],
+                                        icon: 'error'
+                                    })
+                                } else {
+                                    var elemento = '<div id="product-' + data['product']['id'] + '" class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">' +
+                                        '<div class="row no-gutters">' +
+                                        '<input type="hidden" value="3300.0">' +
+                                        '<div class=" col-2 my-auto px-0">' +
+                                        '<img class="card-img rounded-0" src="' + data['product']['image'] + '" alt="' + data['product']['name'] + '">' +
+                                        '</div>' +
+                                        '<div class=" col-8">' +
+                                        '<div class="card-body px-0 pt-1">' +
+                                        '<h6 class="me-2">' + data['product']['name'] + '</h6>' +
+                                        '<input type="number" min="1" max="' + data['product']['stock'] + '"' +
+                                        ' class="form-control d-inline-block text-center form-control-sm input-cantidad"' +
+                                        ' placeholder="cantidad" value="' + data['amount'] + '" ' +
+                                        'style="width: 85px" id="product-quantity-' + data['product']['id'] + '" ' +
+                                        '>' +
+                                        '<button onclick="" class="btn btn-danger btn-sm btn-delete rounded-pill" ' +
+                                        'id="delete-product-' + data['product']['id'] + '" name="delete-product-name-' + data['product']['id'] + '">' +
+                                        '<i class="mdi mdi-trash-can-outline"></i>' +
+                                        '</button>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class=" col-2">' +
+                                        '<span class="float-end pt-1 span-price text-nowrap">' +
+                                        '<b>$ <span id="product-price-sidebar-' + data['product']['id'] + '">' + parseFloat(((parseFloat(data['product']['price']) * parseInt(data['amount']))).toFixed(2)) + '</span></b></span>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>'
+                                    $('#products').prepend(elemento)
+                                    elemento = '<div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3"' +
+                                        'id="cart-section-product-' + data['product']['id'] + '">' +
+                                        '<div class="row no-gutters">' +
+                                        '<input id="cart-section-product-hidden-' + data['product']['id'] + '" type="hidden"' +
+                                        'value="' + (parseFloat((parseFloat(data['product']['price'])).toFixed(2)) * parseInt(data['amount'])).toFixed(2) + '">' +
+                                        '<div class="col-sm-2 col-3 my-auto col-xl-1">' +
+                                        '<img class="card-img rounded-0" src="' + data['product']['image'] + '"' +
+                                        'alt="' + data['product']['image'] + '">' +
+                                        '</div>' +
+                                        '<div class="col-sm-8 col-7 col-xl-9">' +
+                                        '<div class="card-body pe-0 px-sm-3 ps-0 pt-1">' +
+                                        '<h5 class="">' + data['product']['name'] + '</h5>' +
+                                        '<input type="number" min="1" max="' + data['product']['stock'] + '"' +
+                                        'class="form-control d-inline-block text-center form-control-sm input-cantidad"' +
+                                        'placeholder="cantidad" value="' + parseInt(data['amount']) + '"' +
+                                        'style="width: 85px" id="p' + data['product']['id'] + '">' +
+                                        '<button class="btn btn-danger btn-sm btn-delete mt-1 mt-sm-0 rounded-circle"' +
+                                        'id="cart-section-product-delete-' + data['product']['id'] + '" name="' + data['product']['id'] + '">' +
+                                        '<i class="mdi mdi-trash-can-outline"></i>' +
+                                        '</button>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="col-sm-2 col-2">' +
+                                        '<span class="float-end pe-2 pt-1 span-price text-nowrap">' +
+                                        '<b>$ <span id="span' + data['product']['id'] + '">' + (parseFloat((parseFloat(data['product']['price'])).toFixed(2)) * parseInt(data['amount'])).toFixed(2) + '</span></b></span>' +
+                                        '</div>' +
+                                        '</div>'
+                                    $('#cart-section-products').append(elemento)
+                                    asignarEventosEuro()
+                                    $("#botoncito-verde-precio").html((parseFloat(((parseFloat(data['total']))).toFixed(2))).toFixed(2))
+                                    $("#botoncito-verde-cantidad").html(parseInt($("#botoncito-verde-cantidad").html()) + parseInt(1))
+                                    updateCartBLMode(parseFloat($("#botoncito-verde-precio").html()), parseInt($("#botoncito-verde-cantidad").html()))
+                                }
+                            }
+
+                            return false
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            }
+        })
+    } else {
+        document.querySelector('#btn-comprar-modal').addEventListener('click', function () {
+            let value = $('#input-touchspin').val()
+            if (!value || value <= 0)
+                return null
+            else {
+                document.querySelector('#btn-comprar-modal i').classList.remove('mdi-cart-plus')
+                document.querySelector('#btn-comprar-modal i').classList.add('mdi-loading', 'mdi-spin')
+                const http = new EasyHTTP
+                let id = document.querySelector('#input-hidden-id-modal').value
+                http.post(`{{ host }}cart/add/${id}/${value}/`, {"active_session": 1}, '{{ csrf_token }}')
+                    .then(data => {
+                        if (!data.hasOwnProperty('error')) {
+                            Alerta(`${data['product']['name']} fue añadido al carrito`, 'success')
+                            setTimeout(function () {
+                                document.querySelector('#btn-comprar-modal i').classList.remove('mdi-loading', 'mdi-spin')
+                                document.querySelector('#btn-comprar-modal i').classList.add('mdi-cart-plus')
+                            }, 250);
+                            var found = false
+                            for (let i = 0; i < $('#products').children().length; i++) {
+                                var actual = $('#products').children()[i]
+                                if ($(actual).attr('id') === 'product-' + data['product']['id']) {
+                                    found = true
+                                    if (parseInt(data['product']['stock']) < parseInt($('#product-quantity-' + data['product']['id']).val()) + 1) {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'No se puede agregar más existencias de ' + data['product']['name'],
+                                            icon: 'error'
+                                        })
+                                    } else {
+                                        $('#product-quantity-' + data['product']['id']).val(parseInt(data['amount']))
+                                        $('#product-price-sidebar-' + data['product']['id']).html((parseFloat((parseFloat(data['product']['price']) * parseInt(data['amount']) / getExchangeRate()).toFixed(2))).toFixed(2))
+                                        $('#p' + data['product']['id']).val($('#product-quantity-' + data['product']['id']).val())
+                                        $('#span' + data['product']['id']).html($('#product-price-sidebar-' + data['product']['id']).html())
+                                        $("#botoncito-verde-precio").html((parseFloat((parseFloat(data['total']) / getExchangeRate()).toFixed(2))).toFixed(2))
+                                        updateCartBLMode(parseFloat(data['product']['price']), parseInt($("#botoncito-verde-cantidad").html()))
+                                    }
+
+                                }
+
+                            }
+                            if (!found) {
+                                if (parseInt(data['product']['stock']) === 0) {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'No se puede agregar más existencias de ' + data['product']['name'],
+                                        icon: 'error'
+                                    })
+                                } else {
+                                    var elemento = '<div id="product-' + data['product']['id'] + '" class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3">' +
+                                        '<div class="row no-gutters">' +
+                                        '<input type="hidden" value="3300.0">' +
+                                        '<div class=" col-2 my-auto px-0">' +
+                                        '<img class="card-img rounded-0" src="' + data['product']['image'] + '" alt="' + data['product']['name'] + '">' +
+                                        '</div>' +
+                                        '<div class=" col-8">' +
+                                        '<div class="card-body px-0 pt-1">' +
+                                        '<h6 class="me-2">' + data['product']['name'] + '</h6>' +
+                                        '<input type="number" min="1" max="' + data['product']['stock'] + '"' +
+                                        ' class="form-control d-inline-block text-center form-control-sm input-cantidad"' +
+                                        ' placeholder="cantidad" value="' + data['amount'] + '" ' +
+                                        'style="width: 85px" id="product-quantity-' + data['product']['id'] + '" ' +
+                                        '>' +
+                                        '<button onclick="" class="btn btn-danger btn-sm btn-delete rounded-pill" ' +
+                                        'id="delete-product-' + data['product']['id'] + '" name="delete-product-name-' + data['product']['id'] + '">' +
+                                        '<i class="mdi mdi-trash-can-outline"></i>' +
+                                        '</button>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class=" col-2">' +
+                                        '<span class="float-end pt-1 span-price text-nowrap">' +
+                                        '<b>$ <span id="product-price-sidebar-' + data['product']['id'] + '">' + parseFloat(((parseFloat(data['product']['price']) * parseInt(data['amount'])) / getExchangeRate()).toFixed(2)) + '</span></b></span>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>'
+                                    $('#products').prepend(elemento)
+                                    elemento = '<div class="card w-100 shadow-none border-0 border-bottom rounded-0 card-s-cart mb-3"' +
+                                        'id="cart-section-product-' + data['product']['id'] + '">' +
+                                        '<div class="row no-gutters">' +
+                                        '<input id="cart-section-product-hidden-' + data['product']['id'] + '" type="hidden"' +
+                                        'value="' + (parseFloat((parseFloat(data['product']['price']) / getExchangeRate()).toFixed(2)) * parseInt(data['amount'])).toFixed(2) + '">' +
+                                        '<div class="col-sm-2 col-3 my-auto col-xl-1">' +
+                                        '<img class="card-img rounded-0" src="' + data['product']['image'] + '"' +
+                                        'alt="' + data['product']['image'] + '">' +
+                                        '</div>' +
+                                        '<div class="col-sm-8 col-7 col-xl-9">' +
+                                        '<div class="card-body pe-0 px-sm-3 ps-0 pt-1">' +
+                                        '<h5 class="">' + data['product']['name'] + '</h5>' +
+                                        '<input type="number" min="1" max="' + data['product']['stock'] + '"' +
+                                        'class="form-control d-inline-block text-center form-control-sm input-cantidad"' +
+                                        'placeholder="cantidad" value="' + parseInt(data['amount']) + '"' +
+                                        'style="width: 85px" id="p' + data['product']['id'] + '">' +
+                                        '<button class="btn btn-danger btn-sm btn-delete mt-1 mt-sm-0 rounded-circle"' +
+                                        'id="cart-section-product-delete-' + data['product']['id'] + '" name="' + data['product']['id'] + '">' +
+                                        '<i class="mdi mdi-trash-can-outline"></i>' +
+                                        '</button>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="col-sm-2 col-2">' +
+                                        '<span class="float-end pe-2 pt-1 span-price text-nowrap">' +
+                                        '<b>$ <span id="span' + data['product']['id'] + '">' + (parseFloat((parseFloat(data['product']['price']) / getExchangeRate()).toFixed(2)) * parseInt(data['amount'])).toFixed(2) + '</span></b></span>' +
+                                        '</div>' +
+                                        '</div>'
+                                    $('#cart-section-products').append(elemento)
+                                    asignarEventosEuro()
+                                    $("#botoncito-verde-precio").html((parseFloat(((parseFloat(data['total'])) / getExchangeRate()).toFixed(2))).toFixed(2))
+                                    $("#botoncito-verde-cantidad").html(parseInt($("#botoncito-verde-cantidad").html()) + parseInt(1))
+                                    updateCartBLMode(parseFloat($("#botoncito-verde-precio").html()), parseInt($("#botoncito-verde-cantidad").html()))
+                                }
+                            }
+                            return false
+                        }
+                    }).catch(err => {
+                    console.error(err)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hay un problema de conexión con el servidor.',
+                        icon: 'error'
+                    })
+                });
+            }
+        })
+    }
+
     overwatchTPPPrice()
 </script>
