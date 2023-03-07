@@ -147,7 +147,7 @@ class Product(models.Model):
         ordering = ('category',)
 
     def info_tag(self):
-        return mark_safe(self.info)
+        return mark_safe(self.info)[:40]
 
     def about_tag(self):
         return mark_safe(self.about)
