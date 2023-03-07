@@ -9,7 +9,7 @@
             {% endif %}
             <p class="card-text truncate-1 mb-0 fw-bold">{{ prod.get_price | floatformat:2 }} {{ tipo_moneda }}</p>
             <div class="truncate-2">
-                {{ prod.info_tag|safe|truncatewords_html }}
+                {{ prod.info_tag|safe|truncatewords_html:10 }}
             </div>
         </div>
         <div class="card-footer text-center bg-white rounded-0 border-0">
