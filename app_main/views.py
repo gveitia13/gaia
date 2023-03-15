@@ -88,7 +88,10 @@ class StartPage(BaseView, generic.ListView, ):
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             os.path.join(settings.STATIC_URL, settings.BUSINESS_BANNER)]
-        context['object_list'] = Product.objects.filter(is_active=True)
+        if self.request.session['index_url'] == '/CUP/':
+            context['object_list'] = Product.objects.filter(is_active=True).exclude(moneda='Euro')
+        else:
+            context['object_list'] = Product.objects.filter(is_active=True).exclude(moneda='CUP')
         return context
 
     def dispatch(self, request, *args, **kwargs):
