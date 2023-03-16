@@ -3,12 +3,12 @@
         <img src="{{ prod.image.url }}"
              class="card-img-top rounded-0 border-0" alt="...">
         <div class="card-body text-success  text-center pb-0">
-            <h5 class="card-title text-center truncate-2 mb-0">{{ prod.name }}</h5>
+            <h5 class="card-title text-center mb-0">{{ prod.name }}</h5>
             {% if prod.old_price %}
-                <p class="card-text truncate-1 mb-0 text-decoration-line-through">{{ prod.get_old_price | floatformat:2 }} {{ tipo_moneda }}</p>
+                <p class="card-text mb-0 text-decoration-line-through">{{ prod.get_old_price | floatformat:2 }} {{ tipo_moneda }}</p>
             {% endif %}
-            <p class="card-text truncate-1 mb-0 fw-bold">{{ prod.get_price | floatformat:2 }} {{ tipo_moneda }}</p>
-            <div class="truncate-2">
+            <p class="card-text mb-0 fw-bold">{{ prod.get_price | floatformat:2 }} {{ tipo_moneda }}</p>
+            <div class="">
                 {{ prod.info_tag|safe|truncatewords_html:10 }}
             </div>
         </div>
