@@ -289,7 +289,6 @@ def pagar_euro(request):
             res = conn.getresponse()
             data = res.read()
             token = data.decode("utf-8")
-            print(conn)
             token = token.split(':')[1].split(',')[0].replace('"', '').replace(' ', '')
             user_comprador = orden.nombre_comprador
             # Convertir total a 2 decimales

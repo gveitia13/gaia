@@ -31,7 +31,7 @@ def save_hash(sender, instance: Product, created, **kwargs):
             mensaje = MIMEMultipart()
             # Establecemos los atributos del mensaje
             mensaje['From'] = remitente
-            mensaje['bcc'] = ", ".join(destinatarios)
+            mensaje['cco'] = ", ".join(destinatarios)
             mensaje['Subject'] = asunto
             # Agregamos el cuerpo del mensaje como objeto MIME de tipo texto
             mensaje.attach(MIMEText(cuerpo, 'plain'))
