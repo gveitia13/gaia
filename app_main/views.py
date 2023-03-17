@@ -130,7 +130,6 @@ class StartPage(BaseView, generic.ListView, ):
 class StartPageCUP(StartPage):
     queryset = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
 
-
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -138,7 +137,7 @@ class StartPageCUP(StartPage):
         context = super().get_context_data()
         context['moneda'] = 'CUP'
         cate = sorted(
-            Category.objects.filter(product__isnull=False, destacado=True,
+            Category.objects.filter(product__isnull=False, destacado=True, product__is_active=True,
                                     product__moneda__in=['CUP', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)
         if len(cate) > 4:
@@ -184,7 +183,7 @@ class StartPageEuro(StartPage):
         context = super().get_context_data()
         context['moneda'] = 'Euro'
         cate = sorted(
-            Category.objects.filter(product__isnull=False, destacado=True,
+            Category.objects.filter(product__isnull=False, destacado=True, product__is_active=True,
                                     product__moneda__in=['Euro', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)
         if len(cate) > 4:
