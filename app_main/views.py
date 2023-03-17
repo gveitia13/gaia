@@ -81,17 +81,18 @@ class StartPage(BaseView, generic.ListView, ):
         if 'active' in self.request.session:
             context['active'] = self.request.session['active']
         # Sobreescribir abajo
-        context['categories'] = sorted(Category.objects.filter(product__isnull=False, destacado=True).distinct(),
-                                       key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
+        context['categories'] = sorted(
+            Category.objects.filter(product__isnull=False, product__is_active=True, destacado=True).distinct(),
+            key=lambda cat: cat.get_prods_count, reverse=True)[0:4]
         context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True)[0:10]
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False)[0:10]
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             os.path.join(settings.STATIC_URL, settings.BUSINESS_BANNER)]
-        if self.request.session['index_url'] == '/CUP/':
-            context['object_list'] = Product.objects.filter(is_active=True).exclude(moneda='Euro')
-        else:
-            context['object_list'] = Product.objects.filter(is_active=True).exclude(moneda='CUP')
+        # if self.request.session['index_url'] == '/CUP/':
+        #     context['object_list'] = Product.objects.filter(is_active=True).exclude(moneda='Euro')
+        # else:
+        #     context['object_list'] = Product.objects.filter(is_active=True).exclude(moneda='CUP')
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -129,6 +130,7 @@ class StartPage(BaseView, generic.ListView, ):
 class StartPageCUP(StartPage):
     queryset = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
 
+
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -149,8 +151,10 @@ class StartPageCUP(StartPage):
         context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False).exclude(
             moneda='Euro')[0:10]
         context['products_nuevos'] = Product.objects.filter(is_active=True).exclude(moneda='Euro').order_by('-pk')[0:10]
+        products = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
         context['all_categories'] = sorted(
-            Category.objects.filter(product__isnull=False, product__moneda__in=['CUP', 'Ambas']).distinct(),
+            Category.objects.filter(product__isnull=False, product__is_active=True,
+                                    product__moneda__in=['CUP', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)
         cart = Cart(self.request)
         products_in_cart = []
@@ -162,13 +166,19 @@ class StartPageCUP(StartPage):
         context['catalogo_url'] = reverse_lazy('catalogo-cup')
         context['index_url'] = reverse_lazy('index-cup')
         context['tipo_moneda'] = 'CUP'
-
+        context['object_list'] = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
+        context['product_list'] = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
         return context
 
 
 class StartPageEuro(StartPage):
     queryset = Product.objects.filter(is_active=True, ).exclude(moneda='CUP')
     template_name = 'startpage_euro.html'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.exclude(moneda='CUP')
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -187,7 +197,8 @@ class StartPageEuro(StartPage):
             moneda='CUP')[0:10]
         context['products_nuevos'] = Product.objects.filter(is_active=True).exclude(moneda='CUP').order_by('-pk')[0:10]
         context['all_categories'] = sorted(
-            Category.objects.filter(product__isnull=False, product__moneda__in=['Euro', 'Ambas']).distinct(),
+            Category.objects.filter(product__isnull=False, product__is_active=True,
+                                    product__moneda__in=['Euro', 'Ambas']).distinct(),
             key=lambda cat: cat.get_prods_count, reverse=True)
         cart = Cart(self.request)
         products_in_cart = []
@@ -200,6 +211,8 @@ class StartPageEuro(StartPage):
         context['index_url'] = reverse_lazy('index-euro')
         context['is_euro'] = True
         context['tipo_moneda'] = 'EUR'
+        context['object_list'] = Product.objects.filter(is_active=True, ).exclude(moneda='CUP')
+        context['product_list'] = Product.objects.filter(is_active=True, ).exclude(moneda='CUP')
         return context
 
 
@@ -311,7 +324,7 @@ def pagar_euro(request):
                 "termsAndConditions": "true"
             }
             impuesto = orden.total * GeneralData.objects.first().tropipay_impuesto / 100
-            if impuesto > 0 :
+            if impuesto > 0:
                 orden_total = round((orden.total + impuesto + 0.5), 2) * 100
             else:
                 orden_total = round((orden.total), 2) * 100
@@ -406,6 +419,7 @@ def tpp_verificar(request: HttpRequest):
     # fails alerta
     return render(request, 'order_fail.html',
                   {'uuid': request.session['last_order'], 'business': GeneralData.objects.first()})
+
 
 def pagar_cup(request: HttpRequest):
     if request.method == 'POST':
@@ -520,10 +534,12 @@ class OrdenAPIDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Orden.objects.all()
     lookup_field = 'uuid'
 
+
 def change_active_session_ajax(request):
     del request.session['active']
     request.session['active'] = str(request.POST['active_session'])
-    return JsonResponse({"result": "ok", "active":request.session['active']})
+    return JsonResponse({"result": "ok", "active": request.session['active']})
+
 
 def whole_products(request):
     products = ""
