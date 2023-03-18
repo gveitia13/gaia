@@ -219,6 +219,14 @@ CART_SESSION_ID = "cart"
 
 SESSION_COOKIE_AGE = 7200
 
+# TPP_CLIENT_ID = '53ab37c112a8148ce870cba87d787450'
+# TPP_CLIENT_SECRET = '64865eba38167851a56a9454aada3eda'
+# TPP_CLIENT_EMAIL = 'blinit10@gmail.com'
+# TPP_CLIENT_PASSWORD = 'Invoker123*'
+# TPP_URL = "tropipay-dev.herokuapp.com"
+# TPP_SUCCESS_URL = 'https://bf6f-152-207-240-9.sa.ngrok.io/tropipay/success/'
+# TPP_FAILED_URL = 'https://bf6f-152-207-240-9.sa.ngrok.io/tropipay/fails/'
+# TPP_NOTIFICACION_URL = 'https://bf6f-152-207-240-9.sa.ngrok.io/tropipay/verificar/'
 TPP_CLIENT_ID = 'f12538a0aa85242baa9f137380ab1926'
 TPP_CLIENT_SECRET = '323b25d45c305000cec8c8a70afc4cda'
 TPP_CLIENT_EMAIL = 'gaia.habana2021@gmail.com'

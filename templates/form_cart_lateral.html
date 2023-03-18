@@ -36,15 +36,20 @@
             <h4 class="card-title">Dirección:</h4>
             <div class="mb-3">
                 <select class="form-select" required aria-label="Default select example" name="municipio">
-                    <option selected disabled>Selecciona el lugar de entrega</option>
                     {% for address in address %}
-                        <option value="{{ address.id }}"
-                                name="
-
-                                        {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
-                            ---------{% if is_euro %}€
-                                {{ address.precio_euro |floatformat:2 }}{% else %}$
-                                {{ address.precio }}{% endif %}</option>
+                        {% if forloop.first %}
+                            <option selected value="{{ address.id }}"
+                                    name="{% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
+                                ---------{% if is_euro %}€
+                                    {{ address.precio_euro |floatformat:2 }}{% else %}$
+                                    {{ address.precio }}{% endif %}</option>
+                        {% else %}
+                            <option value="{{ address.id }}"
+                                    name="{% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
+                                ---------{% if is_euro %}€
+                                    {{ address.precio_euro |floatformat:2 }}{% else %}$
+                                    {{ address.precio }}{% endif %}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
@@ -85,7 +90,8 @@
             </div>
         </div>
         <div class="card-footer text-center">
-            <button id="checkout-button-lateral" type="submit" class="btn btn-success rounded-pill"><i class="mdi mdi-credit-card"></i><span id="button-verbosity-lateral">Comprar</span>
+            <button id="checkout-button-lateral" type="submit" class="btn btn-success rounded-pill"><i
+                    class="mdi mdi-credit-card"></i><span id="button-verbosity-lateral">Comprar</span>
             </button>
         </div>
     </div>

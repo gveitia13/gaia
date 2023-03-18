@@ -367,8 +367,12 @@ class ComponenteOrden(models.Model):
     cantidad = models.IntegerField()
 
     def __str__(self):
-        return '{}x {} - {} {}'.format(self.cantidad, self.producto.name, '{:.2f}'.format(self.respaldo),
-                                       self.orden.moneda)
+        try:
+            return '{}x {} - {} {}'.format(self.cantidad, self.producto.name, '{:.2f}'.format(self.respaldo),
+                                           self.orden.moneda)
+        except:
+            return '{}x {} - {} {}'.format(self.cantidad, "ERROR", '{:.2f}'.format(self.respaldo),
+                                           self.orden.moneda)
 
     def Componente(self):
         return str(self)

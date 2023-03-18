@@ -36,14 +36,24 @@
             <h4 class="card-title">Dirección:</h4>
             <div class="mb-3">
                 <select class="form-select" required aria-label="Default select example" name="municipio">
-                    <option selected disabled>Selecciona el lugar de entrega</option>
                     {% for address in address %}
-                        <option value="{{ address.id }}"
-                                name="
-                                        {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
-                            ---------{% if is_euro %}€
-                                {{ address.precio_euro |floatformat:2 }}{% else %}$
-                                {{ address.precio }}{% endif %}</option>
+                        {% if forloop.first %}
+                            <option selected value="{{ address.id }}"
+                                    name="
+
+                                            {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
+                                ---------{% if is_euro %}€
+                                    {{ address.precio_euro |floatformat:2 }}{% else %}$
+                                    {{ address.precio }}{% endif %}</option>
+                        {% else %}
+                            <option value="{{ address.id }}"
+                                    name="
+
+                                            {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
+                                ---------{% if is_euro %}€
+                                    {{ address.precio_euro |floatformat:2 }}{% else %}$
+                                    {{ address.precio }}{% endif %}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
@@ -74,17 +84,18 @@
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="id_reparto" name="reparto"
-                       placeholder="Reparto (Opcional)" >
+                       placeholder="Reparto (Opcional)">
                 <label for="id_reparto">Reparto (Opcional)</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="id_detalle" name="detalle"
-                       placeholder="Detalles específicos (Opcional)" >
+                       placeholder="Detalles específicos (Opcional)">
                 <label for="id_detalle">Detalles específicos (Opcional)</label>
             </div>
         </div>
         <div class="card-footer text-center">
-            <button id="checkout-button" type="submit" class="btn btn-success rounded-pill"><i class="mdi mdi-credit-card"></i><span id="button-verbosity">Comprar</span>
+            <button id="checkout-button" type="submit" class="btn btn-success rounded-pill"><i
+                    class="mdi mdi-credit-card"></i><span id="button-verbosity">Comprar</span>
             </button>
         </div>
     </div>

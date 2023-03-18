@@ -301,7 +301,7 @@ def pagar_euro(request):
             res = conn.getresponse()
             data = res.read()
             token = data.decode("utf-8")
-            token = token.split(':')[1].split(',')[0].replace('"', '').replace(' ', '')
+            token = json.loads(token)['access_token']
             user_comprador = orden.nombre_comprador
             # Convertir total a 2 decimales
             address = 'Municipio: ' + orden.municipio + '. '
@@ -338,7 +338,7 @@ def pagar_euro(request):
                 "currency": 'EUR',
                 "singleUse": "true",
                 "reasonId": 4,
-                "expirationDays": 10,
+                "expirationDays": 0,
                 "lang": "es",
                 "urlSuccess": "" + settings.TPP_SUCCESS_URL + "",
                 "urlFailed": "" + settings.TPP_FAILED_URL + "",
