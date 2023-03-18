@@ -13,10 +13,10 @@ from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, 
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'img_link', 'destacado', 'get_color')
-    fields = ('name', 'image', 'img_link', 'destacado', 'color', 'get_colores')
+    list_display = ('name', 'img_link', 'destacado')
+    fields = ('name', 'image', 'img_link', 'destacado')
     actions = ['Activar_destacados', 'Quitar_destacados']
-    readonly_fields = ('get_colores', 'img_link')
+    readonly_fields = ('img_link',)
 
     def Activar_destacados(self, request, queryset):
         for p in queryset:

@@ -1,16 +1,12 @@
 {% include 'carousel.html' %}
 <br>
-<div class="row d-flex justify-content-center row-cols-2 row-cols-sm-3 row-cols-md-4 g-4 user-select-none"
+<div class="row d-flex justify-content-center row-cols-2 row-cols-sm-3 row-cols-md-5 g-4 user-select-none"
      id="bing-row">
     {% for category in categories %}
-        <div class="col">
+        <div class="col ml-2 mr-2">
             <a href="#" class="text-decoration-none category-card" id="c{{ category.id }}">
                 <div class="card rounded-0 border-0 agrandar h-100">
-                    <div class="card-header text-uppercase text-center fs-4 border-0
-                     rounded-0 fw-bold text-white d-flex align-items-center h-100"
-                         style="background-color: #{{ category.color }};line-height: 1.1;clear: both;flex-wrap: wrap;overflow-wrap: anywhere;">
-                        {{ category.name }}
-                    </div>
+
                     <img src="{{ category.get_image }}" class="card-img-bottom rounded-0 img-category" alt="...">
                 </div>
             </a>

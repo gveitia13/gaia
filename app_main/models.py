@@ -30,12 +30,12 @@ class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name='Nombre')
     image = models.ImageField(upload_to='product/img', verbose_name='Imagen Principal', null=True, blank=True)
     destacado = models.BooleanField('Destacada', default=False)
-    color = models.CharField('Color', max_length=100, choices=colors, default='198754')
+    # color = models.CharField('Color', max_length=100, choices=colors, default='198754')
 
-    def get_color(self):
-        return mark_safe(
-            f'<span class="badge text-white rounded-pill" '
-            f'style="background-color: #{self.color}">{self.get_color_display()}</span>')
+    # def get_color(self):
+    #     return mark_safe(
+    #         f'<span class="badge text-white rounded-pill" '
+    #         f'style="background-color: #{self.color}">{self.get_color_display()}</span>')
 
     def get_colores(self):
         html = ''
@@ -75,7 +75,7 @@ class Category(models.Model):
             f'width="40" height="40" /></a>')
 
     img_link.short_description = 'Vista previa'
-    get_color.short_description = 'Color'
+    # get_color.short_description = 'Color'
     get_colores.short_description = 'Colores disponibles'
 
 
