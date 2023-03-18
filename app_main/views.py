@@ -358,12 +358,16 @@ def pagar_euro(request):
             res = conn.getresponse()
             data = res.read()
             retorno = data.decode("utf-8")
-            retorno = retorno.split(',')
-            retorno = retorno[len(retorno) - 2].replace('"shortUrl":"', '').replace('"', '')
-            orden.link_de_pago = retorno
-            orden.total = float('{:.2f}'.format(orden_total)) / 100
-            orden.save()
-            return redirect(orden.link_de_pago)
+            if 'error' in json.loads(retorno):
+                return redirect('/Euro/')
+            else:
+                retorno = json.loads(retorno)['shortUrl']
+                # retorno = retorno.split(',')
+                # retorno = retorno[len(retorno) - 2].replace('"shortUrl":"', '').replace('"', '')
+                orden.link_de_pago = retorno
+                orden.total = float('{:.2f}'.format(orden_total)) / 100
+                orden.save()
+                return redirect(orden.link_de_pago)
 
 
 @method_decorator(csrf_exempt)

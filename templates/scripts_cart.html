@@ -5,15 +5,15 @@
 
     function overwatchTPPPrice() {
         if (window.location.pathname.toLowerCase().includes('euro')) {
-            if (parseFloat($('#sidebar-total-amount').html()) > 10) {
+            if (parseFloat($('#sidebar-total-amount').html()) > 15) {
                 $('#button-verbosity-lateral').html("Comprar")
                 $('#checkout-button-lateral').prop("disabled", false)
                 $('#button-verbosity').html("Comprar")
                 $('#checkout-button').prop("disabled", false)
             } else {
-                $('#button-verbosity-lateral').html("La factura debe exceder los 10 euros")
+                $('#button-verbosity-lateral').html("La factura debe exceder los 15 euros")
                 $('#checkout-button-lateral').prop("disabled", true)
-                $('#button-verbosity').html("La factura debe exceder los 10 euros")
+                $('#button-verbosity').html("La factura debe exceder los 15 euros")
                 $('#checkout-button').prop("disabled", true)
             }
         }
