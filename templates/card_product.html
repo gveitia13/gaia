@@ -1,6 +1,6 @@
 <div class="col py-2">
     <div class="card shadow-sm h-100 pb-3 agrandar">
-        <img src="{{ prod.image.url }}"
+        <img data-bs-toggle="modal" data-bs-target="#product_modal" name="{{ prod.id }}" src="{{ prod.image.url }}"
              class="card-img-top rounded-0 border-0" alt="...">
         <div class="card-body text-success  text-center pb-0">
             <h5 class="card-title text-center mb-0">{{ prod.name }}</h5>
