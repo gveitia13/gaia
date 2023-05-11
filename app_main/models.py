@@ -321,7 +321,7 @@ class Orden(models.Model):
     correo = models.EmailField('Correo del comprador')
     nombre_receptor = models.CharField('Nombre del receptor', max_length=200)
     telefono_receptor = models.CharField('Teléfono del receptor', max_length=200)
-    municipio = models.CharField('Municipio', max_length=200, verbose_name='Reparto')
+    municipio = models.CharField(max_length=200, verbose_name='Reparto')
     calle = models.CharField('Calle', max_length=200)
     calle1 = models.CharField('Entre calle 1', max_length=200)
     calle2 = models.CharField('Entre calle 2', max_length=200)
