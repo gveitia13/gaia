@@ -304,12 +304,12 @@ def pagar_euro(request):
             token = json.loads(token)['access_token']
             user_comprador = orden.nombre_comprador
             # Convertir total a 2 decimales
-            address = 'Municipio: ' + orden.municipio + '. '
+            address = 'Reparto: ' + orden.municipio + '. '
             address += 'Calle: ' + orden.calle + '. '
             address += 'Entre calle : ' + orden.calle1 + ' y calle ' + orden.calle2 + '. '
             address += 'Número: ' + orden.numero_edificio + '. '
-            if orden.reparto != '':
-                address += 'Reparto: ' + orden.reparto + '. '
+            # if orden.reparto != '':
+            #     address += 'Reparto: ' + orden.reparto + '. '
             if orden.detalles_direccion != '':
                 address += 'Detalles : ' + orden.detalles_direccion + '.'
             client = {
@@ -448,7 +448,7 @@ def create_order(request: HttpRequest, moneda, **kwargs):
     entre1 = request.POST.get('entre1')
     entre2 = request.POST.get('entre2')
     numero = request.POST.get('numero')
-    reparto = request.POST.get('reparto', '')
+    # reparto = request.POST.get('reparto', '')
     detalle = request.POST.get('detalle', '')
     precio_envio = municipio.precio if moneda == 'CUP' else municipio.precio_euro
     # Calcular total
@@ -466,7 +466,8 @@ def create_order(request: HttpRequest, moneda, **kwargs):
                                      status='1' if moneda == 'CUP' else '2', nombre_comprador=comprador,
                                      telefono_comprador=phone_comprador, nombre_receptor=receptor,
                                      telefono_receptor=phone_receptor, municipio=nombre_municipio, calle=calle,
-                                     calle1=entre1, calle2=entre2, numero_edificio=numero, reparto=reparto,
+                                     calle1=entre1, calle2=entre2, numero_edificio=numero,
+                                     # reparto=reparto,
                                      detalles_direccion=detalle, tiempo_de_entrega=tiempo_de_entrega, correo=correo)
         for c in cart.all():
             prod = Product.objects.get(pk=c['id'])
@@ -499,10 +500,10 @@ def create_message_order(request, orden):
     for c in orden.componente_orden.all():
         mensaje += str(c) + '\n'
     mensaje += '\nDatos de entrega:\n'
-    mensaje += f'Municipio: {orden.municipio}.\n'
+    mensaje += f'Reparto: {orden.municipio}.\n'
     mensaje += f'Calle: {orden.calle}, entre {orden.calle1} y {orden.calle2}, No {orden.numero_edificio}.'
-    if orden.reparto != '':
-        mensaje += f' Reparto: {orden.reparto}.'
+    # if orden.reparto != '':
+    #     mensaje += f' Reparto: {orden.reparto}.'
     mensaje += f' {orden.detalles_direccion}'
     return mensaje
 
