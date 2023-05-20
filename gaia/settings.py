@@ -19,9 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ['https://*.ngrok.io', 'https://*.gaia-kla9.onrender.com', 'https://*.127.0.0.1',
-                        'https://*.cubasuper-production.up.railway.app', 'https://*.gaia-production.up.railway.app',
-                        'https://gaia-mercado.com/', 'https://*.gaia-mercado.com/']
+CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://gaia-mercado.com/', 'https://*.gaia-mercado.com/']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -48,6 +46,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'django_cleanup.apps.CleanupConfig',
+    'chatmarket.apps.ChatmarketConfig',
 ]
 
 CKEDITOR_CONFIGS = {
@@ -144,7 +143,16 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'gaia',
+#         'USER': 'postgres',
+#         'PASSWORD': 'rootzenBL',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -235,3 +243,7 @@ TPP_URL = "www.tropipay.com"
 TPP_SUCCESS_URL = 'https://gaia-mercado.com/tropipay/success/'
 TPP_FAILED_URL = 'https://gaia-mercado.com/tropipay/fails/'
 TPP_NOTIFICACION_URL = 'https://gaia-mercado.com/tropipay/verificar/'
+META_WA_ACCESSTOKEN = 'EAAKGUD3eZA28BADAJOmO6L19TmZAIEUpdFGHEGHX5sQ3kk4LDQLlnyh607rKSr0x2SAOPJS0kXOUZAhRDIPPGs4vcXQCo2DnfSJMnnIzFW7vaw8EuL7A0HjGZBwE8VwjRnBNam0ARLmfyOCEh1'
+META_WA_SENDER_PHONE_NUMER_ID = '113362588047543'
+META_WA_WABA_ID = '102432872486730'
+META_WA_VERIFY_TOKEN = 'rootzenBL'
