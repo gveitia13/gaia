@@ -8,6 +8,6 @@ from chatmarket.views import *
 
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', meta_wa_callbackurl, name='meta_wa_callbackurl'),
     path('*', lambda request: HttpResponseNotFound('404 Not Found'))
 ]
