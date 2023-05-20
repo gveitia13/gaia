@@ -1,4 +1,19 @@
 {% extends 'startpage.html' %}
+{% block analytics %}
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WP9T5DY96M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-WP9T5DY96M');
+    </script>
+{% endblock %}
 {% block include_cart %}
     {% include 'cart_euro.html' %}
 {% endblock %}
