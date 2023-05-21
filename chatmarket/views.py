@@ -43,5 +43,5 @@ def meta_wa_callbackurl(request):
         else:
             return HttpResponseForbidden()
     except Exception as error:
-        print({'error': error})
+        print({'errors': error})
         return HttpResponseServerError()
