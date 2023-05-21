@@ -1,3 +1,4 @@
+import json
 from collections import defaultdict
 
 from django.http import HttpResponse, HttpResponseServerError, HttpResponseForbidden
@@ -19,7 +20,7 @@ print('CustomerSession')
 def meta_wa_callbackurl(request):
     if request.method == "POST":
         # try:
-        data = request.get_json()
+        data = json.loads(request.body)
         print("Received webhook data: %s", data)
         changed_field = messenger.changed_field(data)
         if changed_field == "messages":
