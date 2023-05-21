@@ -20,6 +20,7 @@ def meta_wa_callbackurl(request):
     if request.method == "POST":
         # try:
         print(request.POST)
+        print(request.body)
         data = messenger.get_message(request.POST)
         print('data')
         print(data)
