@@ -19,7 +19,8 @@ print('CustomerSession')
 def meta_wa_callbackurl(request):
     if request.method == "POST":
         # try:
-        data = messenger.get_message(request.body)
+        print(request.POST)
+        data = messenger.get_message(request.POST)
         print('data')
         print(data)
         # if data and data.get("isMessage"):
