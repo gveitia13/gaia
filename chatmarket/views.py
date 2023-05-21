@@ -18,21 +18,21 @@ print('CustomerSession')
 @csrf_exempt
 def meta_wa_callbackurl(request):
     if request.method == "POST":
-        try:
-            data = messenger.get_message(request.body)
-            print('data')
-            print(data)
-            # if data and data.get("isMessage"):
-            #     incomingMessage = data["message"]
-            #     recipientPhone = incomingMessage["from"]["phone"]
-            #     recipientName = incomingMessage["from"]["name"]
-            #     typeOfMsg = incomingMessage["type"]
-            #     message_id = incomingMessage["message_id"]
-            print('POST: Someone is pinging me!')
-            return HttpResponse(status=200)
-        except Exception as error:
-            print({'error': error})
-            return HttpResponseServerError()
+        # try:
+        data = messenger.get_message(request.body)
+        print('data')
+        print(data)
+        # if data and data.get("isMessage"):
+        #     incomingMessage = data["message"]
+        #     recipientPhone = incomingMessage["from"]["phone"]
+        #     recipientName = incomingMessage["from"]["name"]
+        #     typeOfMsg = incomingMessage["type"]
+        #     message_id = incomingMessage["message_id"]
+        print('POST: Someone is pinging me!')
+        return HttpResponse(status=200)
+        # except Exception as error:
+        #     print({'error': error})
+        #     return HttpResponseServerError()
     try:
         print('GET: Someone is pinging me!')
         mode = request.GET.get('hub.mode')
@@ -43,5 +43,5 @@ def meta_wa_callbackurl(request):
         else:
             return HttpResponseForbidden()
     except Exception as error:
-        print({'errors': error})
+        print({'error': error})
         return HttpResponseServerError()
