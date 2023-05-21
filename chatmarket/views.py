@@ -19,17 +19,68 @@ print('CustomerSession')
 def meta_wa_callbackurl(request):
     if request.method == "POST":
         # try:
-        print(request.POST)
-        print(request.body)
+        data = request.get_json()
+        print("Received webhook data: %s", data)
+        changed_field = messenger.changed_field(data)
+        if changed_field == "messages":
+            new_message = messenger.get_mobile(data)
+            if new_message:
+                mobile = messenger.get_mobile(data)
+                name = messenger.get_name(data)
+                message_type = messenger.get_message_type(data)
+                print(
+                    f"New Message; sender:{mobile} name:{name} type:{message_type}"
+                )
+                if message_type == "text":
+                    message = messenger.get_message(data)
+                    name = messenger.get_name(data)
+                    print("Message: %s", message)
+                    messenger.send_message(f"Hi {name}, nice to connect with you", mobile)
+                elif message_type == "interactive":
+                    message_response = messenger.get_interactive_response(data)
+                    interactive_type = message_response.get("type")
+                    message_id = message_response[interactive_type]["id"]
+                    message_text = message_response[interactive_type]["title"]
+                    print(f"Interactive Message; {message_id}: {message_text}")
+                elif message_type == "location":
+                    message_location = messenger.get_location(data)
+                    message_latitude = message_location["latitude"]
+                    message_longitude = message_location["longitude"]
+                    print("Location: %s, %s", message_latitude, message_longitude)
+                elif message_type == "image":
+                    image = messenger.get_image(data)
+                    image_id, mime_type = image["id"], image["mime_type"]
+                    image_url = messenger.query_media_url(image_id)
+                    image_filename = messenger.download_media(image_url, mime_type)
+                    print(f"{mobile} sent image {image_filename}")
+                elif message_type == "video":
+                    video = messenger.get_video(data)
+                    video_id, mime_type = video["id"], video["mime_type"]
+                    video_url = messenger.query_media_url(video_id)
+                    video_filename = messenger.download_media(video_url, mime_type)
+                    print(f"{mobile} sent video {video_filename}")
+                elif message_type == "audio":
+                    audio = messenger.get_audio(data)
+                    audio_id, mime_type = audio["id"], audio["mime_type"]
+                    audio_url = messenger.query_media_url(audio_id)
+                    audio_filename = messenger.download_media(audio_url, mime_type)
+                    print(f"{mobile} sent audio {audio_filename}")
+                elif message_type == "document":
+                    file = messenger.get_document(data)
+                    file_id, mime_type = file["id"], file["mime_type"]
+                    file_url = messenger.query_media_url(file_id)
+                    file_filename = messenger.download_media(file_url, mime_type)
+                    print(f"{mobile} sent file {file_filename}")
+                else:
+                    print(f"{mobile} sent {message_type} ")
+                    print(data)
+            else:
+                delivery = messenger.get_delivery(data)
+                if delivery:
+                    print(f"Message : {delivery}")
+                else:
+                    print("No new message")
         data = messenger.get_message(request.POST)
-        print('data')
-        print(data)
-        # if data and data.get("isMessage"):
-        #     incomingMessage = data["message"]
-        #     recipientPhone = incomingMessage["from"]["phone"]
-        #     recipientName = incomingMessage["from"]["name"]
-        #     typeOfMsg = incomingMessage["type"]
-        #     message_id = incomingMessage["message_id"]
         print('POST: Someone is pinging me!')
         return HttpResponse(status=200)
         # except Exception as error:
