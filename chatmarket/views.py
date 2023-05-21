@@ -9,15 +9,18 @@ from gaia import settings
 from heyoo import WhatsApp
 import os
 messenger = WhatsApp( settings.META_WA_ACCESSTOKEN,  phone_number_id=settings.META_WA_SENDER_PHONE_NUMER_ID)
-
+print('messenger')
 Store = EcommerceStore()
+print('Store')
 CustomerSession = defaultdict(dict)
+print('CustomerSession')
 # Create your views here.
 @csrf_exempt
 def meta_wa_callbackurl(request):
     if request.method == "POST":
         try:
             data = messenger.get_message(request.body)
+            print('data')
             print(data)
             # if data and data.get("isMessage"):
             #     incomingMessage = data["message"]
