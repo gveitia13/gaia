@@ -35,7 +35,7 @@ def meta_wa_callbackurl(request):
                 if message_type == "text":
                     message = messenger.get_message(data)
                     name = messenger.get_name(data)
-                    print("Message: %s", message)
+                    print("Message: {}".format(message))
                     messenger.send_message(f"Hi {name}, nice to connect with you", mobile)
                 elif message_type == "interactive":
                     message_response = messenger.get_interactive_response(data)
