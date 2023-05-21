@@ -7,7 +7,6 @@ from gaia import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chatmarket/', include('chatmarket.urls')),
     path('', include('app_main.urls')),
     path('', include('app_cart.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
