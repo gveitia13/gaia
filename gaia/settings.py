@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'django_cleanup.apps.CleanupConfig',
-    'chatmarket.apps.ChatmarketConfig',
+    # 'chatmarket.apps.ChatmarketConfig',
 ]
 
 CKEDITOR_CONFIGS = {
@@ -243,7 +243,7 @@ TPP_URL = "www.tropipay.com"
 TPP_SUCCESS_URL = 'https://gaia-mercado.com/tropipay/success/'
 TPP_FAILED_URL = 'https://gaia-mercado.com/tropipay/fails/'
 TPP_NOTIFICACION_URL = 'https://gaia-mercado.com/tropipay/verificar/'
-META_WA_ACCESSTOKEN = 'EAAOR1PelHMEBAI95SCW5yNgsKICoHGhGN8kmyfuCZAhoACFQ3k9RFz5dzQsmqO1VolgtqFEDXJOKBYqZBvvQVfAK0ze2R9BjkKWV3dCzF3RTKBboP2nkVyD4isXlhYvDoOcI66GZC5dcyPnYXEje2vgAaOOpfU9UzbGFb9pXp275NMFCBBGJH2oaFcg4NCffwZC32dfLOH7yjEEDmIBI'
-META_WA_SENDER_PHONE_NUMER_ID = '104789802626880'
-META_WA_WABA_ID = '122586524166911'
-META_WA_VERIFY_TOKEN = 'rootzenBL'
+# META_WA_ACCESSTOKEN = 'EAAOR1PelHMEBAI95SCW5yNgsKICoHGhGN8kmyfuCZAhoACFQ3k9RFz5dzQsmqO1VolgtqFEDXJOKBYqZBvvQVfAK0ze2R9BjkKWV3dCzF3RTKBboP2nkVyD4isXlhYvDoOcI66GZC5dcyPnYXEje2vgAaOOpfU9UzbGFb9pXp275NMFCBBGJH2oaFcg4NCffwZC32dfLOH7yjEEDmIBI'
+# META_WA_SENDER_PHONE_NUMER_ID = '104789802626880'
+# META_WA_WABA_ID = '122586524166911'
+# META_WA_VERIFY_TOKEN = 'rootzenBL'
