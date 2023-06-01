@@ -293,6 +293,7 @@ class Municipio(models.Model):
     nombre = models.CharField('Nombre', max_length=255)
     precio = models.FloatField(verbose_name='Precio de envío en CUP', )
     precio_euro = models.FloatField('Precio de envío en Euro', )
+    visible = models.BooleanField(default=True)
 
     def __str__(self):
         return '{}'.format(self.nombre)

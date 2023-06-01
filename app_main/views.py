@@ -46,7 +46,7 @@ class BaseView(View):
                                      key=lambda cat: cat.get_prods_count, reverse=True),
             'host': host + self.request.get_host() + '/' if settings.TECHNOSTAR else 'https://gaia-mercado.com/',
             # 'host': host + self.request.get_host() + '/' if settings.TECHNOSTAR else 'http://185.101.227.197:8080/',
-            'address': Municipio.objects.all()
+            'address': Municipio.objects.filter(visible=True)
         }
 
 
