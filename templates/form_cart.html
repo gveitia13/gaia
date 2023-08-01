@@ -2,101 +2,107 @@
 <form action="{% if is_euro %}{% url 'pagar-euro' %}{% else %}{% url 'pagar-cup' %}{% endif %}" method="post"
       class="mx-auto my-3" style="width: 90%">
     {% csrf_token %}
-    <div class="card">
-        <div class="card-header">
-            <h3 CLASS="text-center card-text text-success">Inserte sus datos para comprar</h3>
-        </div>
-        <div class="card-body">
-            <h4 class="card-title">Datos de contacto:</h4>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" required id="id_name_comprador" name="comprador"
-                       placeholder="Nombre y apellidos del comprador">
-                <label for="id_name_comprador">Nombre y apellidos del comprador</label>
+    {% if business.checkout_allowed == True %}
+        <div class="card">
+            <div class="card-header">
+                <h3 CLASS="text-center card-text text-success">Inserte sus datos para comprar</h3>
             </div>
-            <div class="form-floating mb-3">
-                <input type="tel" class="form-control" required id="id_phone_comprador" name="phone_comprador"
-                       placeholder="+53999999999">
-                <label for="id_phone_comprador">Teléfono del comprador</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" required id="id_email_comprador" name="email_comprador"
-                       placeholder="algo@servidor.com">
-                <label for="id_email_comprador">Correo del comprador</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" required id="id_name_receptor" name="receptor"
-                       placeholder="Apellidos">
-                <label for="id_name_receptor">Nombre y apellidos del que recibe</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="tel" class="form-control" required id="id_phone_receptor" name="phone_receptor"
-                       placeholder="+53999999999">
-                <label for="id_phone_receptor">Teléfono del que recibe</label>
-            </div>
-            <h4 class="card-title">Dirección:</h4>
-            <div class="mb-3">
-                <select class="form-select" required aria-label="Default select example" name="municipio">
-                    {% for address in address %}
-                        {% if forloop.first %}
-                            <option selected value="{{ address.id }}"
-                                    name="
-
-                                            {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
-                                ---------{% if is_euro %}€
-                                    {{ address.precio_euro |floatformat:2 }}{% else %}$
-                                    {{ address.precio }}{% endif %}</option>
-                        {% else %}
-                            <option value="{{ address.id }}"
-                                    name="
-
-                                            {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
-                                ---------{% if is_euro %}€
-                                    {{ address.precio_euro |floatformat:2 }}{% else %}$
-                                    {{ address.precio }}{% endif %}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" required id="id_calle" name="calle"
-                       placeholder="Nombre o número de calle">
-                <label for="id_calle">Nombre o número de calle</label>
-            </div>
-            <div class="row align-middle align-items-center px-3 mb-3 text-center">
-                <h6 class="text-start ps-0">Entre:</h6>
-
-                <div class="form-floating  col-5 px-0">
-                    <input type="text" class="form-control" required id="id_entre1" name="entre1"
-                           placeholder="Calle">
-                    <label for="id_entre1">Calle</label>
+            <div class="card-body">
+                <h4 class="card-title">Datos de contacto:</h4>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" required id="id_name_comprador" name="comprador"
+                           placeholder="Nombre y apellidos del comprador">
+                    <label for="id_name_comprador">Nombre y apellidos del comprador</label>
                 </div>
-                <div class="col-2 align-middle"><span>y</span></div>
-                <div class="form-floating  col-5 px-0">
-                    <input type="text" class="form-control" required id="id_entre2" name="entre2"
-                           placeholder="Calle">
-                    <label for="id_entre2">Calle</label>
+                <div class="form-floating mb-3">
+                    <input type="tel" class="form-control" required id="id_phone_comprador" name="phone_comprador"
+                           placeholder="+53999999999">
+                    <label for="id_phone_comprador">Teléfono del comprador</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" required id="id_email_comprador" name="email_comprador"
+                           placeholder="algo@servidor.com">
+                    <label for="id_email_comprador">Correo del comprador</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" required id="id_name_receptor" name="receptor"
+                           placeholder="Apellidos">
+                    <label for="id_name_receptor">Nombre y apellidos del que recibe</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="tel" class="form-control" required id="id_phone_receptor" name="phone_receptor"
+                           placeholder="+53999999999">
+                    <label for="id_phone_receptor">Teléfono del que recibe</label>
+                </div>
+                <h4 class="card-title">Dirección:</h4>
+                <div class="mb-3">
+                    <select class="form-select" required aria-label="Default select example" name="municipio">
+                        {% for address in address %}
+                            {% if forloop.first %}
+                                <option selected value="{{ address.id }}"
+                                        name="
+
+
+                                                {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
+                                    ---------{% if is_euro %}€
+                                        {{ address.precio_euro |floatformat:2 }}{% else %}$
+                                        {{ address.precio }}{% endif %}</option>
+                            {% else %}
+                                <option value="{{ address.id }}"
+                                        name="
+
+
+                                                {% if is_euro %}{{ address.precio_euro }}{% else %}{{ address.precio }}{% endif %}">{{ address.nombre }}:
+                                    ---------{% if is_euro %}€
+                                        {{ address.precio_euro |floatformat:2 }}{% else %}$
+                                        {{ address.precio }}{% endif %}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" required id="id_calle" name="calle"
+                           placeholder="Nombre o número de calle">
+                    <label for="id_calle">Nombre o número de calle</label>
+                </div>
+                <div class="row align-middle align-items-center px-3 mb-3 text-center">
+                    <h6 class="text-start ps-0">Entre:</h6>
+
+                    <div class="form-floating  col-5 px-0">
+                        <input type="text" class="form-control" required id="id_entre1" name="entre1"
+                               placeholder="Calle">
+                        <label for="id_entre1">Calle</label>
+                    </div>
+                    <div class="col-2 align-middle"><span>y</span></div>
+                    <div class="form-floating  col-5 px-0">
+                        <input type="text" class="form-control" required id="id_entre2" name="entre2"
+                               placeholder="Calle">
+                        <label for="id_entre2">Calle</label>
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" required id="id_numero" name="numero"
+                           placeholder="Número de la casa o edificio">
+                    <label for="id_numero">Número de la casa o edificio</label>
+                </div>
+                {#            <div class="form-floating mb-3">#}
+                {#                <input type="text" class="form-control" id="id_reparto" name="reparto"#}
+                {#                       placeholder="Reparto (Opcional)">#}
+                {#                <label for="id_reparto">Reparto (Opcional)</label>#}
+                {#            </div>#}
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="id_detalle" name="detalle"
+                           placeholder="Detalles específicos (Opcional)">
+                    <label for="id_detalle">Detalles específicos (Opcional)</label>
                 </div>
             </div>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" required id="id_numero" name="numero"
-                       placeholder="Número de la casa o edificio">
-                <label for="id_numero">Número de la casa o edificio</label>
-            </div>
-{#            <div class="form-floating mb-3">#}
-{#                <input type="text" class="form-control" id="id_reparto" name="reparto"#}
-{#                       placeholder="Reparto (Opcional)">#}
-{#                <label for="id_reparto">Reparto (Opcional)</label>#}
-{#            </div>#}
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="id_detalle" name="detalle"
-                       placeholder="Detalles específicos (Opcional)">
-                <label for="id_detalle">Detalles específicos (Opcional)</label>
+            <div class="card-footer text-center">
+                <button id="checkout-button" type="submit" class="btn btn-success rounded-pill"><i
+                        class="mdi mdi-credit-card"></i><span id="button-verbosity">Comprar</span>
+                </button>
             </div>
         </div>
-        <div class="card-footer text-center">
-            <button id="checkout-button" type="submit" class="btn btn-success rounded-pill"><i
-                    class="mdi mdi-credit-card"></i><span id="button-verbosity">Comprar</span>
-            </button>
-        </div>
-    </div>
+    {% else %}
+        <h1>{{ business.closed_message }}</h1>
+    {% endif %}
 </form>

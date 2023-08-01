@@ -49,7 +49,9 @@ class GeneralDataAdmin(admin.ModelAdmin):
     )
     fieldsets = [
         ('Datos principales', {
-            'fields': ('enterprise_name', 'taza_cambio', 'tropipay_impuesto', 'logo', 'img_principal',)
+            'fields': (
+            'enterprise_name', 'taza_cambio', 'tropipay_impuesto', 'logo', 'img_principal', 'checkout_allowed',
+            'closed_message')
         },),
         ('Redes Sociales', {
             'fields': ('facebook', 'instagram',)

@@ -286,88 +286,91 @@ def delete_suscriptor(request: HttpRequest, *args, **kwargs: dict):
 
 def pagar_euro(request):
     if request.method == 'POST':
-        orden = create_order(request, 'Euro', **{})
-        if orden:
-            mensaje = create_message_order(request, orden)
-            conn = http.client.HTTPSConnection("" + settings.TPP_URL + "")
-            # genera un request json
-            payload_tpp = {"grant_type": "client_credentials", "client_id": settings.TPP_CLIENT_ID,
-                           "client_secret": settings.TPP_CLIENT_SECRET}
-            # hago la petition y capturo el response
-            payload_tpp = json.dumps(payload_tpp)
-            headers = {'Content-Type': "application/json"}
-            # se hace el post
-            conn.request("POST", "/api/v2/access/token", payload_tpp, headers)
-            res = conn.getresponse()
-            data = res.read()
-            token = data.decode("utf-8")
-            token = json.loads(token)['access_token']
-            user_comprador = orden.nombre_comprador
-            # Convertir total a 2 decimales
-            address = 'Reparto: ' + orden.municipio + '. '
-            address += 'Calle: ' + orden.calle + '. '
-            address += 'Entre calle : ' + orden.calle1 + ' y calle ' + orden.calle2 + '. '
-            address += 'Número: ' + orden.numero_edificio + '. '
-            # if orden.reparto != '':
-            #     address += 'Reparto: ' + orden.reparto + '. '
-            if orden.detalles_direccion != '':
-                address += 'Detalles : ' + orden.detalles_direccion + '.'
-            client = {
-                'name': user_comprador.split(' ')[0],
-                'lastName': ''.join(a + ' ' for a in [i for i in user_comprador.split(' ')[1:]]) if len(
-                    user_comprador.split(' ')) > 1 else ' ',
-                "address": address,
-                "phone": orden.telefono_comprador,
-                "email": orden.correo,
-                "countryId": 0,
-                "termsAndConditions": "true"
-            }
-            impuesto = orden.total * GeneralData.objects.first().tropipay_impuesto / 100
-            if impuesto > 0:
-                orden_total = round((orden.total + impuesto + 0.5), 2) * 100
-            else:
-                orden_total = round((orden.total), 2) * 100
-            spain_timezone = pytz.timezone("Europe/Madrid")
-            spain_time = datetime.datetime.now(spain_timezone)
-            payload_tpp = {
-                "reference": str(orden.uuid),
-                "concept": "Orden de GAIA a nombre de " + client['email'],
-                "favorite": "false",
-                "description": mensaje,
-                "amount": orden_total,  # para quitar decimales
-                "currency": 'EUR',
-                "singleUse": "true",
-                "reasonId": 4,
-                "expirationDays": 0,
-                "lang": "es",
-                "urlSuccess": "" + settings.TPP_SUCCESS_URL + "",
-                "urlFailed": "" + settings.TPP_FAILED_URL + "",
-                "urlNotification": "" + settings.TPP_NOTIFICACION_URL + "",
-                "serviceDate": str(spain_time.year) + '-' + str(spain_time.month) + '-' + str(spain_time.day),
-                "client": client,
-                "directPayment": "true",
-                "paymentMethods": ["EXT", "TPP"]
-            }
+        if GeneralData.objects.all()[0].checkout_allowed == True:
+            orden = create_order(request, 'Euro', **{})
+            if orden:
+                mensaje = create_message_order(request, orden)
+                conn = http.client.HTTPSConnection("" + settings.TPP_URL + "")
+                # genera un request json
+                payload_tpp = {"grant_type": "client_credentials", "client_id": settings.TPP_CLIENT_ID,
+                               "client_secret": settings.TPP_CLIENT_SECRET}
+                # hago la petition y capturo el response
+                payload_tpp = json.dumps(payload_tpp)
+                headers = {'Content-Type': "application/json"}
+                # se hace el post
+                conn.request("POST", "/api/v2/access/token", payload_tpp, headers)
+                res = conn.getresponse()
+                data = res.read()
+                token = data.decode("utf-8")
+                token = json.loads(token)['access_token']
+                user_comprador = orden.nombre_comprador
+                # Convertir total a 2 decimales
+                address = 'Reparto: ' + orden.municipio + '. '
+                address += 'Calle: ' + orden.calle + '. '
+                address += 'Entre calle : ' + orden.calle1 + ' y calle ' + orden.calle2 + '. '
+                address += 'Número: ' + orden.numero_edificio + '. '
+                # if orden.reparto != '':
+                #     address += 'Reparto: ' + orden.reparto + '. '
+                if orden.detalles_direccion != '':
+                    address += 'Detalles : ' + orden.detalles_direccion + '.'
+                client = {
+                    'name': user_comprador.split(' ')[0],
+                    'lastName': ''.join(a + ' ' for a in [i for i in user_comprador.split(' ')[1:]]) if len(
+                        user_comprador.split(' ')) > 1 else ' ',
+                    "address": address,
+                    "phone": orden.telefono_comprador,
+                    "email": orden.correo,
+                    "countryId": 0,
+                    "termsAndConditions": "true"
+                }
+                impuesto = orden.total * GeneralData.objects.first().tropipay_impuesto / 100
+                if impuesto > 0:
+                    orden_total = round((orden.total + impuesto + 0.5), 2) * 100
+                else:
+                    orden_total = round((orden.total), 2) * 100
+                spain_timezone = pytz.timezone("Europe/Madrid")
+                spain_time = datetime.datetime.now(spain_timezone)
+                payload_tpp = {
+                    "reference": str(orden.uuid),
+                    "concept": "Orden de GAIA a nombre de " + client['email'],
+                    "favorite": "false",
+                    "description": mensaje,
+                    "amount": orden_total,  # para quitar decimales
+                    "currency": 'EUR',
+                    "singleUse": "true",
+                    "reasonId": 4,
+                    "expirationDays": 0,
+                    "lang": "es",
+                    "urlSuccess": "" + settings.TPP_SUCCESS_URL + "",
+                    "urlFailed": "" + settings.TPP_FAILED_URL + "",
+                    "urlNotification": "" + settings.TPP_NOTIFICACION_URL + "",
+                    "serviceDate": str(spain_time.year) + '-' + str(spain_time.month) + '-' + str(spain_time.day),
+                    "client": client,
+                    "directPayment": "true",
+                    "paymentMethods": ["EXT", "TPP"]
+                }
 
-            payload_tpp = json.dumps(payload_tpp)
-            headers = {
-                'Content-Type': "application/json",
-                'Authorization': "Bearer " + token
-            }
-            conn.request("POST", "/api/v2/paymentcards", payload_tpp, headers)
-            res = conn.getresponse()
-            data = res.read()
-            retorno = data.decode("utf-8")
-            if 'error' in json.loads(retorno):
-                return redirect('/Euro/')
-            else:
-                retorno = json.loads(retorno)['shortUrl']
-                # retorno = retorno.split(',')
-                # retorno = retorno[len(retorno) - 2].replace('"shortUrl":"', '').replace('"', '')
-                orden.link_de_pago = retorno
-                orden.total = float('{:.2f}'.format(orden_total)) / 100
-                orden.save()
-                return redirect(orden.link_de_pago)
+                payload_tpp = json.dumps(payload_tpp)
+                headers = {
+                    'Content-Type': "application/json",
+                    'Authorization': "Bearer " + token
+                }
+                conn.request("POST", "/api/v2/paymentcards", payload_tpp, headers)
+                res = conn.getresponse()
+                data = res.read()
+                retorno = data.decode("utf-8")
+                if 'error' in json.loads(retorno):
+                    return redirect('/Euro/')
+                else:
+                    retorno = json.loads(retorno)['shortUrl']
+                    # retorno = retorno.split(',')
+                    # retorno = retorno[len(retorno) - 2].replace('"shortUrl":"', '').replace('"', '')
+                    orden.link_de_pago = retorno
+                    orden.total = float('{:.2f}'.format(orden_total)) / 100
+                    orden.save()
+                    return redirect(orden.link_de_pago)
+        else:
+            return redirect('closed')
 
 
 @method_decorator(csrf_exempt)
@@ -426,12 +429,15 @@ def tpp_verificar(request: HttpRequest):
 
 def pagar_cup(request: HttpRequest):
     if request.method == 'POST':
-        orden = create_order(request, 'CUP', **{})
-        if orden:
-            mensaje = create_message_order(request, orden)
-            return redirect(
-                f'https://api.whatsapp.com/send/?phone=+{GeneralData.objects.all().first().phone_number}&text=' + mensaje.replace(
-                    " <br/> ", "\n") + '&app_absent=1')
+        if GeneralData.objects.all()[0].checkout_allowed == True:
+            orden = create_order(request, 'CUP', **{})
+            if orden:
+                mensaje = create_message_order(request, orden)
+                return redirect(
+                    f'https://api.whatsapp.com/send/?phone=+{GeneralData.objects.all().first().phone_number}&text=' + mensaje.replace(
+                        " <br/> ", "\n") + '&app_absent=1')
+        else:
+            return redirect('closed')
     return redirect('index-cup')
 
 

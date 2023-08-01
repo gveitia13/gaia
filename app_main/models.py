@@ -198,6 +198,11 @@ class GeneralData(models.Model):
                                         help_text='Search Engine Optimization (SEO)', default='GAIA')
     meta_kw = models.TextField(verbose_name='Meta etiqueta palabras clave',
                                help_text='Search Engine Optimization (SEO)', default='GAIA')
+    checkout_allowed = models.BooleanField(default=True, verbose_name='Permitir compras',
+                                           help_text='Permitir a los usuarios realizar compras')
+    closed_message = models.CharField(verbose_name='Mensaje de Cerrado',
+                                      help_text="Texto a mostrar cuando la tienda está cerrada",
+                                      default="Lo sentimos, estamos cerrados.", max_length=255)
 
     def __str__(self):
         return self.enterprise_name
