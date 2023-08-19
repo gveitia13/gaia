@@ -158,20 +158,4 @@
 
       }
     </script>
-{% comment %}    <script>
-      //bing chat
-      var row = document.getElementById("bing-row");
-      var cardHeaders = row.querySelectorAll(".card-header");
-      var maxHeight = 0;
-      for (var i = 0; i < cardHeaders.length; i++) {
-        var height = cardHeaders[i].offsetHeight;
-        if (height > maxHeight) {
-          maxHeight = height;
-        }
-      }
-      for (var i = 0; i < cardHeaders.length; i++) {
-        cardHeaders[i].style.height = maxHeight + "px";
-      }
-
-    </script>{% endcomment %}
 {% endblock %}

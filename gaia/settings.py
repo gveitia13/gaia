@@ -19,6 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['currency']
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173',]
 CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://gaia-mercado.com/', 'https://*.gaia-mercado.com/']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -133,32 +135,27 @@ WSGI_APPLICATION = 'gaia.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'gaia',
-        'USER': 'postgres',
-        'PASSWORD': 'gaia098*',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #         'NAME': 'gaia',
 #         'USER': 'postgres',
-#         'PASSWORD': 'rootzenBL',
+#         'PASSWORD': 'gaia098*',
 #         'HOST': 'localhost',
 #         'PORT': '5432',
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'gaia',
+        'USER': 'postgres',
+        'PASSWORD': 'rootzenBL',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -227,14 +224,6 @@ CART_SESSION_ID = "cart"
 
 SESSION_COOKIE_AGE = 7200
 
-# TPP_CLIENT_ID = '53ab37c112a8148ce870cba87d787450'
-# TPP_CLIENT_SECRET = '64865eba38167851a56a9454aada3eda'
-# TPP_CLIENT_EMAIL = 'blinit10@gmail.com'
-# TPP_CLIENT_PASSWORD = 'Invoker123*'
-# TPP_URL = "tropipay-dev.herokuapp.com"
-# TPP_SUCCESS_URL = 'https://bf6f-152-207-240-9.sa.ngrok.io/tropipay/success/'
-# TPP_FAILED_URL = 'https://bf6f-152-207-240-9.sa.ngrok.io/tropipay/fails/'
-# TPP_NOTIFICACION_URL = 'https://bf6f-152-207-240-9.sa.ngrok.io/tropipay/verificar/'
 TPP_CLIENT_ID = 'f12538a0aa85242baa9f137380ab1926'
 TPP_CLIENT_SECRET = '323b25d45c305000cec8c8a70afc4cda'
 TPP_CLIENT_EMAIL = 'gaia.habana2021@gmail.com'
@@ -243,7 +232,13 @@ TPP_URL = "www.tropipay.com"
 TPP_SUCCESS_URL = 'https://gaia-mercado.com/tropipay/success/'
 TPP_FAILED_URL = 'https://gaia-mercado.com/tropipay/fails/'
 TPP_NOTIFICACION_URL = 'https://gaia-mercado.com/tropipay/verificar/'
-# META_WA_ACCESSTOKEN = 'EAAOR1PelHMEBAI95SCW5yNgsKICoHGhGN8kmyfuCZAhoACFQ3k9RFz5dzQsmqO1VolgtqFEDXJOKBYqZBvvQVfAK0ze2R9BjkKWV3dCzF3RTKBboP2nkVyD4isXlhYvDoOcI66GZC5dcyPnYXEje2vgAaOOpfU9UzbGFb9pXp275NMFCBBGJH2oaFcg4NCffwZC32dfLOH7yjEEDmIBI'
-# META_WA_SENDER_PHONE_NUMER_ID = '104789802626880'
-# META_WA_WABA_ID = '122586524166911'
-# META_WA_VERIFY_TOKEN = 'rootzenBL'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '127.0.0.1:11211',
+    },
+    'local': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+}

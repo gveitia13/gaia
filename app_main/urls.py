@@ -1,14 +1,27 @@
 from django.shortcuts import redirect
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
+from app_main.api import BaseViewSet, StartPageViewSet, ImportantProductsView, OnSaleProductsView, NewProductsView, \
+    CategoryViewSet, ProductViewSet, QuickInitialView
 from app_main.views import *
 
+
+router = DefaultRouter()
+router.register(r'base', BaseViewSet, basename='base')
+router.register(r'start_page', StartPageViewSet, basename='start_page')
+router.register(r'categories', CategoryViewSet, basename='categories')
+router.register(r'products', ProductViewSet, basename='products')
 
 def asd(request):
     return redirect('index-cup')
 
-
 urlpatterns = [
+    path('api/', include(router.urls)),
+    path('api/quick/initial/', QuickInitialView.as_view(), name='quick_initial'),
+    path('api/important_products/', ImportantProductsView.as_view(), name='important_products'),
+    path('api/onsale_products/', OnSaleProductsView.as_view(), name='onsale_products'),
+    path('api/new_products/', NewProductsView.as_view(), name='new_products'),
     path('', asd, name='asd'),
     path('CUP/', StartPageCUP.as_view(), name='index-cup'),
     path('Euro/', StartPageEuro.as_view(), name='index-euro'),

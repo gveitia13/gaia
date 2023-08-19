@@ -10,12 +10,14 @@ from django.views.decorators.http import require_POST
 from app_cart.cart import Cart
 from app_main.models import Product
 from gaia.settings import CART_SESSION_ID
-
+from django.core.cache import cache
 
 # @require_POST
 @method_decorator(csrf_exempt, require_POST)
 def add(request: HttpRequest, id: int):
-    cart = Cart(request)
+    # session_key = request.session.session_key
+    # print(f'Session key: {session_key}')
+    # cart = cache.get('asdas', {})
     cart.add(product=Product.objects.filter(id=id).first())
 
     return JsonResponse({

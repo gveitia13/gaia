@@ -89,10 +89,6 @@ class StartPage(BaseView, generic.ListView, ):
         context['products_nuevos'] = Product.objects.filter(is_active=True).order_by('-pk')[0:10]
         context['carousel'] = [b.banner.url for b in Banner.objects.filter(gnd=gnd)] if gnd else [
             os.path.join(settings.STATIC_URL, settings.BUSINESS_BANNER)]
-        # if self.request.session['index_url'] == '/CUP/':
-        #     context['object_list'] = Product.objects.filter(is_active=True).exclude(moneda='Euro')
-        # else:
-        #     context['object_list'] = Product.objects.filter(is_active=True).exclude(moneda='CUP')
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -101,7 +97,6 @@ class StartPage(BaseView, generic.ListView, ):
 
     def post(self, request: HttpRequest, *args: list, **kwargs: dict):
         data = {}
-        print(request.body)
         try:
             body = json.loads(request.body)
             action = body['action']
@@ -267,13 +262,16 @@ class CatalogoEuroView(StartPageEuro):
 @method_decorator(csrf_exempt)
 def create_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     data = {}
+    body = json.loads(request.body)
+    email = body['email']
     try:
-        suscriptor = Suscriptor(email=request.POST['email'])
+        # Parse the request body as JSON
+        suscriptor = Suscriptor(email=email)
         suscriptor.save()
         data = model_to_dict(suscriptor)
         data['url'] = request.path
-    except Exception as e:
-        data['error'] = f'Ya existe un suscriptor con el correo {request.POST["email"]}'
+    except Exception:
+        data['error'] = f'Ya existe un suscriptor con el correo {email}'
     return JsonResponse(data=data, safe=False)
 
 
