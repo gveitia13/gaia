@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from app_main.api import BaseViewSet, StartPageViewSet, ImportantProductsView, OnSaleProductsView, NewProductsView, \
-    CategoryViewSet, ProductViewSet, QuickInitialView
+    CategoryViewSet, ProductViewSet, QuickInitialView, InfoUtilList
 from app_main.views import *
 
 
@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/important_products/', ImportantProductsView.as_view(), name='important_products'),
     path('api/onsale_products/', OnSaleProductsView.as_view(), name='onsale_products'),
     path('api/new_products/', NewProductsView.as_view(), name='new_products'),
+    path('api/infoutil/', InfoUtilList.as_view(), name='infoutil_list'),
     path('', asd, name='asd'),
     path('CUP/', StartPageCUP.as_view(), name='index-cup'),
     path('Euro/', StartPageEuro.as_view(), name='index-euro'),

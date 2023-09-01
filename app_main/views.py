@@ -3,8 +3,9 @@ import http.client
 import json
 import os
 import random
+import re
 from hashlib import sha256, sha1
-
+from django.core.cache import cache
 import pytz
 from django.forms import model_to_dict
 from django.http import HttpRequest, JsonResponse, HttpResponse
@@ -282,10 +283,13 @@ def delete_suscriptor(request: HttpRequest, *args, **kwargs: dict):
     return redirect(reverse_lazy('index'))
 
 
+@csrf_exempt
 def pagar_euro(request):
     if request.method == 'POST':
         if GeneralData.objects.all()[0].checkout_allowed == True:
-            orden = create_order(request, 'Euro', **{})
+            purchase_data = json.loads(request.body.decode('utf-8'))
+            purchase_data['cart_id'] = request.headers.get('X-Session-ID')
+            orden = create_order(purchase_data, 'Euro', **{})
             if orden:
                 mensaje = create_message_order(request, orden)
                 conn = http.client.HTTPSConnection("" + settings.TPP_URL + "")
@@ -358,17 +362,15 @@ def pagar_euro(request):
                 data = res.read()
                 retorno = data.decode("utf-8")
                 if 'error' in json.loads(retorno):
-                    return redirect('/Euro/')
+                    return JsonResponse({'status': 400})
                 else:
                     retorno = json.loads(retorno)['shortUrl']
-                    # retorno = retorno.split(',')
-                    # retorno = retorno[len(retorno) - 2].replace('"shortUrl":"', '').replace('"', '')
                     orden.link_de_pago = retorno
                     orden.total = float('{:.2f}'.format(orden_total)) / 100
                     orden.save()
-                    return redirect(orden.link_de_pago)
+                    return JsonResponse({'status': 200, 'payment_link': orden.link_de_pago})
         else:
-            return redirect('closed')
+            return JsonResponse({'status': 400})
 
 
 @method_decorator(csrf_exempt)
@@ -425,67 +427,72 @@ def tpp_verificar(request: HttpRequest):
                   {'uuid': request.session['last_order'], 'business': GeneralData.objects.first()})
 
 
+@csrf_exempt
 def pagar_cup(request: HttpRequest):
     if request.method == 'POST':
         if GeneralData.objects.all()[0].checkout_allowed == True:
-            orden = create_order(request, 'CUP', **{})
+            purchase_data = json.loads(request.body.decode('utf-8'))
+            purchase_data['cart_id'] = request.headers.get('X-Session-ID')
+            orden = create_order(purchase_data, 'CUP', **{})
             if orden:
                 mensaje = create_message_order(request, orden)
-                return redirect(
-                    f'https://api.whatsapp.com/send/?phone=+{GeneralData.objects.all().first().phone_number}&text=' + mensaje.replace(
-                        " <br/> ", "\n") + '&app_absent=1')
+                return JsonResponse({'status': 200,
+                                     'payment_link': f'https://api.whatsapp.com/send/?phone={GeneralData.objects.all().first().phone_number}&text=[TEXTPLACEHOLDER]&app_absent=1',
+                                     'wa_message':mensaje})
         else:
-            return redirect('closed')
-    return redirect('index-cup')
+            return JsonResponse({'status': 400})
+    return JsonResponse({'status': 400, 'return_url': 'https://gaia-mercado.com'})
 
 
-def create_order(request: HttpRequest, moneda, **kwargs):
+def create_order(purchase_data, moneda, **kwargs):
     # Datos del formulario
-    comprador = request.POST.get('comprador')
-    phone_comprador = request.POST.get('phone_comprador')
-    correo = request.POST.get('email_comprador')
-    receptor = request.POST.get('receptor')
-    phone_receptor = request.POST.get('phone_receptor')
-    municipio = Municipio.objects.get(pk=request.POST.get('municipio'))
+    comprador = purchase_data['comprador']
+    phone_comprador = purchase_data['phone_comprador']
+    correo = purchase_data['email_comprador'] if moneda == 'Euro' else None
+    municipio = Municipio.objects.get(pk=purchase_data['municipio'])
     nombre_municipio = municipio.nombre
-    calle = request.POST.get('calle')
-    entre1 = request.POST.get('entre1')
-    entre2 = request.POST.get('entre2')
-    numero = request.POST.get('numero')
-    # reparto = request.POST.get('reparto', '')
-    detalle = request.POST.get('detalle', '')
+    calle = purchase_data['calle']
+    entre1 = purchase_data['entre1']
+    entre2 = purchase_data['entre2']
+    numero = purchase_data['numero']
+    detalle = purchase_data['detalle']
     precio_envio = municipio.precio if moneda == 'CUP' else municipio.precio_euro
     # Calcular total
-    cart = Cart(request)
+    cart = Cart()
+    cart.session = purchase_data['cart_id']
     total = 0
     taza_cambio = 1 if moneda == 'CUP' else GeneralData.objects.all().first().taza_cambio
     tiempo_de_entrega = 0
     if cart.all():
-        for c in cart.all():
-            total += c['product']['price'] / taza_cambio * c['quantity']
-            if int(c['product']['delivery_time']) > tiempo_de_entrega:
-                tiempo_de_entrega = int(c['product']['delivery_time'])
+        products = Product.objects.filter(pk__in=cart.all())
+        for c in products:
+            total += float(c.price) / taza_cambio * int(cache.get(cart.session)[str(c.id)])
+            if int(c.delivery_time) > tiempo_de_entrega:
+                tiempo_de_entrega = int(c.delivery_time)
         total += municipio.precio if moneda == 'CUP' else municipio.precio_euro
-        orden = Orden.objects.create(total=float(total), precio_envio=float(precio_envio), moneda=moneda,
-                                     status='1' if moneda == 'CUP' else '2', nombre_comprador=comprador,
-                                     telefono_comprador=phone_comprador, nombre_receptor=receptor,
-                                     telefono_receptor=phone_receptor, municipio=nombre_municipio, calle=calle,
-                                     calle1=entre1, calle2=entre2, numero_edificio=numero,
-                                     # reparto=reparto,
-                                     detalles_direccion=detalle, tiempo_de_entrega=tiempo_de_entrega, correo=correo)
-        for c in cart.all():
-            prod = Product.objects.get(pk=c['id'])
-            ComponenteOrden.objects.create(orden=orden, producto=prod,
-                                           respaldo=float(c['product']['price'] / taza_cambio * c['quantity']),
-                                           cantidad=int(c['quantity']))
+        orden = Orden(total=float(total), precio_envio=float(precio_envio), moneda=moneda,
+                      status='1' if moneda == 'CUP' else '2', nombre_comprador=comprador,
+                      telefono_comprador=phone_comprador, municipio=nombre_municipio, calle=calle,
+                      calle1=entre1, calle2=entre2, numero_edificio=numero,
+                      detalles_direccion=detalle, tiempo_de_entrega=tiempo_de_entrega)
+        if correo:
+            orden.correo = correo
+        orden.save()
+        for c in products:
+            ComponenteOrden.objects.create(orden=orden, producto=c,
+                                           respaldo=float(
+                                               float(c.price) / taza_cambio * int(cache.get(cart.session)[str(c.id)])),
+                                           cantidad=int(cache.get(cart.session)[str(c.id)]))
             # Aki se rebaja
             if moneda == 'CUP':
-                prod.stock = prod.stock - int(c['quantity'])
-                prod.sales += int(c['quantity'])
-                prod.save()
-        request.session['last_order'] = str(orden.uuid)
+                c.stock = c.stock - int(cache.get(cart.session)[str(c.id)])
+                c.sales += int(cache.get(cart.session)[str(c.id)])
+                c.save()
         # Limpiar cart
-        Cart(request).clear()
+        cart = cache.get(purchase_data['cart_id'])
+        for product_id in list(cart.keys()):
+            del cart[str(product_id)]
+        cache.set(purchase_data['cart_id'], None)
         return orden
     return None
 
@@ -495,8 +502,6 @@ def create_message_order(request, orden):
     mensaje += 'Ticket: ' + f'{str(orden.uuid)}\n'
     mensaje += 'Comprador: ' + orden.nombre_comprador + '\n'
     mensaje += 'Teléfono del comprador: ' + orden.telefono_comprador + '\n'
-    mensaje += 'Receptor: ' + orden.nombre_receptor + '\n'
-    mensaje += 'Teléfono del receptor: ' + orden.telefono_receptor + '\n'
     mensaje += 'Precio de envío: ' + str(orden.precio_envio) + f' {orden.moneda}\n'
     mensaje += 'Precio total: ' + '{:.2f}'.format(orden.total) + f' {orden.moneda}\n'
     mensaje += 'Tiempo máximo de entrega: ' + str(orden.tiempo_de_entrega) + ' días\n\n'
@@ -505,9 +510,7 @@ def create_message_order(request, orden):
         mensaje += str(c) + '\n'
     mensaje += '\nDatos de entrega:\n'
     mensaje += f'Reparto: {orden.municipio}.\n'
-    mensaje += f'Calle: {orden.calle}, entre {orden.calle1} y {orden.calle2}, No {orden.numero_edificio}.'
-    # if orden.reparto != '':
-    #     mensaje += f' Reparto: {orden.reparto}.'
+    mensaje += f'Calle: {orden.calle}, entre {orden.calle1} y {orden.calle2}, No {orden.numero_edificio}.\n'
     mensaje += f' {orden.detalles_direccion}'
     return mensaje
 

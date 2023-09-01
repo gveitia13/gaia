@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
-
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,9 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['currency']
+CORS_ALLOW_HEADERS = ['currency', 'X-Session-ID', 'content-type']
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173',]
-CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://gaia-mercado.com/', 'https://*.gaia-mercado.com/']
+CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://gaia-mercado.com/', 'https://*.gaia-mercado.com/', 'http://localhost:5173']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -135,26 +134,26 @@ WSGI_APPLICATION = 'gaia.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'gaia',
-#         'USER': 'postgres',
-#         'PASSWORD': 'gaia098*',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'gaia',
         'USER': 'postgres',
-        'PASSWORD': 'rootzenBL',
+        'PASSWORD': 'gaia098*',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'gaia',
+#         'USER': 'postgres',
+#         'PASSWORD': 'rootzenBL',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation

@@ -318,9 +318,12 @@ class Orden(models.Model):
     tiempo_de_entrega = models.PositiveIntegerField('Tiempo de entrega máximo')
     nombre_comprador = models.CharField('Nombre del comprador', max_length=200)
     telefono_comprador = models.CharField('Teléfono del comprador', max_length=200)
-    correo = models.EmailField('Correo del comprador')
-    nombre_receptor = models.CharField('Nombre del receptor', max_length=200)
-    telefono_receptor = models.CharField('Teléfono del receptor', max_length=200)
+    correo = models.EmailField('Correo del comprador', null=True, blank=True,
+                               help_text='No necesario para compras en C.U.P')
+    nombre_receptor = models.CharField('Nombre del receptor', max_length=200, null=True, blank=True,
+                                       help_text='Eliminado')
+    telefono_receptor = models.CharField('Teléfono del receptor', max_length=200, null=True, blank=True,
+                                         help_text='Eliminado')
     municipio = models.CharField(max_length=200, verbose_name='Reparto')
     calle = models.CharField('Calle', max_length=200)
     calle1 = models.CharField('Entre calle 1', max_length=200)

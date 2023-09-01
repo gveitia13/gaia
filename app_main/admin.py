@@ -157,7 +157,7 @@ class OrdenAdmin(admin.ModelAdmin):
 
     def Exportar_Excel(self, request, queryset: QuerySet[Orden]):
         filas = [
-            f'{i.nombre_receptor}\n{i.telefono_receptor}\n{i.municipio} calle: {i.calle} entre: {i.calle1} y ' \
+            f'{i.nombre_comprador}\n{i.telefono_comprador}\n{i.municipio} calle: {i.calle} entre: {i.calle1} y ' \
             f'{i.calle2} No: {i.numero_edificio} {i.detalles_direccion}' for i in queryset]
         filas += ['TOTAL']
         columnas = [Product.objects.get(pk=i[0]) for i in

@@ -1,7 +1,4 @@
-import json
-from django.conf import settings
-from django.shortcuts import redirect
-from app_main.models import Product
+from django.core.cache import cache
 
 
 class Wrapper(dict):
@@ -12,97 +9,95 @@ class Wrapper(dict):
 
 
 class Cart(object):
-    def __init__(self, request):
-        self.request = request
-        self.session = request.session
-        cart = self.session.get(settings.CART_SESSION_ID)
-        if not cart:  # or True:
-            # save an empty cart in the session
-            cart = self.session[settings.CART_SESSION_ID] = {}
-        self.cart = cart
+    def __init__(self, request=None):
+        if request is not None:
+            self.request = request
+            self.session = request.headers.get('X-Session-ID')
 
     def add(self, product, quantity=1):
         """
-        Add a product to the cart its quantity.
+        Add a product to the cart or update its quantity.
         """
         q = int(quantity)
         stock = int(product.stock)
-        if str(product.id) not in self.cart.keys():
-            self.cart[str(product.id)] = {
-                "id": str(product.id),
-                'user_id': self.request.user.id,
-                'product': product.toJSON(),
-                'quantity': q if q <= stock else stock
-            }
+        shopping_cart = cache.get(self.session) or {}
+        if str(product.id) not in shopping_cart:
+            shopping_cart[str(product.id)] = q if q <= stock else stock
         else:
-            amount = int(self.cart[str(product.id)]['quantity'])
-            self.cart[str(product.id)]['quantity'] = amount + q if (amount + q) <= stock else stock
-        self.save()
+            amount = int(cache.get(self.session)[str(product.id)])
+            shopping_cart[str(product.id)] = amount + q if (amount + q) <= stock else stock
+        self.save(shopping_cart)
 
-    def save(self):
+    def subtract(self, product, quantity=1):
+        """
+        Subtract a product from the cart or update its quantity.
+        """
+        q = int(quantity)
+        shopping_cart = cache.get(self.session) or {}
+        if str(product.id) in shopping_cart:
+            amount = int(cache.get(self.session)[str(product.id)])
+            new_quantity = max(amount - q, 0)
+            if new_quantity == 0:
+                del shopping_cart[str(product.id)]
+            else:
+                shopping_cart[str(product.id)] = new_quantity
+            self.save(shopping_cart)
+
+    def save(self, shopping_cart):
         # update the session cart
-        self.session[settings.CART_SESSION_ID] = self.cart
-        # mark the session as "modified" to make sure it is saved
-        self.session.modified = True
+        cache.set(self.session, shopping_cart, 60 * 60 * 4)
 
     def get(self, id):
-        return self.session[settings.CART_SESSION_ID][id]
+        if str(id) in cache.get(self.session):
+            return cache.get(self.session)[str(id)]
+        else:
+            return 0
 
-    def all(self, ):
-        return list(self.session[settings.CART_SESSION_ID].values())
+    def all(self):
+        return list(cache.get(self.session).keys())
 
     def set(self, key, value):
-        self.cart[key] = value
-        self.save()
-
-    def update(self, key, content: dict):
-        for k in content.keys():
-            self.cart[k][key] = content[k]
-        self.save()
-
-    def clear_garbage(self, key, value):
-        for i in self.all():
-            if i[key] == value:
-                del self.cart[i["id"]]
-        self.save()
+        cache.get(self.session)[str(key)] = value
 
     def get_sum_of(self, key):
-        return sum(map(lambda x: float(x[key]), self.all()))
-
-    def get_multiply_of(self, key1, key2):
-        return map(lambda x: float(x[key1]) * float(x[key2]), self.all())
+        return sum(map(lambda x: float(x), cache.get(self.session).values()))
 
     def remove(self, product):
         """
         Remove a product from the cart.
         """
-        if str(product.id) in self.cart:
-            del self.cart[str(product.id)]
-            self.save()
+        cart = cache.get(self.session)
+        if str(product.id) in cart:
+            del cart[str(product.id)]
+            cache.set(self.session, cart)
 
-    def pop(self, ):
-        del self.session[settings.CART_SESSION_ID][str(self.all().pop()['id'])]
-        self.save()
+    def pop(self):
+        if len(cache.get(self.session)) > 0:
+            last_product = list(cache.get(self.session).values()).pop()
+            del cache.get(self.session)[str(last_product['id'])]
 
     def decrement(self, product):
-        self.cart[str(product.id)]['quantity'] = int(self.cart[str(product.id)]['quantity']) - 1
-        if self.cart[str(product.id)]['quantity'] < 1:
-            return redirect('cart:cart_detail')
-        self.save()
+        if str(product.id) in cache.get(self.session):
+            new_quantity = int(cache.get(self.session)[str(product.id)]) - 1
+            if new_quantity < 1:
+                del cache.get(self.session)[str(product.id)]
+            else:
+                cache.get(self.session)[str(product.id)] = new_quantity
 
     # mio
     def update_quant(self, product, value):
         q = int(value)
         stock = int(product.stock)
-        amount = int(self.cart[str(product.id)]['quantity'])
-        if q >= stock:
-            self.cart[str(product.id)]['quantity'] = stock
-            self.save()
-            return
-        self.cart[str(product.id)]['quantity'] = q
-        self.save()
+        if str(product.id) in cache.get(self.session):
+            if q >= stock:
+                new_quantity = stock
+            else:
+                new_quantity = q
+            cache.get(self.session)[str(product.id)] = new_quantity
 
     def clear(self):
         # empty cart
-        self.session[settings.CART_SESSION_ID] = {}
-        self.session.modified = True
+        cart = cache.get(self.session)
+        for product_id in list(cart.keys()):
+            del cart[str(product_id)]
+        cache.set(self.session, cart)

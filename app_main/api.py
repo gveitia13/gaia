@@ -2,6 +2,7 @@ import random
 
 from django.db.models import Q, Count
 from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -19,7 +20,10 @@ def get_context_data(currency=None):
         business_data = GeneralDataSerializer(business).data
     else:
         business_data = {}
-    infoUtil_list = InfoUtil.objects.filter(title__isnull=False, contenidoinfo__isnull=False)[:4]
+    if len(InfoUtil.objects.filter(contenidoinfo__isnull=False).distinct()):
+        infoUtil_list = InfoUtil.objects.filter(contenidoinfo__isnull=False).distinct()[:4]
+    else:
+        infoUtil_list = InfoUtil.objects.filter(contenidoinfo__isnull=False).distinct()
     infoUtil_data = InfoUtilSerializer(infoUtil_list, many=True, context = {'esential' : True}).data
     if currency == 'CUP':
         all_categories = sorted(
@@ -47,8 +51,8 @@ def get_context_data(currency=None):
 
 class BaseViewSet(viewsets.ViewSet):
     def list(self, request):
-        cart = Cart(self.request)
-        c_x_p = len(cart.all())
+        # cart = Cart(self.request)
+        # c_x_p = len(cart.all())
 
         if self.request.get_host().__contains__("127.0.0.1") or self.request.get_host().__contains__(
                 "localhost"):
@@ -62,7 +66,7 @@ class BaseViewSet(viewsets.ViewSet):
             'logo': settings.BUSINESS_NAME_IMG_PATH,
             'banner': settings.BUSINESS_BANNER,
             'business': context_data_result['business'],
-            'products_in_cart': cart.all(),
+            'products_in_cart': {},
             'total_price': '',
             'infoUtil_list': context_data_result['infoUtil_list'],
             'all_categories': context_data_result['all_categories'],
@@ -120,3 +124,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.filter(is_active=True)
     serializer_class = ProductSerializer
+
+class InfoUtilList(ListAPIView):
+    serializer_class = InfoUtilSerializer
+
+    def get_queryset(self):
+        # Filter the queryset to only include InfoUtil instances with at least one related ContenidoInfo object
+        queryset = InfoUtil.objects.filter(contenidoinfo__isnull=False).distinct()
+        return queryset
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['esential'] = self.request.query_params.get('esential', False)
+        return context
