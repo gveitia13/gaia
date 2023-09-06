@@ -124,91 +124,14 @@ class StartPage(BaseView, generic.ListView, ):
 
 
 class StartPageCUP(StartPage):
-    queryset = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
 
     def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['moneda'] = 'CUP'
-        cate = sorted(
-            Category.objects.filter(product__isnull=False, destacado=True, product__is_active=True,
-                                    product__moneda__in=['CUP', 'Ambas']).distinct(),
-            key=lambda cat: cat.get_prods_count, reverse=True)
-        if len(cate) > 4:
-            context['categories'] = random.sample(cate, 4)
-        else:
-            context['categories'] = random.sample(cate, len(cate))
-
-        context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
-            moneda='Euro')[0:10]
-        context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False).exclude(
-            moneda='Euro')[0:10]
-        context['products_nuevos'] = Product.objects.filter(is_active=True).exclude(moneda='Euro').order_by('-pk')[0:10]
-        products = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
-        context['all_categories'] = sorted(
-            Category.objects.filter(product__isnull=False, product__is_active=True,
-                                    product__moneda__in=['CUP', 'Ambas']).distinct(),
-            key=lambda cat: cat.get_prods_count, reverse=True)
-        cart = Cart(self.request)
-        products_in_cart = []
-        if cart.all():
-            for c in cart.all():
-                if Product.objects.get(pk=c['id']).moneda in ['CUP', 'Ambas']:
-                    products_in_cart.append(c)
-        context['products_in_cart'] = products_in_cart
-        context['catalogo_url'] = reverse_lazy('catalogo-cup')
-        context['index_url'] = reverse_lazy('index-cup')
-        context['tipo_moneda'] = 'CUP'
-        context['object_list'] = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
-        context['product_list'] = Product.objects.filter(is_active=True, ).exclude(moneda='Euro')
-        return context
+        return redirect('https://gaia-mercado.com')
 
 
 class StartPageEuro(StartPage):
-    queryset = Product.objects.filter(is_active=True, ).exclude(moneda='CUP')
-    template_name = 'startpage_euro.html'
+    pass
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        qs = qs.exclude(moneda='CUP')
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['moneda'] = 'Euro'
-        cate = sorted(
-            Category.objects.filter(product__isnull=False, destacado=True, product__is_active=True,
-                                    product__moneda__in=['Euro', 'Ambas']).distinct(),
-            key=lambda cat: cat.get_prods_count, reverse=True)
-        if len(cate) > 4:
-            context['categories'] = random.sample(cate, 4)
-        else:
-            context['categories'] = random.sample(cate, len(cate))
-        context['products_destacados'] = Product.objects.filter(is_active=True, is_important=True).exclude(
-            moneda='CUP')[0:10]
-        context['products_descuento'] = Product.objects.filter(is_active=True, old_price__isnull=False).exclude(
-            moneda='CUP')[0:10]
-        context['products_nuevos'] = Product.objects.filter(is_active=True).exclude(moneda='CUP').order_by('-pk')[0:10]
-        context['all_categories'] = sorted(
-            Category.objects.filter(product__isnull=False, product__is_active=True,
-                                    product__moneda__in=['Euro', 'Ambas']).distinct(),
-            key=lambda cat: cat.get_prods_count, reverse=True)
-        cart = Cart(self.request)
-        products_in_cart = []
-        if cart.all():
-            for c in cart.all():
-                if Product.objects.get(pk=c['id']).moneda in ['Euro', 'Ambas']:
-                    products_in_cart.append(c)
-        context['products_in_cart'] = products_in_cart
-        context['catalogo_url'] = reverse_lazy('catalogo-euro')
-        context['index_url'] = reverse_lazy('index-euro')
-        context['is_euro'] = True
-        context['tipo_moneda'] = 'EUR'
-        context['object_list'] = Product.objects.filter(is_active=True, ).exclude(moneda='CUP')
-        context['product_list'] = Product.objects.filter(is_active=True, ).exclude(moneda='CUP')
-        return context
 
 
 class InfoView(generic.ListView, BaseView):

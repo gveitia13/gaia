@@ -293,6 +293,7 @@ class Municipio(models.Model):
     precio = models.FloatField(verbose_name='Precio de envío en CUP', )
     precio_euro = models.FloatField('Precio de envío en Euro', )
     visible = models.BooleanField(default=True)
+    is_pickup_place = models.BooleanField(default=False, verbose_name='Punto de recogida')
 
     def __str__(self):
         return '{}'.format(self.nombre)

@@ -28,6 +28,7 @@ class Cart(object):
             shopping_cart[str(product.id)] = amount + q if (amount + q) <= stock else stock
         self.save(shopping_cart)
 
+
     def subtract(self, product, quantity=1):
         """
         Subtract a product from the cart or update its quantity.

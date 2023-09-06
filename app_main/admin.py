@@ -135,7 +135,7 @@ class InfoUtilAdmin(admin.ModelAdmin):
 
 
 class MunicipioAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'precio', 'precio_euro', 'visible')
+    list_display = ('nombre', 'precio', 'precio_euro', 'visible', 'is_pickup_place')
 
 
 class ComponenteOrdenInline(admin.TabularInline):

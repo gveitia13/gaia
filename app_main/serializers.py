@@ -67,7 +67,7 @@ class InfoUtilSerializer(serializers.ModelSerializer):
 class MunicipioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Municipio
-        fields = ('id','nombre', 'precio', 'precio_euro', 'visible')
+        fields = ('id','nombre', 'precio', 'precio_euro', 'visible', 'is_pickup_place')
 
 class CategorySerializer(serializers.ModelSerializer):
     get_image = serializers.SerializerMethodField()
