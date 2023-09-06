@@ -137,3 +137,14 @@ class InfoUtilList(ListAPIView):
         context = super().get_serializer_context()
         context['esential'] = self.request.query_params.get('esential', False)
         return context
+
+class SearchView(APIView):
+    def get(self, request):
+        search_query = request.GET.get('search', '')
+        products = Product.objects.filter(
+            Q(moneda=request.headers['currency']) | Q(moneda='Ambas'),
+            is_active=True,
+            name__icontains=search_query
+        )
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
