@@ -9,7 +9,7 @@ from django.http import FileResponse
 from django.shortcuts import render
 
 from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
-    ComponenteOrden, ContenidoInfo
+    ComponenteOrden, ContenidoInfo, ProductExtraImage, ExtraPaymentMethod
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -27,6 +27,11 @@ class CategoryAdmin(admin.ModelAdmin):
         for p in queryset:
             p.destacado = False
             p.save()
+
+
+class ProductExtraImageInline(admin.TabularInline):
+    model = ProductExtraImage
+    extra = 0
 
 
 class BannerInline(admin.TabularInline):
@@ -50,8 +55,8 @@ class GeneralDataAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Datos principales', {
             'fields': (
-            'enterprise_name', 'taza_cambio', 'tropipay_impuesto', 'logo', 'img_principal', 'checkout_allowed',
-            'closed_message')
+                'enterprise_name', ('taza_cambio','tasa_mlc'), 'tropipay_impuesto', 'logo', 'img_principal', 'checkout_allowed',
+                'closed_message')
         },),
         ('Redes Sociales', {
             'fields': ('facebook', 'instagram',)
@@ -102,6 +107,7 @@ class ProductAdmin(admin.ModelAdmin):
                'Quitar_descuento']
     change_list_template = 'admin/custom_list.html'
     readonly_fields = ('date_updated', 'sales', 'img_link', 'codigo')
+    inlines = [ProductExtraImageInline,]
 
     def Desactivar_productos(self, request, queryset):
         for p in queryset:
@@ -231,6 +237,10 @@ class ComponenteOrdenAdmin(admin.ModelAdmin):
     list_filter = ('producto',)
     search_fields = ('orden', 'producto')
 
+class ExtraPaymentMethodAdmin(admin.ModelAdmin):
+    list_display = ('active', 'name', 'card', 'confirmation_number', 'type')
+    list_display_links = ('active', 'name', 'card', 'confirmation_number', 'type')
+    list_filter = ('active', 'type')
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(InfoUtil, InfoUtilAdmin)
@@ -240,3 +250,4 @@ admin.site.register(Suscriptor)
 admin.site.register(Orden, OrdenAdmin)
 admin.site.register(ComponenteOrden, ComponenteOrdenAdmin)
 admin.site.register(Municipio, MunicipioAdmin)
+admin.site.register(ExtraPaymentMethod, ExtraPaymentMethodAdmin)

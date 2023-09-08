@@ -21,7 +21,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'category', 'image', 'name', 'price', 'old_price', 'info', 'about', 'is_active', 'is_important', 'stock',
             'date_updated', 'sales', 'delivery_time', 'moneda', 'codigo', 'info_tag', 'about_tag', 'get_image',
             'get_price',
-            'get_old_price', 'id')
+            'get_old_price', 'id', 'productextraimage_set')
         depth = 3
 
     def get_info_tag(self, obj):
@@ -96,7 +96,7 @@ class GeneralDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneralData
         fields = (
-            'logo', 'img_principal', 'enterprise_name', 'enterprise_address', 'taza_cambio', 'tropipay_impuesto',
+            'logo', 'img_principal', 'enterprise_name', 'enterprise_address', 'taza_cambio', 'tasa_mlc','tropipay_impuesto',
             'email', 'phone_number', 'facebook', 'instagram', 'meta_tittle', 'meta_description', 'meta_kw',
             'checkout_allowed', 'closed_message', 'logo_tag', 'img_principal_tag', 'banner_set')
 

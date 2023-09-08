@@ -168,14 +168,40 @@ class Product(models.Model):
     img_link.short_description = 'Vista previa'
     info_tag.short_description = 'Información'
 
+class ProductExtraImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='product/img', verbose_name='Imagen')
+
+    def get_image(self):
+        if self.image:
+            return self.image.url
+        return f'{STATIC_URL}img/empty.png'
+
+    def img_link(self):
+        if self.image:
+            return mark_safe(
+                f'<a href="{self.image.url}"><img src="{self.image.url}" class="agrandar mb-2 mr-2" '
+                f'width="50" height="50" /></a>')
+        return mark_safe(
+            f'<a href="{STATIC_URL}img/empty.png"><img src="{STATIC_URL}img/empty.png" class="agrandar mb-2 mr-2" '
+            f'width="50" height="50" /></a>')
+
+    def __str__(self):
+        return "Imagen extra"
+
+    class Meta:
+        verbose_name = 'Imagen Extra'
+        verbose_name_plural = 'Imágenes Extra'
 
 class GeneralData(models.Model):
     logo = models.ImageField(upload_to='datos_generales/logo', verbose_name='Logo')
     img_principal = models.ImageField(upload_to='datos_generales/img_principal', verbose_name='Imagen Principal')
     enterprise_name = models.CharField(max_length=100, verbose_name='Nombre de la empresa')
     enterprise_address = models.CharField(max_length=100, verbose_name='Dirección de la empresa', null=True, blank=True)
-    taza_cambio = models.FloatField('Taza de cambio', validators=[MinValueValidator(0, 'Debe ser mayor que cero')],
+    taza_cambio = models.FloatField('Tasa de cambio', validators=[MinValueValidator(0, 'Debe ser mayor que cero')],
                                     help_text='Valor del Euro en CUP')
+    tasa_mlc = models.FloatField('Tasa de cambio MLC', validators=[MinValueValidator(0, 'Debe ser mayor que cero')],
+                                    help_text='Valor del MLC en CUP', default=200)
     tropipay_impuesto = models.FloatField('Impuesto de Tropipay', default=3.45,
                                           help_text='Porciento del total de la orden aumentado',
                                           validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
@@ -393,3 +419,22 @@ class ComponenteOrden(models.Model):
         ordering = ('orden', 'producto')
         verbose_name = 'Componente de orden'
         verbose_name_plural = 'Componentes de ordenes'
+
+class ExtraPaymentMethod(models.Model):
+    TYPE_CHOICES = (
+        ('cup','C.U.P'),
+        ('mlc','MLC'),
+    )
+    active = models.BooleanField(default=True, verbose_name="Activo")
+    name = models.CharField(max_length=255, verbose_name="Nombre")
+    card = models.CharField(max_length=255, verbose_name="Número de Tarjeta")
+    confirmation_number = models.CharField(max_length=255, verbose_name="Móvil a Confirmar")
+    type = models.CharField(max_length=255, choices=TYPE_CHOICES, default='cup', verbose_name='Tipo')
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+    class Meta:
+        verbose_name = 'Método Extra de Pago'
+        verbose_name_plural = 'Métodos Extra de Pago'
+
