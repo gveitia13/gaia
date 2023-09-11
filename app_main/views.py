@@ -509,8 +509,11 @@ def upload_csv(request):
             with transaction.atomic():
                 for index, row in data.iterrows():
                     try:
-                        product = Product.objects.get(name=row['Nombre'])
-                        product.system_code = row['Codigo']
+                        try:
+                            product = Product.objects.get(system_code=row['Codigo'])
+                        except Exception:
+                            product = Product.objects.get(name=row['Nombre'])
+                            product.system_code = row['Codigo']
                         product.stock = row['Existencias']
                         product.price = row['Precio']
                         product.save()
