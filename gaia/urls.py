@@ -3,9 +3,11 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 
+from app_main.views import upload_csv
 from gaia import settings
 
 urlpatterns = [
+    path('admin/upload_csv/', upload_csv, name='upload_csv'),
     path('admin/', admin.site.urls),
     path('', include('app_main.urls')),
     path('', include('app_cart.urls')),

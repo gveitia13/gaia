@@ -1,3 +1,5 @@
+import pandas as pd
+import csv
 import datetime
 import http.client
 import json
@@ -5,12 +7,15 @@ import os
 import random
 import re
 from hashlib import sha256, sha1
+
+from django.contrib import messages
 from django.core.cache import cache
 import pytz
+from django.db import transaction
 from django.forms import model_to_dict
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import generic, View
 from django.views.decorators.csrf import csrf_exempt
@@ -132,8 +137,10 @@ class StartPageCUP(StartPage):
 class StartPageEuro(StartPage):
     pass
 
+
 def info_redirect(request):
     return redirect(request)
+
 
 class InfoView(generic.ListView, BaseView):
     template_name = 'info.html'
@@ -362,7 +369,7 @@ def pagar_cup(request: HttpRequest):
                 mensaje = create_message_order(request, orden)
                 return JsonResponse({'status': 200,
                                      'payment_link': f'https://api.whatsapp.com/send/?phone={GeneralData.objects.all().first().phone_number}&text=[TEXTPLACEHOLDER]&app_absent=1',
-                                     'wa_message':mensaje})
+                                     'wa_message': mensaje})
         else:
             return JsonResponse({'status': 400})
     return JsonResponse({'status': 400, 'return_url': 'https://gaia-mercado.com'})
@@ -481,3 +488,37 @@ def whole_products(request):
     for product in Product.objects.all():
         products = products + '{} - {}'.format(product.name, str(product.price))
     return JsonResponse({"result": products, "active": "1"})
+
+
+def read_excel_file(excel_file):
+    if not excel_file.content_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        raise Exception('El Archivo no es un Excel')
+    data_frame = pd.read_excel(excel_file)
+    required_columns = {'Codigo', 'Nombre', 'Existencias', 'Precio'}
+    if set(data_frame.columns) != required_columns:
+        raise Exception('Excel no válido')
+    return data_frame
+
+def upload_csv(request):
+    if request.method == 'POST':
+        excel_file = request.FILES['csv_file']
+        with open("excel_file", 'wb') as f:  # Save the file locally
+            f.write(request.FILES['csv_file'].file.read())
+        data = pd.read_excel(excel_file)
+        try:
+            with transaction.atomic():
+                for index, row in data.iterrows():
+                    try:
+                        product = Product.objects.get(name=row['Nombre'])
+                        product.system_code = row['Codigo']
+                        product.stock = row['Existencias']
+                        product.price = row['Precio']
+                        product.save()
+                    except Exception as e:
+                        print(e)
+            messages.success(request, 'Productos Actualizados')
+        except Exception as e:
+            messages.error(request, 'An error occurred: {}.'.format(e))
+        return redirect(reverse('admin:app_main_product_changelist'))
+    else:
+        return redirect(reverse('admin:app_main_product_changelist'))
