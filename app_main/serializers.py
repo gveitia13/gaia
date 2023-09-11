@@ -124,4 +124,4 @@ class OrdenSerializer(serializers.ModelSerializer):
 class ExtraPaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExtraPaymentMethod
-        fields = ['active', 'name', 'card', 'confirmation_number', 'type']
+        fields = ['pk', 'active', 'name', 'card', 'confirmation_number', 'type']
