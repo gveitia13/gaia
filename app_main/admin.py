@@ -94,6 +94,7 @@ class ProductExtraImageAdmin(admin.ModelAdmin):
         'img_link', '__str__')
     list_display_links = (
         'img_link', '__str__')
+    autocomplete_fields = ['product',]
     readonly_fields = ('img_link', )
 
 class ProductAdmin(admin.ModelAdmin):
