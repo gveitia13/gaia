@@ -132,7 +132,8 @@ class StartPageCUP(StartPage):
 class StartPageEuro(StartPage):
     pass
 
-
+def info_redirect(request):
+    return redirect(request)
 
 class InfoView(generic.ListView, BaseView):
     template_name = 'info.html'

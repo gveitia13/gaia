@@ -8,10 +8,10 @@ from rest_framework.views import APIView
 
 from app_cart.cart import Cart
 from gaia import settings
-from .models import GeneralData, InfoUtil, Category, Municipio, Product
+from .models import GeneralData, InfoUtil, Category, Municipio, Product, ExtraPaymentMethod
 from .views import BaseView, StartPage
 from .serializers import ProductSerializer, GeneralDataSerializer, InfoUtilSerializer, CategorySerializer, \
-    MunicipioSerializer
+    MunicipioSerializer, ExtraPaymentMethodSerializer
 
 
 def get_context_data(currency=None):
@@ -148,3 +148,10 @@ class SearchView(APIView):
         )
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+
+class ExtraPaymentMethodList(APIView):
+    def get(self, request):
+        mlc_exchange = GeneralData.objects.first().tasa_mlc
+        methods = ExtraPaymentMethod.objects.filter(active=True)
+        serializer = ExtraPaymentMethodSerializer(methods, many=True)
+        return Response({'mlc_exchange': mlc_exchange, 'methods': serializer.data})

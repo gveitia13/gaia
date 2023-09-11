@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from app_main.api import BaseViewSet, StartPageViewSet, ImportantProductsView, OnSaleProductsView, NewProductsView, \
-    CategoryViewSet, ProductViewSet, QuickInitialView, InfoUtilList, SearchView
+    CategoryViewSet, ProductViewSet, QuickInitialView, InfoUtilList, SearchView, ExtraPaymentMethodList
 from app_main.views import *
 
 
@@ -24,10 +24,11 @@ urlpatterns = [
     path('api/new_products/', NewProductsView.as_view(), name='new_products'),
     path('api/infoutil/', InfoUtilList.as_view(), name='infoutil_list'),
     path('api/search/', SearchView.as_view(), name='search_view'),
+    path('api/extrapaymentmethods/', ExtraPaymentMethodList.as_view(), name='extrapaymentmethods'),
     path('', asd, name='asd'),
     path('CUP/', StartPageCUP.as_view(), name='index-cup'),
     path('Euro/', StartPageEuro.as_view(), name='index-euro'),
-    path('info/', InfoView.as_view(), name='info'),
+    path('info/', info_redirect, name='info'),
     path('catalogo/CUP/', CatalogoCUPView.as_view(), name='catalogo-cup'),
     path('catalogo/Euro/', CatalogoEuroView.as_view(), name='catalogo-euro'),
     path('CUP/suscriptor_create/', create_suscriptor, name='suscriptor'),

@@ -2,7 +2,8 @@ from django.utils.safestring import mark_safe
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
-from app_main.models import Orden, ComponenteOrden, GeneralData, InfoUtil, Category, Municipio, Banner, ContenidoInfo
+from app_main.models import Orden, ComponenteOrden, GeneralData, InfoUtil, Category, Municipio, Banner, ContenidoInfo, \
+    ExtraPaymentMethod
 
 from rest_framework import serializers
 from .models import Product
@@ -119,3 +120,8 @@ class OrdenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orden
         fields = '__all__'
+
+class ExtraPaymentMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExtraPaymentMethod
+        fields = ['active', 'name', 'card', 'confirmation_number', 'type']
