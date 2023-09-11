@@ -89,6 +89,12 @@ class ProductInline(admin.StackedInline):
         })
     ]
 
+class ProductExtraImageAdmin(admin.ModelAdmin):
+    list_display = (
+        'img_link', '__str__')
+    list_display_links = (
+        'img_link', '__str__')
+    readonly_fields = ('img_link', )
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -243,6 +249,7 @@ class ExtraPaymentMethodAdmin(admin.ModelAdmin):
     list_filter = ('active', 'type')
 
 admin.site.register(Product, ProductAdmin)
+admin.site.register(ProductExtraImage, ProductExtraImageAdmin)
 admin.site.register(InfoUtil, InfoUtilAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(GeneralData, GeneralDataAdmin)

@@ -187,7 +187,7 @@ class ProductExtraImage(models.Model):
             f'width="50" height="50" /></a>')
 
     def __str__(self):
-        return "Imagen extra"
+        return "Imagen extra de {}".format(self.product)
 
     class Meta:
         verbose_name = 'Imagen Extra'
