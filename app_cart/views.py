@@ -122,14 +122,20 @@ def decrement_quant(request: HttpRequest, id: int, quantity: int):
 
 @method_decorator(csrf_exempt, require_POST)
 def item_clear(request: HttpRequest, id: int):
-    cart = Cart(request)
-    product = Product.objects.get(pk=id)
-    cart.remove(product=product)
-    return JsonResponse({
-        'product': product.toJSON(),
-        "result": "ok",
-        "amount": cart.get_sum_of("quantity")
-    })
+    try:
+        cart = Cart(request)
+        product = Product.objects.get(pk=id)
+        cart.remove(product=product)
+        return JsonResponse({
+            'product': product.toJSON(),
+            "result": "ok",
+            "amount": cart.get_sum_of("quantity")
+        })
+    except:
+        return JsonResponse({
+            "status": 403,
+            "result": "ko",
+        })
 
 @method_decorator(csrf_exempt, require_POST)
 def cart_clear(request: HttpRequest):

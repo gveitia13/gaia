@@ -55,7 +55,8 @@ class GeneralDataAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Datos principales', {
             'fields': (
-                'enterprise_name', ('taza_cambio','tasa_mlc'), 'tropipay_impuesto', 'logo', 'img_principal', 'checkout_allowed',
+                'enterprise_name', ('taza_cambio', 'tasa_mlc'), 'tropipay_impuesto', 'logo', 'img_principal',
+                'checkout_allowed',
                 'closed_message')
         },),
         ('Redes Sociales', {
@@ -89,17 +90,20 @@ class ProductInline(admin.StackedInline):
         })
     ]
 
+
 class ProductExtraImageAdmin(admin.ModelAdmin):
     list_display = (
         'img_link', '__str__')
     list_display_links = (
         'img_link', '__str__')
-    autocomplete_fields = ['product',]
-    readonly_fields = ('img_link', )
+    autocomplete_fields = ['product', ]
+    readonly_fields = ('img_link',)
+
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'category', 'img_link', 'moneda', 'price', 'codigo', 'sales', 'stock', 'has_old_price', 'is_active')
+        'name', 'category', 'img_link', 'system_code', 'moneda', 'price', 'codigo', 'sales', 'stock', 'has_old_price',
+        'is_active')
     fieldsets = [
         ('Datos Principales:', {
             'fields': ('name', 'category', 'moneda', 'price', 'old_price', 'stock', 'delivery_time')
@@ -112,9 +116,9 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('category',)
     actions = ['Desactivar_productos', 'Activar_productos', 'Activar_destacados', 'Quitar_destacados',
                'Quitar_descuento']
-    change_list_template = 'admin/custom_list.html'
+    change_list_template = 'admin/app_main/product_change_list.html'
     readonly_fields = ('date_updated', 'sales', 'img_link', 'codigo')
-    inlines = [ProductExtraImageInline,]
+    inlines = [ProductExtraImageInline, ]
 
     def Desactivar_productos(self, request, queryset):
         for p in queryset:
@@ -244,10 +248,12 @@ class ComponenteOrdenAdmin(admin.ModelAdmin):
     list_filter = ('producto',)
     search_fields = ('orden', 'producto')
 
+
 class ExtraPaymentMethodAdmin(admin.ModelAdmin):
     list_display = ('active', 'name', 'card', 'confirmation_number', 'type')
     list_display_links = ('active', 'name', 'card', 'confirmation_number', 'type')
     list_filter = ('active', 'type')
+
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductExtraImage, ProductExtraImageAdmin)

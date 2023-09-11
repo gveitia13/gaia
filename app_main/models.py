@@ -94,6 +94,7 @@ class Product(models.Model):
         ('Ambas', 'Ambas'),
     ), default='CUP', max_length=200)
     codigo = models.CharField('Código', max_length=100, editable=False, null=True, blank=True)
+    system_code = models.CharField(max_length=255, null=True, blank=True, verbose_name="Código del Sistema")
 
     def __str__(self):
         return self.name

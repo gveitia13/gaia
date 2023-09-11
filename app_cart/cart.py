@@ -67,10 +67,13 @@ class Cart(object):
         """
         Remove a product from the cart.
         """
-        cart = cache.get(self.session)
-        if str(product.id) in cart:
-            del cart[str(product.id)]
-            cache.set(self.session, cart)
+        try:
+            cart = cache.get(self.session)
+            if str(product.id) in cart:
+                del cart[str(product.id)]
+                cache.set(self.session, cart)
+        except:
+            raise Exception
 
     def pop(self):
         if len(cache.get(self.session)) > 0:
