@@ -30,4 +30,4 @@ urlpatterns = [
     # API
     path('orden/list/', OrdenAPIList.as_view(), name='orden-api-list'),
     path('orden/<uuid>/', OrdenAPIDetails.as_view(), name='orden-api-details'),
-]
+] + opinion_router.urls

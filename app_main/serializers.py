@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
-from app_main.models import Orden, ComponenteOrden
+from app_main.models import Orden, ComponenteOrden,Opinion
 
 
 class ComponenteOrdenSerializer(serializers.ModelSerializer):
@@ -17,3 +17,9 @@ class OrdenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orden
         fields = '__all__'
+
+class OpinionSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Opinion
+        fields = "__all__"

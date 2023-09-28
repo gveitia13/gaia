@@ -1,7 +1,9 @@
 import uuid as uuid
+
 from ckeditor.fields import RichTextField
 from crum import get_current_request
-from django.core.validators import RegexValidator, MinValueValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.forms import model_to_dict
 from django.http import HttpRequest
@@ -377,3 +379,23 @@ class ComponenteOrden(models.Model):
         ordering = ('orden', 'producto')
         verbose_name = 'Componente de orden'
         verbose_name_plural = 'Componentes de ordenes'
+
+def validate_calification(value):
+    if value < 0 or value > 5:
+        raise ValidationError(message="La calificacion debe estar entre 0 y 5.")
+
+class Opinion(models.Model):
+    """Model definition for Opinion."""
+
+    calification = models.PositiveIntegerField("Calificacion",validators=[validate_calification])
+    comment = models.TextField("Commentario",null=True)
+
+    class Meta:
+        """Meta definition for Opinion."""
+
+        verbose_name = 'Opinion'
+        verbose_name_plural = 'Opinions'
+
+    def __str__(self):
+        """Unicode representation of Opinion."""
+        return f"Cal: {self.calification}"
