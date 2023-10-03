@@ -610,4 +610,4 @@ class OpinionViewset(ListModelMixin,
     
 
 opinion_router = SimpleRouter()
-opinion_router.register(r'opinion',OpinionViewset)
+opinion_router.register(r'api/opinion',OpinionViewset)
