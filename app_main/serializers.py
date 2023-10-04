@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
 from app_main.models import Orden, ComponenteOrden, GeneralData, InfoUtil, Category, Municipio, Banner, ContenidoInfo, \
-    ExtraPaymentMethod
+    ExtraPaymentMethod, Opinion
 
 from rest_framework import serializers
 from .models import Product
@@ -125,3 +125,9 @@ class ExtraPaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExtraPaymentMethod
         fields = ['pk', 'active', 'name', 'card', 'confirmation_number', 'type']
+        
+class OpinionSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Opinion
+        fields = "__all__"

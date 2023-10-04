@@ -21,11 +21,15 @@ from django.views import generic, View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from rest_framework import generics
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.routers import SimpleRouter
 
 from app_cart.cart import Cart
 from app_main.models import Product, Category, GeneralData, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
-    ComponenteOrden
-from app_main.serializers import OrdenSerializer
+    ComponenteOrden,Opinion
+from app_main.serializers import OrdenSerializer,OpinionSerializer
 from gaia import settings
 
 
@@ -525,3 +529,16 @@ def upload_csv(request):
         return redirect(reverse('admin:app_main_product_changelist'))
     else:
         return redirect(reverse('admin:app_main_product_changelist'))
+
+class OpinionViewset(ListModelMixin,
+                     RetrieveModelMixin,
+                     CreateModelMixin,
+                     GenericViewSet):
+
+    serializer_class = OpinionSerializer
+    queryset = Opinion.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+
+opinion_router = SimpleRouter()
+opinion_router.register(r'api/opinion',OpinionViewset)

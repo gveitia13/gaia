@@ -49,4 +49,4 @@ urlpatterns = [
     #AJAX
     path('whole_products/', whole_products, name='whole_products'),
     path('session/change/', change_active_session_ajax, name='change_active_session_ajax'),
-]
+] + opinion_router.urls
