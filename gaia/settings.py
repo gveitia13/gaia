@@ -137,7 +137,7 @@ WSGI_APPLICATION = 'gaia.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'gaia',
+        'NAME': 'gaia_test',
         'USER': 'postgres',
         'PASSWORD': 'gaia098*',
         'HOST': 'localhost',
