@@ -23,7 +23,6 @@ from django.views.decorators.http import require_POST
 from rest_framework import generics
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.routers import SimpleRouter
 
 from app_cart.cart import Cart
@@ -537,7 +536,7 @@ class OpinionViewset(ListModelMixin,
 
     serializer_class = OpinionSerializer
     queryset = Opinion.objects.all()
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = []
     
 
 opinion_router = SimpleRouter()
