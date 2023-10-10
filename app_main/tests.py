@@ -29,7 +29,7 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from rest_framework.test import APITestCase
 
-from app_main.models import Opinion, validate_calification
+from app_main.models import Opinion, validate_calification, ExtraPaymentMethod
 from app_main.serializers import OpinionSerializer
 
 class OpinionTest(APITestCase):
@@ -123,3 +123,42 @@ class OpinionViewsetTest(APITestCase):
         response = self.client.post(url,data=data)
         self.assertEqual(response.status_code,201)
         self.assertDictContainsSubset(data,response.data)
+        
+class ExtraPaymentMethodTest(APITestCase):
+
+    def test_create(self):
+        data_ok = {
+                "name": "Transferencia en CUP",
+                "card": "9205555555555555",
+                "confirmation_number": "55555555",
+                "type": "cup"
+            }
+        ExtraPaymentMethod.objects.create(**data_ok)
+        with self.assertRaises(Exception):
+            data = data_ok.copy()
+            data.pop('card')
+            obj = ExtraPaymentMethod.objects.create(**data)
+            
+        with self.assertRaises(Exception):
+            data = data_ok.copy()
+            data.pop('confirmation_number')
+            ExtraPaymentMethod.objects.create(**data)
+
+        data_ok.update({"name": "Transferencia en MLC","type": "mlc"})
+        ExtraPaymentMethod.objects.create(**data_ok)
+        
+        with self.assertRaises(Exception):
+            data = data_ok.copy()
+            data.pop('card')
+            ExtraPaymentMethod.objects.create(**data)
+            
+        with self.assertRaises(Exception):
+            data = data_ok.copy()
+            data.pop('confirmation_number')
+            ExtraPaymentMethod.objects.create(**data)
+        
+        data_efectivo = {
+            "name": "Efectivo",
+            "type": "efectivo"
+        }
+        ExtraPaymentMethod.objects.create(**data_efectivo)

@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 import uuid as uuid
 from ckeditor.fields import RichTextField
 from crum import get_current_request
@@ -426,16 +427,25 @@ class ExtraPaymentMethod(models.Model):
     TYPE_CHOICES = (
         ('cup','C.U.P'),
         ('mlc','MLC'),
+        ('efectivo','Efectivo'),
     )
     active = models.BooleanField(default=True, verbose_name="Activo")
     name = models.CharField(max_length=255, verbose_name="Nombre")
-    card = models.CharField(max_length=255, verbose_name="Número de Tarjeta")
-    confirmation_number = models.CharField(max_length=255, verbose_name="Móvil a Confirmar")
+    card = models.CharField(max_length=255, verbose_name="Número de Tarjeta",blank=True)
+    confirmation_number = models.CharField(max_length=255, verbose_name="Móvil a Confirmar",blank=True)
     type = models.CharField(max_length=255, choices=TYPE_CHOICES, default='cup', verbose_name='Tipo')
 
     def __str__(self):
         return "{}".format(self.name)
-
+    
+    def clean(self) -> None:
+        if self.type != 'efectivo' and (not self.card or not self.confirmation_number):
+            raise ValidationError({'card': "This field is required",'confirmation_number': "This field is required"})
+    
+    def save(self, *args, **kwargs) -> None:
+        self.clean()
+        return super().save(*args, **kwargs)
+        
     class Meta:
         verbose_name = 'Método Extra de Pago'
         verbose_name_plural = 'Métodos Extra de Pago'
