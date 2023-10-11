@@ -9,7 +9,7 @@ from django.http import FileResponse
 from django.shortcuts import render
 
 from app_main.models import Category, GeneralData, Product, Banner, Suscriptor, InfoUtil, Municipio, Orden, \
-    ComponenteOrden, ContenidoInfo, ProductExtraImage, ExtraPaymentMethod
+    ComponenteOrden, ContenidoInfo, ProductExtraImage, ExtraPaymentMethod, Opinion
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -265,3 +265,4 @@ admin.site.register(Orden, OrdenAdmin)
 admin.site.register(ComponenteOrden, ComponenteOrdenAdmin)
 admin.site.register(Municipio, MunicipioAdmin)
 admin.site.register(ExtraPaymentMethod, ExtraPaymentMethodAdmin)
+admin.site.register(Opinion)
