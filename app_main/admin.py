@@ -258,9 +258,11 @@ class OpinionAdmin(admin.ModelAdmin):
     list_display = ('calification','comment_display')
     
     def comment_display(self,obj):
-        if len(obj.comment) < 50:
+        if not obj.comment:
+            return "No hay comentario."
+        if len(obj.comment) <= 50:
             return obj.comment
-        return f"{obj.comment[:50]} ..."
+        return f"{obj.comment[:49]} ..."
     
     comment_display.short_description = 'Comentario'
 

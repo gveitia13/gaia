@@ -464,7 +464,7 @@ class Opinion(models.Model):
         """Meta definition for Opinion."""
 
         verbose_name = 'Opinion'
-        verbose_name_plural = 'Opinions'
+        verbose_name_plural = 'Opiniones'
 
     def __str__(self):
         """Unicode representation of Opinion."""
