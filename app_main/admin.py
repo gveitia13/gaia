@@ -253,6 +253,16 @@ class ExtraPaymentMethodAdmin(admin.ModelAdmin):
     list_display = ('active', 'name', 'card', 'confirmation_number', 'type')
     list_display_links = ('active', 'name', 'card', 'confirmation_number', 'type')
     list_filter = ('active', 'type')
+    
+class OpinionAdmin(admin.ModelAdmin):
+    list_display = ('calification','comment_display')
+    
+    def comment_display(self,obj):
+        if len(obj.comment) < 50:
+            return obj.comment
+        return f"{obj.comment[:50]} ..."
+    
+    comment_display.short_description = 'Comentario'
 
 
 admin.site.register(Product, ProductAdmin)
@@ -265,4 +275,4 @@ admin.site.register(Orden, OrdenAdmin)
 admin.site.register(ComponenteOrden, ComponenteOrdenAdmin)
 admin.site.register(Municipio, MunicipioAdmin)
 admin.site.register(ExtraPaymentMethod, ExtraPaymentMethodAdmin)
-admin.site.register(Opinion)
+admin.site.register(Opinion,OpinionAdmin)
