@@ -171,6 +171,7 @@ class Product(models.Model):
     img_link.short_description = 'Vista previa'
     info_tag.short_description = 'Información'
 
+
 class ProductExtraImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product/img', verbose_name='Imagen')
@@ -196,6 +197,7 @@ class ProductExtraImage(models.Model):
         verbose_name = 'Imagen Extra'
         verbose_name_plural = 'Imágenes Extra'
 
+
 class GeneralData(models.Model):
     logo = models.ImageField(upload_to='datos_generales/logo', verbose_name='Logo')
     img_principal = models.ImageField(upload_to='datos_generales/img_principal', verbose_name='Imagen Principal')
@@ -204,7 +206,7 @@ class GeneralData(models.Model):
     taza_cambio = models.FloatField('Tasa de cambio', validators=[MinValueValidator(0, 'Debe ser mayor que cero')],
                                     help_text='Valor del Euro en CUP')
     tasa_mlc = models.FloatField('Tasa de cambio MLC', validators=[MinValueValidator(0, 'Debe ser mayor que cero')],
-                                    help_text='Valor del MLC en CUP', default=200)
+                                 help_text='Valor del MLC en CUP', default=200)
     tropipay_impuesto = models.FloatField('Impuesto de Tropipay', default=3.45,
                                           help_text='Porciento del total de la orden aumentado',
                                           validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
@@ -423,42 +425,45 @@ class ComponenteOrden(models.Model):
         verbose_name = 'Componente de orden'
         verbose_name_plural = 'Componentes de ordenes'
 
+
 class ExtraPaymentMethod(models.Model):
     TYPE_CHOICES = (
-        ('cup','C.U.P'),
-        ('mlc','MLC'),
-        ('efectivo','Efectivo'),
+        ('cup', 'C.U.P'),
+        ('mlc', 'MLC'),
+        ('efectivo', 'Efectivo'),
     )
     active = models.BooleanField(default=True, verbose_name="Activo")
     name = models.CharField(max_length=255, verbose_name="Nombre")
-    card = models.CharField(max_length=255, verbose_name="Número de Tarjeta",blank=True)
-    confirmation_number = models.CharField(max_length=255, verbose_name="Móvil a Confirmar",blank=True)
+    card = models.CharField(max_length=255, verbose_name="Número de Tarjeta", blank=True)
+    confirmation_number = models.CharField(max_length=255, verbose_name="Móvil a Confirmar", blank=True)
     type = models.CharField(max_length=255, choices=TYPE_CHOICES, default='cup', verbose_name='Tipo')
 
     def __str__(self):
         return "{}".format(self.name)
-    
+
     def clean(self) -> None:
         if self.type != 'efectivo' and (not self.card or not self.confirmation_number):
-            raise ValidationError({'card': "This field is required",'confirmation_number': "This field is required"})
-    
+            raise ValidationError({'card': "This field is required", 'confirmation_number': "This field is required"})
+
     def save(self, *args, **kwargs) -> None:
         self.clean()
         return super().save(*args, **kwargs)
-        
+
     class Meta:
         verbose_name = 'Método Extra de Pago'
         verbose_name_plural = 'Métodos Extra de Pago'
+
 
 def validate_calification(value):
     if value < 0 or value > 5:
         raise ValidationError(message="La calificacion debe estar entre 0 y 5.")
 
+
 class Opinion(models.Model):
     """Model definition for Opinion."""
 
-    calification = models.PositiveIntegerField("Calificacion",validators=[validate_calification])
-    comment = models.TextField("Commentario",null=True)
+    calification = models.PositiveIntegerField("Calificacion", validators=[validate_calification])
+    comment = models.TextField("Commentario", null=True)
 
     class Meta:
         """Meta definition for Opinion."""

@@ -1,11 +1,8 @@
 from django.utils.safestring import mark_safe
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
 
 from app_main.models import Orden, ComponenteOrden, GeneralData, InfoUtil, Category, Municipio, Banner, ContenidoInfo, \
     ExtraPaymentMethod, Opinion
-
-from rest_framework import serializers
 from .models import Product
 
 
@@ -31,7 +28,6 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_about_tag(self, obj):
         return mark_safe(obj.about)
 
-
     def get_get_image(self, obj):
         return obj.get_image()
 
@@ -41,17 +37,19 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_get_old_price(self, obj):
         return obj.get_old_price()
 
+
 class ContenidoInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContenidoInfo
         fields = ('text', 'image')
+
 
 class InfoUtilSerializer(serializers.ModelSerializer):
     contenidoinfo_set = ContenidoInfoSerializer(many=True, read_only=True)
 
     class Meta:
         model = InfoUtil
-        fields = ('pk','title', 'contenidoinfo_set')
+        fields = ('pk', 'title', 'contenidoinfo_set')
 
     def to_representation(self, instance):
         # Call the superclass method to get the default serialized data
@@ -61,14 +59,16 @@ class InfoUtilSerializer(serializers.ModelSerializer):
         if len(instance.contenidoinfo_set.all()) > 0:
             if self.context['esential'] == True:
                 # Only include the title field
-                data = {'title': data['title'], 'id':data['pk']}
+                data = {'title': data['title'], 'id': data['pk']}
 
             return data
+
 
 class MunicipioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Municipio
-        fields = ('id','nombre', 'precio', 'precio_euro', 'visible', 'is_pickup_place')
+        fields = ('id', 'nombre', 'precio', 'precio_euro', 'visible', 'is_pickup_place')
+
 
 class CategorySerializer(serializers.ModelSerializer):
     get_image = serializers.SerializerMethodField()
@@ -76,7 +76,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id','name', 'image', 'destacado', 'get_image', 'get_prods_count')
+        fields = ('id', 'name', 'image', 'destacado', 'get_image', 'get_prods_count')
 
     def get_get_image(self, obj):
         return obj.get_image()
@@ -84,10 +84,12 @@ class CategorySerializer(serializers.ModelSerializer):
     def get_get_prods_count(self, obj):
         return obj.get_prods_count
 
+
 class BannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Banner
-        fields = ('banner','id')
+        fields = ('banner', 'id')
+
 
 class GeneralDataSerializer(serializers.ModelSerializer):
     logo_tag = serializers.SerializerMethodField()
@@ -97,7 +99,8 @@ class GeneralDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneralData
         fields = (
-            'logo', 'img_principal', 'enterprise_name', 'enterprise_address', 'taza_cambio', 'tasa_mlc','tropipay_impuesto',
+            'logo', 'img_principal', 'enterprise_name', 'enterprise_address', 'taza_cambio', 'tasa_mlc',
+            'tropipay_impuesto',
             'email', 'phone_number', 'facebook', 'instagram', 'meta_tittle', 'meta_description', 'meta_kw',
             'checkout_allowed', 'closed_message', 'logo_tag', 'img_principal_tag', 'banner_set')
 
@@ -121,13 +124,14 @@ class OrdenSerializer(serializers.ModelSerializer):
         model = Orden
         fields = '__all__'
 
+
 class ExtraPaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExtraPaymentMethod
         fields = ['pk', 'active', 'name', 'card', 'confirmation_number', 'type']
-        
+
+
 class OpinionSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Opinion
         fields = "__all__"
